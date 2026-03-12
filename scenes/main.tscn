@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://bfmy0g0v4chk6"]
 
 [ext_resource type="Script" uid="uid://b4tdte0od7vt3" path="res://scripts/main.gd" id="1_o5qli"]
+[ext_resource type="PackedScene" path="res://scenes/chunk.tscn" id="2_0wfyh"]
 
 [node name="Main" type="Node2D" unique_id=1828361990]
 script = ExtResource("1_o5qli")
+
+[node name="Chunk" parent="." unique_id=1127148850 instance=ExtResource("2_0wfyh")]
