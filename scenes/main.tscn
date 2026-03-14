@@ -1,9 +1,20 @@
 [gd_scene format=3 uid="uid://bfmy0g0v4chk6"]
 
 [ext_resource type="Script" uid="uid://b4tdte0od7vt3" path="res://scripts/main.gd" id="1_o5qli"]
-[ext_resource type="PackedScene" path="res://scenes/chunk.tscn" id="2_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://ddgk1s8xjb5id" path="res://scenes/world_map.tscn" id="2_0wfyh"]
+
+[sub_resource type="Curve" id="Curve_0wfyh"]
+_data = [Vector2(0.05, 0), 0.0, 2.0871623, 0, 0, Vector2(0.08, 0.955), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.18073678, 0.0, 0, 0]
+point_count = 3
 
 [node name="Main" type="Node2D" unique_id=1828361990]
 script = ExtResource("1_o5qli")
 
-[node name="Chunk" parent="." unique_id=1127148850 instance=ExtResource("2_0wfyh")]
+[node name="WorldMap" parent="." unique_id=1127148850 instance=ExtResource("2_0wfyh")]
+island_number = 6
+distance_curve = SubResource("Curve_0wfyh")
+map_size = Vector2i(700, 400)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=2129287634]
+anchor_mode = 0
+zoom = Vector2(0.1, 0.1)
