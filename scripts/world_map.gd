@@ -1,7 +1,8 @@
 extends Node2D
 
 @onready var sea_layer: TileMapLayer = $SeaLayer
-@onready var noise: FastNoiseLite = FastNoiseLite.new();
+@onready var terrain_noise: FastNoiseLite = FastNoiseLite.new();
+@onready var sea_noise: FastNoiseLite = FastNoiseLite.new();
 
 var island_locations: Array[Vector2i] = []
 var terrains: Dictionary[int, Array] = {}
@@ -9,11 +10,15 @@ var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var thread: Thread
 
 @export var island_number: int = 4
-@export var distance_curve: Curve
+@export var island_size: float = 40.0
 @export var map_size: Vector2i = Vector2i(170,100)
 
 func _ready() -> void:
-	noise.seed = 3630
+	terrain_noise.seed = 3630
+	terrain_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
+	
+	sea_noise.seed = 67
+	sea_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
 	
 	spawn_islands()
 	
@@ -42,46 +47,40 @@ func render_terrain():
 func _get_tile_value(index: Vector2i) -> int:
 	var result = 0
 	
-	var nearest_island = _get_nearest_position(index);
-	var island_distance = nearest_island.distance_to(index) / map_size.x;
-	var distance_sample = distance_curve.sample(island_distance)
-	var noise_value = (noise.get_noise_2d(index.x, index.y) + 1.0) / 2.0
+	var nearest_island = _get_distance_to_nearest_island(index);
+	var island_distance = nearest_island / pow(island_size, 2);
+	island_distance += terrain_noise.get_noise_2d(index.x, index.y)
+	result = clampi(island_distance, 0, 4)
 	
-	result = roundi((distance_sample + noise_value) * 2.5)
-	#result = roundi((distance_sample ) * 5.0)
-	result = clampi(result, 0, 4)
+	if result > 2:
+		result = 2 + (sea_noise.get_noise_2d(index.x,index.y) + 1)
 	
 	return result
 	
 func spawn_islands():
-	for i in island_number:
-		var island = Vector2i(
-			rng.randi_range(0, map_size.x),
-			rng.randi_range(0, map_size.y)
-		)
-		
-		var valid_island = false
-		while (!valid_island):
-			valid_island = true
-			for existing_island in island_locations:
-				if existing_island.distance_squared_to(island) < 400:
-					valid_island = false
-					island = Vector2i(
-						rng.randi_range(0, map_size.x),
-						rng.randi_range(0, map_size.y)
-					)
-				
-		
-		island_locations.push_back(island)
+	var grid_size = sqrt(island_number)
+	var cell_width = map_size.x / grid_size
+	var cell_height = map_size.y / grid_size
 	
-func _get_nearest_position(index: Vector2i) -> Vector2i:
-	var nearest_length = 9999999.0
-	var nearest_location = Vector2i(-1,-1)
+	for i in range(grid_size):
+		for j in range(grid_size):
+			# Position de base au centre de la cellule
+			var base_x = i * cell_width + (cell_width / 2.0)
+			var base_y = j * cell_height + (cell_height / 2.0)
+			
+			# On ajoute du "jitter" (variation) pour que ça ne fasse pas trop grille
+			# On limite le jitter à 30-40% de la taille de la cellule
+			var offset_x = rng.randf_range(-cell_width * 0.3, cell_width * 0.3)
+			var offset_y = rng.randf_range(-cell_height * 0.3, cell_height * 0.3)
+			
+			island_locations.push_back(Vector2i(base_x + offset_x, base_y + offset_y))
+	
+func _get_distance_to_nearest_island(index: Vector2i) -> float:
+	var nearest_distance = 999999999.0
 	
 	for island in island_locations:
 		var island_length = island.distance_squared_to(index)
-		if (island_length < nearest_length):
-			nearest_location = island
-			nearest_length = island_length
+		if (island_length < nearest_distance):
+			nearest_distance = island_length
 	
-	return nearest_location
+	return nearest_distance

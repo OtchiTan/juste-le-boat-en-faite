@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://buyykhrl8ns8x" path="res://scripts/world_map.gd" id="1_jtw3q"]
 [ext_resource type="Texture2D" uid="uid://dtd8vvmw1isw2" path="res://assets/textures/Ground/Shore.png" id="2_c3gog"]
-[ext_resource type="Curve" uid="uid://gdqppkyxj3ol" path="res://assets/curves/island_generation_curve.tres" id="2_u82pb"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4dvvg"]
 texture = ExtResource("2_c3gog")
@@ -38,7 +37,6 @@ sources/0 = SubResource("TileSetAtlasSource_4dvvg")
 
 [node name="Chunk" type="Node2D" unique_id=1127148850]
 script = ExtResource("1_jtw3q")
-distance_curve = ExtResource("2_u82pb")
 
 [node name="SeaLayer" type="TileMapLayer" parent="." unique_id=1102426168]
 use_parent_material = true
