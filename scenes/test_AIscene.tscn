@@ -38,7 +38,6 @@ shape = SubResource("CircleShape2D_fl7rg")
 
 [node name="AIController2D" type="Node2D" parent="character" unique_id=723886873]
 script = ExtResource("3_t758q")
-onnx_model_path = "model.onnx"
 metadata/_custom_type_script = "uid://d0h34wbh1pjqi"
 
 [node name="World" type="Area2D" parent="." unique_id=653290915]
