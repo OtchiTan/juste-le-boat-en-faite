@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://cr0a4bm58qhf6"]
+
+[ext_resource type="PackedScene" uid="uid://bhvmtuw1p13g6" path="res://scenes/test_AIscene.tscn" id="1_s7xq5"]
+[ext_resource type="Script" uid="uid://ok2c2172j67q" path="res://addons/godot_rl_agents/sync.gd" id="2_4g7jt"]
+
+[node name="BatchAItest" type="Node2D" unique_id=1866573813]
+
+[node name="batching" type="Node" parent="." unique_id=1609025082]
+
+[node name="TestAIscene" parent="batching" unique_id=853725166 instance=ExtResource("1_s7xq5")]
+
+[node name="TestAIscene2" parent="batching" unique_id=1320093943 instance=ExtResource("1_s7xq5")]
+position = Vector2(1920, 0)
+
+[node name="TestAIscene3" parent="batching" unique_id=11305491 instance=ExtResource("1_s7xq5")]
+position = Vector2(0, 1080)
+
+[node name="TestAIscene4" parent="batching" unique_id=1753232312 instance=ExtResource("1_s7xq5")]
+position = Vector2(1920, 1080)
+
+[node name="TestAIscene5" parent="batching" unique_id=880033826 instance=ExtResource("1_s7xq5")]
+position = Vector2(0, -2160)
+
+[node name="TestAIscene6" parent="batching" unique_id=1356919142 instance=ExtResource("1_s7xq5")]
+position = Vector2(1920, -2160)
+
+[node name="TestAIscene7" parent="batching" unique_id=106977483 instance=ExtResource("1_s7xq5")]
+position = Vector2(0, -1080)
+
+[node name="TestAIscene8" parent="batching" unique_id=1140142052 instance=ExtResource("1_s7xq5")]
+position = Vector2(1920, -1080)
+
+[node name="TestAIscene9" parent="batching" unique_id=2069369231 instance=ExtResource("1_s7xq5")]
+position = Vector2(-3868, 0)
+
+[node name="TestAIscene10" parent="batching" unique_id=1565628108 instance=ExtResource("1_s7xq5")]
+position = Vector2(-1948, 0)
+
+[node name="TestAIscene11" parent="batching" unique_id=473833704 instance=ExtResource("1_s7xq5")]
+position = Vector2(-3868, 1080)
+
+[node name="TestAIscene12" parent="batching" unique_id=1220001362 instance=ExtResource("1_s7xq5")]
+position = Vector2(-1948, 1080)
+
+[node name="TestAIscene13" parent="batching" unique_id=1390446691 instance=ExtResource("1_s7xq5")]
+position = Vector2(-3868, -2160)
+
+[node name="TestAIscene14" parent="batching" unique_id=1047344391 instance=ExtResource("1_s7xq5")]
+position = Vector2(-1948, -2160)
+
+[node name="TestAIscene15" parent="batching" unique_id=233190309 instance=ExtResource("1_s7xq5")]
+position = Vector2(-3868, -1080)
+
+[node name="TestAIscene16" parent="batching" unique_id=405691781 instance=ExtResource("1_s7xq5")]
+position = Vector2(-1948, -1080)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1812660144]
+position = Vector2(114, 79)
+offset = Vector2(-1080, -600)
+zoom = Vector2(0.145, 0.145)
+
+[node name="Sync" type="Node" parent="." unique_id=2082133980]
+script = ExtResource("2_4g7jt")
+control_mode = 2
+onnx_model_path = "model.onnx"
+metadata/_custom_type_script = "uid://ok2c2172j67q"
