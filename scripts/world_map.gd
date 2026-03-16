@@ -58,23 +58,31 @@ func _get_tile_value(index: Vector2i) -> int:
 	return result
 	
 func spawn_islands():
-	var grid_size = sqrt(island_number)
+	var grid_size = ceili(sqrt(island_number))
 	var cell_width = map_size.x / grid_size
 	var cell_height = map_size.y / grid_size
 	
+	var cells_island: Array[bool] = []
+	cells_island.resize(grid_size * grid_size)
+	
+	for i in island_number:
+		var random_i = rng.randi_range(0, cells_island.size() - 1)
+		while cells_island[random_i]:
+			random_i = rng.randi_range(0, cells_island.size() - 1)
+		cells_island[random_i] = true
+		
+	var populated_grid = 0
 	for i in range(grid_size):
 		for j in range(grid_size):
-			# Position de base au centre de la cellule
-			var base_x = i * cell_width + (cell_width / 2.0)
-			var base_y = j * cell_height + (cell_height / 2.0)
+			if cells_island[populated_grid]:
+				var base_x = i * cell_width + (cell_width / 2.0)
+				var base_y = j * cell_height + (cell_height / 2.0)
+				var offset_x = rng.randf_range(-cell_width * 0.3, cell_width * 0.3)
+				var offset_y = rng.randf_range(-cell_height * 0.3, cell_height * 0.3)
+				
+				island_locations.push_back(Vector2i(base_x + offset_x, base_y + offset_y))
 			
-			# On ajoute du "jitter" (variation) pour que ça ne fasse pas trop grille
-			# On limite le jitter à 30-40% de la taille de la cellule
-			var offset_x = rng.randf_range(-cell_width * 0.3, cell_width * 0.3)
-			var offset_y = rng.randf_range(-cell_height * 0.3, cell_height * 0.3)
-			
-			island_locations.push_back(Vector2i(base_x + offset_x, base_y + offset_y))
-	
+			populated_grid = populated_grid + 1
 func _get_distance_to_nearest_island(index: Vector2i) -> float:
 	var nearest_distance = 999999999.0
 	
