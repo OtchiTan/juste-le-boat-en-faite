@@ -6,17 +6,18 @@
 load_path = "res://.godot/imported/Boat.png-35589654e32fd06d4321846cfa571870.ctex"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d2m2p"]
-size = Vector2(8, 12)
+size = Vector2(57, 94)
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1374635960]
 script = ExtResource("1_5gp31")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=81384593]
 position = Vector2(1, -1)
+scale = Vector2(8, 8)
 texture = SubResource("CompressedTexture2D_d2m2p")
 region_enabled = true
 region_rect = Rect2(2.5174522, 0.15011597, 10.96476, 16.043266)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1451069936]
-position = Vector2(1, -2)
+position = Vector2(1.5, -8)
 shape = SubResource("RectangleShape2D_d2m2p")
