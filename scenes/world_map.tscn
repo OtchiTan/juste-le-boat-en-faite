@@ -8,9 +8,11 @@ texture = ExtResource("2_c3gog")
 0:0/0 = 0
 0:0/0/terrain_set = 0
 0:0/0/terrain = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:0/0 = 0
 1:0/0/terrain_set = 0
 1:0/0/terrain = 1
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 2:0/0 = 0
 2:0/0/terrain_set = 0
 2:0/0/terrain = 2
@@ -22,6 +24,7 @@ texture = ExtResource("2_c3gog")
 4:0/0/terrain = 4
 
 [sub_resource type="TileSet" id="TileSet_rnjyy"]
+physics_layer_0/collision_layer = 1
 terrain_set_0/mode = 0
 terrain_set_0/terrain_0/name = "Sand"
 terrain_set_0/terrain_0/color = Color(0.90588236, 0.8352941, 0.5764706, 1)
