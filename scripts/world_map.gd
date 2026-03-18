@@ -50,10 +50,10 @@ func _get_tile_value(index: Vector2i) -> int:
 	var nearest_island = _get_distance_to_nearest_island(index);
 	var island_distance = nearest_island / pow(island_size, 2);
 	island_distance += terrain_noise.get_noise_2d(index.x, index.y)
-	result = clampi(island_distance, 0, 4)
+	result = clampi(island_distance, 0, 5)
 	
-	if result > 2:
-		result = 2 + (sea_noise.get_noise_2d(index.x,index.y) + 1)
+	if result > 3:
+		result = 3 + (sea_noise.get_noise_2d(index.x,index.y) + 1)
 	
 	return result
 	
