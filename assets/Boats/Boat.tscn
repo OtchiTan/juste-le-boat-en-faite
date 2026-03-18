@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bd3bhg5ddf81h"]
 
-[ext_resource type="Script" uid="uid://btvyahl8b6f16" path="res://assets/boat.gd" id="1_5gp31"]
+[ext_resource type="Script" uid="uid://btvyahl8b6f16" path="res://assets/Boats/boat.gd" id="1_5gp31"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_d2m2p"]
 load_path = "res://.godot/imported/Boat.png-35589654e32fd06d4321846cfa571870.ctex"
