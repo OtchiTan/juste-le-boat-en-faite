@@ -30,10 +30,18 @@ func _ready() -> void:
 func spawn_island_objects():
 	for i in island_locations.size(): #island_pos in island_locations:
 		var island_instance = island_scene.instantiate()
-		island_instance.change_owner(i)
+		island_instance.change_owner(i, true)
 		var world_pos = sea_layer.map_to_local(island_locations[i])
 		island_instance.position = world_pos
 		add_child(island_instance)
+	
+	#var boat = preload("res://assets/Boats/Boat.tscn").instantiate()
+	#boat.player_id = 0
+	#boat.position = Vector2(200,200)
+	#var camera = preload("res://scenes/camera_2d.tscn").instantiate()
+	#boat.add_child(camera)
+	#camera.make_current()
+	
 
 	
 func _exit_tree() -> void:

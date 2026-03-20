@@ -5,34 +5,47 @@ var speed :float = 300.0
 var rotation_speed = 2.5
 var acceleration = 100
 var friction = 0.99
+
 var life = 20
 var atk :int = 5
+var player_id : int = -1
+
+@export var is_player:bool
 @export var projectile_scene: PackedScene
+
+
+# INPUTS (pilotés par controller)
+var throttle := 0.0   # -1 → 1
+var steering := 0.0   # -1 → 1
+var want_to_shoot := false
+var controller = null
+		
+func _ready():
+	if is_player:
+		set_as_player(true)
+	GameManager.register_boat(self)
+		
+func set_as_player(is_player: bool) -> void:
+	if is_player:
+		player_id=0
+		controller=PlayerController.new()
+		controller.boat = self
+	else:
+		pass # si c'est une AI
+		
 		
 func _physics_process(delta: float) -> void:
-	if Input.is_action_just_pressed("attack"):
-		print("attack")
+	if controller:
+		controller.update(delta)
+	
+	# Tir
+	if want_to_shoot:
 		attack()
-		
-	#var Input_Direction = Vector2(
-	#	Input.get_action_strength("right")-Input.get_action_strength("left"),
-	#	Input.get_action_strength("down")-Input.get_action_strength("up")
-	#)
-	#velocity= Input_Direction * speed;
-
-	#move_and_slide()
-	# 1. Rotation gauche/droite
-	var turn = Input.get_action_strength("right") - Input.get_action_strength("left")
-	rotation += turn * rotation_speed * delta
-
-	# 2. Avancer / reculer
-	var forward = Input.get_action_strength("up") - Input.get_action_strength("down")
-
-	# direction vers laquelle pointe le bateau
+		want_to_shoot = false
+	#deplacement
+	rotation += steering  * rotation_speed * delta
 	var direction = Vector2.RIGHT.rotated(rotation)
-
-	# 3. Accélération (au lieu de vitesse directe)
-	velocity += direction * forward * acceleration * delta
+	velocity += direction * throttle * acceleration * delta
 
 	# 4. Limiter la vitesse max
 	if velocity.length() > speed:
@@ -53,14 +66,10 @@ func attack() -> void :
 	projectile.direction = direction
 	projectile.degats = atk
 	projectile.tireur = self  
-	# ajouter à la scène
 	get_parent().add_child(projectile)
 	
-func get_damage(damage: float) -> void :
+func get_damage(damage: float, tireur) -> void :
 	life-= damage
-	print(life)
 	if life <= 0:
+		GameManager.on_boat_destroyed(self, tireur)
 		queue_free()
-	
-func claim_Island() -> void :
-	pass

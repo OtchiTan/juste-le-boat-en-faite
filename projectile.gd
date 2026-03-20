@@ -18,5 +18,5 @@ func _on_body_entered(body):
 	if body == tireur:
 		return
 	if body.has_method("get_damage"):
-		body.get_damage(degats)
+		body.get_damage(degats, tireur)
 	queue_free()

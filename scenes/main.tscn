@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bn0kngi6cvs5f" path="res://assets/island.tscn" id="3_tefeu"]
 [ext_resource type="PackedScene" uid="uid://b6u1ubbrve3xx" path="res://assets/projectile.tscn" id="4_jyhfs"]
 [ext_resource type="Script" uid="uid://b2a5kgjuq3xhk" path="res://assets/Boats/emptyBoat.gd" id="5_tbgi4"]
+[ext_resource type="PackedScene" uid="uid://643adwfdt1lf" path="res://scenes/camera_2d.tscn" id="6_o6xl0"]
 
 [node name="Main" type="Node2D" unique_id=1828361990]
 script = ExtResource("1_o5qli")
@@ -20,13 +21,9 @@ island_scene = ExtResource("3_tefeu")
 position = Vector2(100, 100)
 projectile_scene = ExtResource("4_jyhfs")
 
-[node name="Camera2D" type="Camera2D" parent="CharacterBody2D" unique_id=2129287634]
+[node name="Camera2D" parent="CharacterBody2D" unique_id=2045000063 instance=ExtResource("6_o6xl0")]
 position = Vector2(2, 1)
-zoom = Vector2(0.5, 0.5)
-limit_left = 0
-limit_top = 0
-limit_right = 11200
-limit_bottom = 6400
+zoom = Vector2(0.1, 0.1)
 
 [node name="CharacterBody2D2" parent="." unique_id=1581344437 instance=ExtResource("3_sugp2")]
 position = Vector2(991, 238)

@@ -1,22 +1,28 @@
 extends Node
 
 var island_owner : int = -1
+var island_id : int
 @onready var castle_player: Sprite2D = $castle_player
 @onready var castle_ai: Sprite2D = $castle_ai
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass# Replace with function body.
+	GameManager.register_island(self)
+	update_visual()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
 	
-func change_owner(new_owner:int)->void:
-	await ready
+func change_owner(new_owner:int, isNeededToAwaitReady:bool)->void:
 	island_owner = new_owner
-	if new_owner == 0:
+	if isNeededToAwaitReady: # sinon ça plante la 1ere fois parce certais trucs sont pas chargésé
+		await ready
+	update_visual()
+	
+func update_visual() ->void:
+	if island_owner == 0:
 		castle_player.visible = true
 		castle_ai.visible = false
 	else:

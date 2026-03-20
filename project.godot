@@ -15,6 +15,10 @@ run/main_scene="uid://bfmy0g0v4chk6"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameManager="*uid://dpdosp8w3xlhr"
+
 [dotnet]
 
 project/assembly_name="Juste le boat en faite"
