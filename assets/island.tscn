@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bn0kngi6cvs5f"]
+
+[ext_resource type="Script" uid="uid://c5ffp6xuxwlkk" path="res://scripts/island.gd" id="1_stbqp"]
+[ext_resource type="Texture2D" uid="uid://culi2dg1f6xce" path="res://assets/textures/Buildings/Cyan/CyanKeep.png" id="1_tt7lh"]
+[ext_resource type="Texture2D" uid="uid://bwqvvphk00fws" path="res://assets/textures/Buildings/Red/RedKeep.png" id="3_kxrnx"]
+
+[node name="Island" type="Node2D" unique_id=1055533821]
+script = ExtResource("1_stbqp")
+
+[node name="castle_player" type="Sprite2D" parent="." unique_id=782191194]
+scale = Vector2(5, 5)
+texture = ExtResource("1_tt7lh")
+region_enabled = true
+region_rect = Rect2(0.9449959, 33.03382, 30.135582, 30.813114)
+
+[node name="castle_ai" type="Sprite2D" parent="." unique_id=1966312059]
+scale = Vector2(5, 5)
+texture = ExtResource("3_kxrnx")
+region_enabled = true
+region_rect = Rect2(0.9449959, 33.03382, 30.135582, 30.813114)

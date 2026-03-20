@@ -12,6 +12,7 @@ var thread: Thread
 @export var island_number: int = 4
 @export var island_size: float = 40.0
 @export var map_size: Vector2i = Vector2i(170,100)
+@export var island_scene: PackedScene
 
 func _ready() -> void:
 	terrain_noise.seed = 3630
@@ -24,6 +25,16 @@ func _ready() -> void:
 	
 	thread = Thread.new()
 	thread.start(generate_map.bind())
+
+
+func spawn_island_objects():
+	for i in island_locations.size(): #island_pos in island_locations:
+		var island_instance = island_scene.instantiate()
+		island_instance.change_owner(i)
+		var world_pos = sea_layer.map_to_local(island_locations[i])
+		island_instance.position = world_pos
+		add_child(island_instance)
+
 	
 func _exit_tree() -> void:
 	thread.wait_to_finish()
@@ -43,6 +54,7 @@ func generate_map():
 func render_terrain():
 	for terrain in terrains:
 		sea_layer.set_cells_terrain_connect(terrains.get(terrain), 0,terrain)
+	spawn_island_objects()
 	
 func _get_tile_value(index: Vector2i) -> int:
 	var result = 0
