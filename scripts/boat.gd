@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 class_name Boat
-var speed :float = 300.0
+var speed :float = 1000.0
 var rotation_speed = 2.5
 var acceleration = 100
 var friction = 0.99
@@ -10,8 +10,8 @@ var life = 20
 var atk :int = 5
 var player_id : int = -1
 
-@export var is_player:bool
 @export var projectile_scene: PackedScene
+@export var camera_scene: PackedScene
 
 
 # INPUTS (pilotés par controller)
@@ -21,15 +21,28 @@ var want_to_shoot := false
 var controller = null
 		
 func _ready():
-	if is_player:
-		set_as_player(true)
 	GameManager.register_boat(self)
 		
-func set_as_player(is_player: bool) -> void:
-	if is_player:
-		player_id=0
+func set_as_player_and_id(id_player: int) -> void:
+	player_id= id_player
+	if id_player == 0:
 		controller=PlayerController.new()
 		controller.boat = self
+		if camera_scene:
+			var camera_instance = camera_scene.instantiate()
+			# Sécurité : On vérifie que c'est bien une Camera2D
+			if camera_instance is Camera2D:
+				# On s'assure qu'elle est active
+				camera_instance.enabled = true 
+				# On l'attache au bateau
+				add_child(camera_instance)
+				print("Caméra configurée attachée au bateau du joueur : ", player_id)
+			else:
+				print("Erreur: camera_scene n'est pas une Camera2D !")
+				camera_instance.queue_free() # On nettoie si c'est le mauvais type
+		else:
+			print("Avertissement: camera_scene n'est pas assignée pour le joueur ", player_id)
+		print("Bateau initialisé pour le joueur : ", player_id)
 	else:
 		pass # si c'est une AI
 		

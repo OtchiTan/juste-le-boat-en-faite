@@ -13,6 +13,8 @@ var thread: Thread
 @export var island_size: float = 40.0
 @export var map_size: Vector2i = Vector2i(170,100)
 @export var island_scene: PackedScene
+@export var boat_scene: PackedScene
+@export var boat_offset: float = 900.0
 
 func _ready() -> void:
 	terrain_noise.seed = 3630
@@ -34,14 +36,17 @@ func spawn_island_objects():
 		var world_pos = sea_layer.map_to_local(island_locations[i])
 		island_instance.position = world_pos
 		add_child(island_instance)
+		spawn_boat_around_island(world_pos, i)
 	
-	#var boat = preload("res://assets/Boats/Boat.tscn").instantiate()
-	#boat.player_id = 0
-	#boat.position = Vector2(200,200)
-	#var camera = preload("res://scenes/camera_2d.tscn").instantiate()
-	#boat.add_child(camera)
-	#camera.make_current()
+func spawn_boat_around_island(island_pos: Vector2, i:int):
+	var boat_instance = boat_scene.instantiate()
+	var random_direction = Vector2.RIGHT.rotated(rng.randf_range(0, TAU))
+	boat_instance.position = island_pos + (random_direction * boat_offset)
+	boat_instance.set_as_player_and_id(i)
+	add_child(boat_instance)
 	
+	#TO DO 
+	#tester si le bateau spawn sur une ile 
 
 	
 func _exit_tree() -> void:

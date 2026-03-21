@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://bd3bhg5ddf81h"]
 
-[ext_resource type="Script" uid="uid://btvyahl8b6f16" path="res://assets/Boats/boat.gd" id="1_5gp31"]
+[ext_resource type="Script" uid="uid://btvyahl8b6f16" path="res://scripts/boat.gd" id="1_5gp31"]
+[ext_resource type="PackedScene" uid="uid://b6u1ubbrve3xx" path="res://scenes/projectile.tscn" id="2_8jrvy"]
+[ext_resource type="PackedScene" uid="uid://643adwfdt1lf" path="res://scenes/camera_2d.tscn" id="3_q7w65"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_d2m2p"]
 load_path = "res://.godot/imported/Boat.png-35589654e32fd06d4321846cfa571870.ctex"
@@ -10,6 +12,8 @@ size = Vector2(89, 67)
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1374635960]
 script = ExtResource("1_5gp31")
+projectile_scene = ExtResource("2_8jrvy")
+camera_scene = ExtResource("3_q7w65")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=81384593]
 position = Vector2(1, -1)
