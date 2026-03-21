@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="3_sugp2"]
 [ext_resource type="PackedScene" uid="uid://bn0kngi6cvs5f" path="res://scenes/island.tscn" id="3_tefeu"]
 
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_jyhfs"]
+
 [node name="Main" type="Node2D" unique_id=1828361990]
 script = ExtResource("1_o5qli")
 
@@ -14,3 +16,22 @@ island_size = 30.0
 map_size = Vector2i(700, 400)
 island_scene = ExtResource("3_tefeu")
 boat_scene = ExtResource("3_sugp2")
+
+[node name="Bordures" type="StaticBody2D" parent="." unique_id=309844219]
+
+[node name="CollisionShape_up" type="CollisionShape2D" parent="Bordures" unique_id=223622771]
+rotation = 3.1415927
+shape = SubResource("WorldBoundaryShape2D_jyhfs")
+
+[node name="CollisionShape_bottom" type="CollisionShape2D" parent="Bordures" unique_id=712285007]
+position = Vector2(0, 6400)
+shape = SubResource("WorldBoundaryShape2D_jyhfs")
+
+[node name="CollisionShape_left" type="CollisionShape2D" parent="Bordures" unique_id=1335913411]
+rotation = 1.5707964
+shape = SubResource("WorldBoundaryShape2D_jyhfs")
+
+[node name="CollisionShape_right" type="CollisionShape2D" parent="Bordures" unique_id=1620718632]
+position = Vector2(11200, 0)
+rotation = -1.5707964
+shape = SubResource("WorldBoundaryShape2D_jyhfs")

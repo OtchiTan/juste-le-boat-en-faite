@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 class_name Boat
-var speed :float = 1000.0
+var speed :float = 500.0
 var rotation_speed = 2.5
 var acceleration = 100
 var friction = 0.99
