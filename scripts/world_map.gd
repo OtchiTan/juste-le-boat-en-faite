@@ -40,14 +40,26 @@ func spawn_island_objects():
 	
 func spawn_boat_around_island(island_pos: Vector2, i:int):
 	var boat_instance = boat_scene.instantiate()
+	var attempt = 0
 	var random_direction = Vector2.RIGHT.rotated(rng.randf_range(0, TAU))
-	boat_instance.position = island_pos + (random_direction * boat_offset)
+	var tile_pos = sea_layer.local_to_map(island_pos + (random_direction * boat_offset))
+	while(_get_tile_value(tile_pos) < 2 and attempt <10):
+		print(random_direction)
+		attempt +=1
+		print("fail")
+		random_direction = Vector2.RIGHT.rotated(rng.randf_range(0, TAU))
+		tile_pos = sea_layer.local_to_map(island_pos + (random_direction * boat_offset))
+	
+	if (attempt >= 10):
+		print("give up")
+		var water_tiles = terrains.get(2, [])
+		var rand_water = rng.randi_range(0, water_tiles.size()-1)
+		boat_instance.position = water_tiles[rand_water]
+	else:
+		boat_instance.position = island_pos + (random_direction * boat_offset)
 	boat_instance.set_as_player_and_id(i)
 	add_child(boat_instance)
 	
-	#TO DO 
-	#tester si le bateau spawn sur une ile 
-
 	
 func _exit_tree() -> void:
 	thread.wait_to_finish()
