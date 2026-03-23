@@ -1,10 +1,18 @@
 extends CharacterBody2D
 
 class_name Boat
-var speed :float = 500.0
-var rotation_speed = 2.5
+var max_speed = 250.0
 var acceleration = 100
-var friction = 0.99
+var current_velocity = Vector2.ZERO
+var friction = 0.995
+var lateral_friction = 0.975
+
+var max_rotation_speed = 200
+var min_rotation_speed = 0.05
+var rotation_acceleration = 4
+var current_rotation_speed = 0
+var rotation_friction = 0.95
+
 
 var life = 20
 var atk :int = 5
@@ -51,22 +59,58 @@ func _physics_process(delta: float) -> void:
 	if controller:
 		controller.update(delta)
 	
-	# Tir
+	### Tir
+	
 	if want_to_shoot:
 		attack()
 		want_to_shoot = false
-	#deplacement
-	rotation += steering  * rotation_speed * delta
+	
+	### Deplacement
+	
 	var direction = Vector2.RIGHT.rotated(rotation)
-	velocity += direction * throttle * acceleration * delta
+	
+	# Applique les input
+	if(throttle != 0):
+		current_velocity += direction * throttle * acceleration * delta
+	
+	if(steering != 0):
+		var sensdirection = current_velocity.normalized().dot(direction.normalized())
+		current_rotation_speed += steering * (rotation_acceleration * current_velocity.length() / max_speed) * current_velocity.normalized().dot(direction.normalized()) * delta 
+	
+	# Limiter les vitesses max
+	if current_velocity.length() > max_speed:
+		current_velocity = current_velocity.normalized() * max_speed
+		
+	if(current_rotation_speed > max_rotation_speed):
+		current_rotation_speed = max_rotation_speed
+		
+	if(current_rotation_speed < -max_rotation_speed):
+		current_rotation_speed = -max_rotation_speed
+	
+	
+	# Applique la rotation
+	
+	if(abs(current_rotation_speed) > min_rotation_speed):
+		rotation += current_rotation_speed * delta
+	
+	# Friction
+	var forward_v = current_velocity.dot(direction)
+	var side_v = current_velocity.dot(direction.orthogonal())
+	
+	var new_forward_vel = direction * forward_v * friction
+	var new_side_vel = direction.orthogonal() * side_v * lateral_friction
+	
+	current_velocity = new_forward_vel + new_side_vel
+	
+	current_rotation_speed *= rotation_friction
+	
+	
 
-	# 4. Limiter la vitesse max
-	if velocity.length() > speed:
-		velocity = velocity.normalized() * speed
+	### DEBUG
+	#if (current_velocity.length() != 0):
+		#print_debug(current_velocity.length())
 
-	# 5. Friction (effet eau)
-	velocity *= friction
-
+	velocity = current_velocity
 	move_and_slide()
 
 
@@ -78,7 +122,8 @@ func attack() -> void :
 	
 	projectile.direction = direction
 	projectile.degats = atk
-	projectile.tireur = self  
+	projectile.tireur = self
+	
 	get_parent().add_child(projectile)
 	
 func get_damage(damage: float, tireur) -> void :
