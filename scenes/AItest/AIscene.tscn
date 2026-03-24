@@ -1,8 +1,10 @@
 [gd_scene format=3 uid="uid://bhvmtuw1p13g6"]
 
-[ext_resource type="Script" uid="uid://dw0cunbogci3p" path="res://scripts/character/character.gd" id="2_fl7rg"]
+[ext_resource type="Script" uid="uid://dw0cunbogci3p" path="res://scripts/character/AICharacterTest.gd" id="2_fl7rg"]
 [ext_resource type="Texture2D" uid="uid://cb523uv56435a" path="res://icon.svg" id="2_t758q"]
 [ext_resource type="Script" uid="uid://brlpknw5n45w" path="res://scripts/character/ai_controller_2d.gd" id="3_t758q"]
+[ext_resource type="Script" uid="uid://b7e8gyqlinkem" path="res://scenes/target.gd" id="4_fl7rg"]
+[ext_resource type="Texture2D" uid="uid://n4f61x0juple" path="res://assets/textures/Buildings/Enemy/Mausoleum.png" id="5_8bf4v"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_fl7rg"]
 radius = 33.0
@@ -22,6 +24,13 @@ fill_from = Vector2(0, 0.40000004)
 fill_to = Vector2(1, 0.40000004)
 metadata/_snap_enabled = true
 metadata/_snap_count = 15
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_8bf4v"]
+radius = 35.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_mbxw1"]
+font_size = 128
+font_color = Color(0, 0, 0, 1)
 
 [node name="TestAIscene" type="Node2D" unique_id=853725166]
 
@@ -49,4 +58,24 @@ shape = SubResource("RectangleShape2D_t758q")
 z_index = -1
 texture = SubResource("GradientTexture2D_fl7rg")
 
+[node name="Target" type="Area2D" parent="." unique_id=863920102]
+position = Vector2(512, -303)
+script = ExtResource("4_fl7rg")
+
+[node name="Sprite2D" type="Sprite2D" parent="Target" unique_id=582445384]
+texture = ExtResource("5_8bf4v")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Target" unique_id=2123383006]
+shape = SubResource("CircleShape2D_8bf4v")
+
+[node name="Label" type="Label" parent="." unique_id=2002457910]
+offset_left = -903.0
+offset_top = -513.0
+offset_right = -831.0
+offset_bottom = -490.0
+text = "Reward..."
+label_settings = SubResource("LabelSettings_mbxw1")
+
 [connection signal="body_exited" from="World" to="character" method="_on_world_body_exited"]
+[connection signal="body_entered" from="Target" to="character" method="_on_target_body_entered"]
+[connection signal="body_exited" from="Target" to="character" method="_on_target_body_exited"]

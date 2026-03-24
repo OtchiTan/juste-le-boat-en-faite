@@ -298,7 +298,7 @@ func _extract_action_dict(action_array: Array, action_space: Dictionary, action_
 		elif action_type == "continuous":
 			# For continous actions, we only take the action mean values
 			result[key] = clamp_array(action_array.slice(index, index + size), -1.0, 1.0)
-			if action_means_only:
+			if action_means_only or control_mode == ControlModes.ONNX_INFERENCE :
 				index += size # model only outputs action means, so we move index by size
 			else:
 				index += size * 2 # model outputs logstd after action mean, we skip the logstd part

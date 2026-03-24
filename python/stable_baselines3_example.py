@@ -1,6 +1,7 @@
 import argparse
 import os
 import pathlib
+import torch
 from typing import Callable
 
 from stable_baselines3 import PPO
@@ -184,18 +185,23 @@ def linear_schedule(initial_value: float) -> Callable[[float], float]:
         return progress_remaining * initial_value
 
     return func
-
+    
+device = "cpu"
+if torch.cuda.is_available():
+    device = "cuda"
 
 if args.resume_model_path is None:
     learning_rate = 0.0003 if not args.linear_lr_schedule else linear_schedule(0.0003)
     model: PPO = PPO(
         "MultiInputPolicy",
         env,
-        ent_coef=0.0001,
+        ent_coef=0.001,
         verbose=2,
-        n_steps=32,
+        n_steps=256,
         tensorboard_log=args.experiment_dir,
         learning_rate=learning_rate,
+        device=device,
+        batch_size=1024,
     )
 else:
     path_zip = pathlib.Path(args.resume_model_path)
