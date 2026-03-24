@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://p7n5lyphve2s"]
+
+[ext_resource type="Texture2D" uid="uid://cb523uv56435a" path="res://icon.svg" id="2_j51dc"]
+[ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="3_votaf"]
+
+[sub_resource type="GDScript" id="GDScript_etidm"]
+script/source = "extends Node2D
+
+@export var boat_scene: PackedScene
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	var boat_instance = boat_scene.instantiate()
+	boat_instance.position = Vector2(-500,200)
+	boat_instance.set_as_player_and_id(0)
+	add_child(boat_instance)
+	var boat_instance2 = boat_scene.instantiate()
+	boat_instance2.position = Vector2(500,-200)
+	boat_instance2.rotation = 3.141592
+	boat_instance2.set_as_player_and_id(1)
+	add_child(boat_instance2)
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_silpr"]
+distance = -285.0
+
+[node name="BoatTraining" type="Node2D" unique_id=742048777]
+script = SubResource("GDScript_etidm")
+boat_scene = ExtResource("3_votaf")
+
+[node name="Bordures" type="StaticBody2D" parent="." unique_id=1533796562]
+
+[node name="CollisionShape_up" type="CollisionShape2D" parent="Bordures" unique_id=35444703]
+position = Vector2(0, -325)
+rotation = 3.14159
+shape = SubResource("WorldBoundaryShape2D_silpr")
+
+[node name="CollisionShape_bottom" type="CollisionShape2D" parent="Bordures" unique_id=1895284435]
+position = Vector2(0, 325)
+shape = SubResource("WorldBoundaryShape2D_silpr")
+
+[node name="CollisionShape_left" type="CollisionShape2D" parent="Bordures" unique_id=540695370]
+position = Vector2(-575, 0)
+rotation = 1.5708
+shape = SubResource("WorldBoundaryShape2D_silpr")
+
+[node name="CollisionShape_right" type="CollisionShape2D" parent="Bordures" unique_id=1435565150]
+position = Vector2(575, 0)
+rotation = -1.5708
+shape = SubResource("WorldBoundaryShape2D_silpr")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=667581334]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1661059478]
+position = Vector2(1.0000153, -0.49995422)
+scale = Vector2(13.421875, 9.4765625)
+texture = ExtResource("2_j51dc")

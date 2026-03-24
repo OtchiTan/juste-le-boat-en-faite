@@ -52,8 +52,8 @@ func set_as_player_and_id(id_player: int) -> void:
 			print("Avertissement: camera_scene n'est pas assignée pour le joueur ", player_id)
 		print("Bateau initialisé pour le joueur : ", player_id)
 	else:
-		pass # si c'est une AI
-		
+		controller = AIControllerBoat.new()
+		controller.boat = self
 		
 func _physics_process(delta: float) -> void:
 	if controller:
@@ -74,7 +74,6 @@ func _physics_process(delta: float) -> void:
 		current_velocity += direction * throttle * acceleration * delta
 	
 	if(steering != 0):
-		var sensdirection = current_velocity.normalized().dot(direction.normalized())
 		current_rotation_speed += steering * (rotation_acceleration * current_velocity.length() / max_speed) * current_velocity.normalized().dot(direction.normalized()) * delta 
 	
 	# Limiter les vitesses max
@@ -104,8 +103,6 @@ func _physics_process(delta: float) -> void:
 	
 	current_rotation_speed *= rotation_friction
 	
-	
-
 	### DEBUG
 	#if (current_velocity.length() != 0):
 		#print_debug(current_velocity.length())
