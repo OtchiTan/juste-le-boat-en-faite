@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://cimxy72y7w622"]
+
+[ext_resource type="Script" uid="uid://dw0cunbogci3p" path="res://scripts/character/AICharacterTest.gd" id="1_e380s"]
+[ext_resource type="Texture2D" uid="uid://cb523uv56435a" path="res://icon.svg" id="2_v1kbi"]
+[ext_resource type="Script" uid="uid://brlpknw5n45w" path="res://scripts/character/ai_controller_2d.gd" id="3_ptu11"]
+[ext_resource type="Script" uid="uid://dukmfiwpskmss" path="res://scripts/character/raycast_sensor_2d_extended.gd" id="4_v1kbi"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fl7rg"]
+radius = 33.0
+
+[node name="character" type="CharacterBody2D" unique_id=553365638]
+motion_mode = 1
+script = ExtResource("1_e380s")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1945369862]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_v1kbi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=14910829]
+shape = SubResource("CircleShape2D_fl7rg")
+
+[node name="RaycastSensor2D" type="Node2D" parent="." unique_id=548427248]
+rotation = 0.19198622
+scale = Vector2(0.99999994, 0.99999994)
+script = ExtResource("4_v1kbi")
+add_friend_foe_info = true
+foe_layer = 132
+world_layer = 128
+ray_groupping = 3
+collision_mask = 134
+collide_with_areas = true
+n_rays = 48.0
+ray_length = 2000
+debug_draw = false
+metadata/_custom_type_script = "uid://bnudskl80vm5q"
+
+[node name="AIController2D" type="Node2D" parent="." unique_id=1817872726]
+script = ExtResource("3_ptu11")
+metadata/_custom_type_script = "uid://d0h34wbh1pjqi"

@@ -1,91 +1,17 @@
 [gd_scene format=3 uid="uid://b8nlwmlqba3go"]
 
-[ext_resource type="Script" uid="uid://dw0cunbogci3p" path="res://scripts/character/AICharacterTest.gd" id="1_3gky8"]
-[ext_resource type="Texture2D" uid="uid://cb523uv56435a" path="res://icon.svg" id="2_5obcm"]
-[ext_resource type="Script" uid="uid://brlpknw5n45w" path="res://scripts/character/ai_controller_2d.gd" id="3_fdldk"]
-[ext_resource type="Script" uid="uid://b7e8gyqlinkem" path="res://scenes/target.gd" id="4_qkt8v"]
-[ext_resource type="Texture2D" uid="uid://n4f61x0juple" path="res://assets/textures/Buildings/Enemy/Mausoleum.png" id="5_86lx8"]
+[ext_resource type="PackedScene" uid="uid://bhvmtuw1p13g6" path="res://scenes/AItest/AIscene.tscn" id="1_omric"]
 [ext_resource type="Script" uid="uid://ok2c2172j67q" path="res://addons/godot_rl_agents/sync.gd" id="6_5obcm"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_fl7rg"]
-radius = 33.0
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_t758q"]
-size = Vector2(1880, 1040)
-
-[sub_resource type="Gradient" id="Gradient_t758q"]
-offsets = PackedFloat32Array(0, 0.010738255, 0.981208, 0.98791945)
-colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_fl7rg"]
-gradient = SubResource("Gradient_t758q")
-width = 1900
-height = 1060
-fill_from = Vector2(0, 0.40000004)
-fill_to = Vector2(1, 0.40000004)
-metadata/_snap_enabled = true
-metadata/_snap_count = 15
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_8bf4v"]
-radius = 40.0
-
-[sub_resource type="LabelSettings" id="LabelSettings_5obcm"]
-font_color = Color(0, 0, 0, 1)
 
 [node name="TestAIscene" type="Node2D" unique_id=853725166]
 
-[node name="character" type="CharacterBody2D" parent="." unique_id=983140180]
-motion_mode = 1
-script = ExtResource("1_3gky8")
-
-[node name="Sprite2D" type="Sprite2D" parent="character" unique_id=1936961684]
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_5obcm")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="character" unique_id=579237013]
-shape = SubResource("CircleShape2D_fl7rg")
-
-[node name="AIController2D" type="Node2D" parent="character" unique_id=723886873]
-script = ExtResource("3_fdldk")
-onnx_model_path = "python/model.onnx"
-metadata/_custom_type_script = "uid://d0h34wbh1pjqi"
-
-[node name="World" type="Area2D" parent="." unique_id=653290915]
-
-[node name="Aera" type="CollisionShape2D" parent="World" unique_id=1313905071]
-shape = SubResource("RectangleShape2D_t758q")
-
-[node name="Sprite2D" type="Sprite2D" parent="World" unique_id=1678110515]
-z_index = -1
-texture = SubResource("GradientTexture2D_fl7rg")
-
-[node name="Target" type="Area2D" parent="." unique_id=863920102]
-position = Vector2(512, -303)
-script = ExtResource("4_qkt8v")
-
-[node name="Sprite2D" type="Sprite2D" parent="Target" unique_id=582445384]
-texture = ExtResource("5_86lx8")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Target" unique_id=2123383006]
-shape = SubResource("CircleShape2D_8bf4v")
+[node name="AIscene" parent="." unique_id=641189026 instance=ExtResource("1_omric")]
 
 [node name="Sync2" type="Node" parent="." unique_id=1012748634]
 script = ExtResource("6_5obcm")
 control_mode = 2
-action_repeat = 1
-onnx_model_path = "python/model.onnx"
+action_repeat = 4
+onnx_model_path = "python/models/model_retrained.onnx"
 metadata/_custom_type_script = "uid://ok2c2172j67q"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=323178772]
-
-[node name="Label" type="Label" parent="." unique_id=2025126508]
-offset_left = -903.0
-offset_top = -513.0
-offset_right = -831.0
-offset_bottom = -490.0
-text = "Reward..."
-label_settings = SubResource("LabelSettings_5obcm")
-
-[connection signal="body_exited" from="World" to="character" method="_on_world_body_exited"]
-[connection signal="body_entered" from="Target" to="character" method="_on_target_body_entered"]
-[connection signal="body_exited" from="Target" to="character" method="_on_target_body_exited"]

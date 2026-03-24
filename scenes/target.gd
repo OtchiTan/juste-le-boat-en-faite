@@ -1,6 +1,6 @@
 extends Area2D
 
-@onready var aera: CollisionShape2D = $"../World/Aera"
+@onready var world: Area2D = $"../World"
 
 
 # Called when the node enters the scene tree for the first time.
@@ -8,14 +8,14 @@ func _ready() -> void:
 	reset_pos()
 
 func reset_pos() :
-	if (aera) :
-		var rect: Rect2 = aera.shape.get_rect()
+	if (world) :
+		var worldpos = world.global_position
 		# Calculate random X and Y within the shape's rectangle
-		var x = randf_range(rect.position.x + 150, rect.end.x - 150)
-		var y = randf_range(rect.position.y + 150, rect.end.y - 150 )
+		var x = worldpos.x + randf_range( -700, 700)
+		var y = worldpos.y + randf_range( -400, 400 )
 		# Convert local area point to global position
-		position.x = x
-		position.y = y
+		global_position.x = x
+		global_position.y = y
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

@@ -110,6 +110,10 @@ parser.add_argument(
 args, extras = parser.parse_known_args()
 
 
+policy_kwargs = dict(
+    net_arch=[128, 128] 
+)
+
 def handle_onnx_export():
     # Enforce the extension of onnx and zip when saving model to avoid potential conflicts in case of same name
     # and extension used for both
@@ -198,6 +202,7 @@ if args.resume_model_path is None:
         ent_coef=0.001,
         verbose=2,
         n_steps=256,
+        policy_kwargs = policy_kwargs,
         tensorboard_log=args.experiment_dir,
         learning_rate=learning_rate,
         device=device,
