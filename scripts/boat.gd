@@ -19,6 +19,7 @@ var atk :int = 5
 var player_id : int = -1
 
 var target : Boat = null
+var targ : Vector2
 
 @export var projectile_scene: PackedScene
 @export var camera_scene: PackedScene
@@ -57,9 +58,12 @@ func set_as_player_and_id(id_player: int) -> void:
 		controller = AIControllerBoat.new()
 		controller.boat = self
 		add_child(controller)
-		print("BLOOOVAAA")
 		
-		
+func setAITrainingController(id_player: int, new_controller):
+	player_id = id_player
+	controller = new_controller
+	add_child(controller)
+	
 func _physics_process(delta: float) -> void:
 	if controller:
 		controller.update(delta)
@@ -76,7 +80,10 @@ func _physics_process(delta: float) -> void:
 	
 	# Applique les input
 	if(throttle != 0):
-		current_velocity += direction * throttle * acceleration * delta
+		if(throttle < 0 and current_velocity.normalized().dot(direction.normalized()) < 0):
+			current_velocity += direction * throttle * acceleration * delta / 4
+		else :
+			current_velocity += direction * throttle * acceleration * delta
 	
 	if(steering != 0):
 		current_rotation_speed += steering * delta 														\

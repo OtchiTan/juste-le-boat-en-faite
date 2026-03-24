@@ -1,8 +1,6 @@
 extends AIController2D
 class_name AIControllerBoat
 
-@onready var character: Boat = $".."
-
 var boat : Boat = null
 var delta_dist = 0
 var delta_angle = 0
@@ -51,8 +49,8 @@ func get_action_space() -> Dictionary:
 	return dict
 	
 func set_action(action) -> void:
-	character.throttle = action["forward"] - 1
-	character.steering = action["rotation"] - 1
+	boat.throttle = action["forward"] - 1
+	boat.steering = action["rotation"] - 1
 
 func update(delta):
 	pass

@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://cnk3f6xasg6i3"]
+
+[ext_resource type="PackedScene" uid="uid://bvqb3jk0x4kt" path="res://scenes/Level/SoloTraining/BoatSoloTrainingNoSync.tscn" id="1_epp8s"]
+[ext_resource type="Script" uid="uid://ok2c2172j67q" path="res://addons/godot_rl_agents/sync.gd" id="2_rav2c"]
+
+[node name="BatchTraining" type="Node2D" unique_id=114497482]
+
+[node name="Batch" type="Node" parent="." unique_id=595887509]
+
+[node name="BoatTraining" parent="Batch" unique_id=742048777 instance=ExtResource("1_epp8s")]
+position = Vector2(-1915, -705)
+
+[node name="BoatTraining2" parent="Batch" unique_id=662579197 instance=ExtResource("1_epp8s")]
+position = Vector2(11, -696)
+
+[node name="BoatTraining3" parent="Batch" unique_id=378961115 instance=ExtResource("1_epp8s")]
+position = Vector2(-1915, 687)
+
+[node name="BoatTraining4" parent="Batch" unique_id=874484678 instance=ExtResource("1_epp8s")]
+position = Vector2(42, 714)
+
+[node name="BoatTraining5" parent="Batch" unique_id=121161890 instance=ExtResource("1_epp8s")]
+position = Vector2(1981, -709)
+
+[node name="BoatTraining6" parent="Batch" unique_id=1769876457 instance=ExtResource("1_epp8s")]
+position = Vector2(2003, 728)
+
+[node name="BoatTraining7" parent="Batch" unique_id=1040116038 instance=ExtResource("1_epp8s")]
+position = Vector2(-1907, -2074)
+
+[node name="BoatTraining8" parent="Batch" unique_id=2071125520 instance=ExtResource("1_epp8s")]
+position = Vector2(19, -2074)
+
+[node name="BoatTraining9" parent="Batch" unique_id=1551557216 instance=ExtResource("1_epp8s")]
+position = Vector2(1963, -2092)
+
+[node name="BoatTraining10" parent="Batch" unique_id=2021068071 instance=ExtResource("1_epp8s")]
+position = Vector2(-3796, -2092)
+
+[node name="BoatTraining11" parent="Batch" unique_id=265231493 instance=ExtResource("1_epp8s")]
+position = Vector2(-3832, -688)
+
+[node name="BoatTraining12" parent="Batch" unique_id=485614426 instance=ExtResource("1_epp8s")]
+position = Vector2(-3811, 673)
+
+[node name="BoatTraining13" parent="Batch" unique_id=968740543 instance=ExtResource("1_epp8s")]
+position = Vector2(-3804, 2099)
+
+[node name="BoatTraining14" parent="Batch" unique_id=1194698135 instance=ExtResource("1_epp8s")]
+position = Vector2(-1884, 2142)
+
+[node name="BoatTraining15" parent="Batch" unique_id=1557193654 instance=ExtResource("1_epp8s")]
+position = Vector2(43, 2142)
+
+[node name="BoatTraining16" parent="Batch" unique_id=191749851 instance=ExtResource("1_epp8s")]
+position = Vector2(1977, 2142)
+
+[node name="BoatTraining17" parent="Batch" unique_id=124319867 instance=ExtResource("1_epp8s")]
+position = Vector2(3904, 2073)
+
+[node name="BoatTraining18" parent="Batch" unique_id=1657826787 instance=ExtResource("1_epp8s")]
+position = Vector2(3927, 769)
+
+[node name="BoatTraining19" parent="Batch" unique_id=2097800541 instance=ExtResource("1_epp8s")]
+position = Vector2(3892, -673)
+
+[node name="BoatTraining20" parent="Batch" unique_id=464976376 instance=ExtResource("1_epp8s")]
+position = Vector2(3892, -2080)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=301479338]
+position = Vector2(23, 0)
+zoom = Vector2(0.12, 0.12)
+
+[node name="Sync" type="Node" parent="." unique_id=534625311]
+script = ExtResource("2_rav2c")
+speed_up = 4.0
+metadata/_custom_type_script = "uid://ok2c2172j67q"
