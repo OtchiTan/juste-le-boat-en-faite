@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://ddgk1s8xjb5id" path="res://scenes/world_map.tscn" id="2_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="3_sugp2"]
 [ext_resource type="PackedScene" uid="uid://bn0kngi6cvs5f" path="res://scenes/island.tscn" id="3_tefeu"]
+[ext_resource type="PackedScene" uid="uid://cp5wyt6eikplx" path="res://scenes/UI/victory.tscn" id="5_tbgi4"]
+[ext_resource type="PackedScene" uid="uid://db7vu88a6jeey" path="res://scenes/UI/game_over.tscn" id="6_tefeu"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_jyhfs"]
 
@@ -35,3 +37,9 @@ shape = SubResource("WorldBoundaryShape2D_jyhfs")
 position = Vector2(11200, 0)
 rotation = -1.5707964
 shape = SubResource("WorldBoundaryShape2D_jyhfs")
+
+[node name="UI" type="Node" parent="." unique_id=1726997890]
+
+[node name="victory" parent="UI" unique_id=1513328342 instance=ExtResource("5_tbgi4")]
+
+[node name="gameOver" parent="UI" unique_id=916379606 instance=ExtResource("6_tefeu")]
