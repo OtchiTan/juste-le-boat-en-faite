@@ -18,6 +18,8 @@ var life = 20
 var atk :int = 5
 var player_id : int = -1
 
+var target : Boat = null
+
 @export var projectile_scene: PackedScene
 @export var camera_scene: PackedScene
 
@@ -54,6 +56,9 @@ func set_as_player_and_id(id_player: int) -> void:
 	else:
 		controller = AIControllerBoat.new()
 		controller.boat = self
+		add_child(controller)
+		print("BLOOOVAAA")
+		
 		
 func _physics_process(delta: float) -> void:
 	if controller:
@@ -74,7 +79,9 @@ func _physics_process(delta: float) -> void:
 		current_velocity += direction * throttle * acceleration * delta
 	
 	if(steering != 0):
-		current_rotation_speed += steering * (rotation_acceleration * current_velocity.length() / max_speed) * current_velocity.normalized().dot(direction.normalized()) * delta 
+		current_rotation_speed += steering * delta 														\
+									* (rotation_acceleration * current_velocity.length() / max_speed) 	\
+									* current_velocity.normalized().dot(direction.normalized()) 
 	
 	# Limiter les vitesses max
 	if current_velocity.length() > max_speed:
@@ -124,7 +131,10 @@ func attack() -> void :
 	get_parent().add_child(projectile)
 	
 func get_damage(damage: float, tireur) -> void :
-	life-= damage
+	life -= damage
 	if life <= 0:
 		GameManager.on_boat_destroyed(self, tireur)
 		queue_free()
+
+func set_target(targ_boat : Boat) -> void :
+	target = targ_boat
