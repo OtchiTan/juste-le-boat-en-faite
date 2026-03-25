@@ -3,6 +3,10 @@
 [ext_resource type="Script" uid="uid://c5ffp6xuxwlkk" path="res://scripts/island.gd" id="1_stbqp"]
 [ext_resource type="Texture2D" uid="uid://culi2dg1f6xce" path="res://assets/textures/Buildings/Cyan/CyanKeep.png" id="1_tt7lh"]
 [ext_resource type="Texture2D" uid="uid://bwqvvphk00fws" path="res://assets/textures/Buildings/Red/RedKeep.png" id="3_kxrnx"]
+[ext_resource type="Texture2D" uid="uid://x1q30n6ded2c" path="res://assets/textures/Buildings/Wood/Docks.png" id="4_gt8d0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1uhhg"]
+radius = 400.0
 
 [node name="Island" type="Node2D" unique_id=1055533821]
 script = ExtResource("1_stbqp")
@@ -18,3 +22,41 @@ scale = Vector2(5, 5)
 texture = ExtResource("3_kxrnx")
 region_enabled = true
 region_rect = Rect2(0.9449959, 33.03382, 30.135582, 30.813114)
+
+[node name="Dock" type="Node2D" parent="." unique_id=835547789]
+
+[node name="Area2D" type="Area2D" parent="Dock" unique_id=996083645]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Dock/Area2D" unique_id=1719365019]
+shape = SubResource("CircleShape2D_1uhhg")
+
+[node name="CaptureBar" type="ProgressBar" parent="Dock" unique_id=1852232190]
+offset_left = -73.0
+offset_top = -121.0
+offset_right = 69.0
+offset_bottom = -94.0
+
+[node name="SpriteRight" type="Sprite2D" parent="Dock" unique_id=1326151122]
+scale = Vector2(5, 5)
+texture = ExtResource("4_gt8d0")
+region_enabled = true
+region_rect = Rect2(0, 17, 32, 15)
+
+[node name="SpriteLeft" type="Sprite2D" parent="Dock" unique_id=163519743]
+scale = Vector2(5, 5)
+texture = ExtResource("4_gt8d0")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(0, 17, 32, 15)
+
+[node name="SpriteUp" type="Sprite2D" parent="Dock" unique_id=590646753]
+scale = Vector2(5, 5)
+texture = ExtResource("4_gt8d0")
+region_enabled = true
+region_rect = Rect2(48, 0, 16, 32)
+
+[node name="SpriteDown" type="Sprite2D" parent="Dock" unique_id=978719559]
+scale = Vector2(5, 5)
+texture = ExtResource("4_gt8d0")
+region_enabled = true
+region_rect = Rect2(32, 0, 16, 32)
