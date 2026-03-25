@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cr0a4bm58qhf6"]
 
-[ext_resource type="PackedScene" uid="uid://bhvmtuw1p13g6" path="res://scenes/test_AIscene.tscn" id="1_s7xq5"]
-[ext_resource type="Script" uid="uid://ok2c2172j67q" path="res://addons/godot_rl_agents/sync.gd" id="2_4g7jt"]
+[ext_resource type="PackedScene" uid="uid://bhvmtuw1p13g6" path="res://scenes/AItest/AIscene.tscn" id="1_s7xq5"]
+[ext_resource type="Script" uid="uid://ok2c2172j67q" path="res://addons/godot_rl_agents/sync.gd" id="2_tfsnp"]
 
 [node name="BatchAItest" type="Node2D" unique_id=1866573813]
 
@@ -57,10 +57,10 @@ position = Vector2(-1948, -1080)
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1812660144]
 position = Vector2(114, 79)
 offset = Vector2(-1080, -600)
-zoom = Vector2(0.145, 0.145)
+zoom = Vector2(0.22, 0.22)
 
 [node name="Sync" type="Node" parent="." unique_id=2082133980]
-script = ExtResource("2_4g7jt")
-control_mode = 2
-onnx_model_path = "python/models/model.onnx"
+script = ExtResource("2_tfsnp")
+speed_up = 50.0
+onnx_model_path = "python/model.onnx"
 metadata/_custom_type_script = "uid://ok2c2172j67q"

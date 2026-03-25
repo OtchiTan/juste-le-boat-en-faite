@@ -19,20 +19,20 @@ namespace GodotONNX
 
 		private SessionOptions SessionOpt;
 
-		/// <summary>
-		/// init function
-		/// </summary>
-		/// <param name="Path"></param>
-		/// <param name="BatchSize"></param>
-		/// <returns>Returns the output size of the model</returns>
-		public int Initialize(string Path, int BatchSize)
+        /// <summary>
+        /// init function
+        /// </summary>
+        /// <param name="Path"></param>
+        /// <param name="BatchSize"></param>
+        /// <returns>Returns the output size of the model</returns>
+        public int Initialize(string Path, int BatchSize)
 		{
 			modelPath = Path;
 			batchSize = BatchSize;
-			SessionOpt = SessionConfigurator.MakeConfiguredSessionOptions();
-			session = LoadModel(modelPath);
-			return session.OutputMetadata["output"].Dimensions[1];
-		}
+            SessionOpt = SessionConfigurator.MakeConfiguredSessionOptions();
+            session = LoadModel(modelPath);
+            return session.OutputMetadata["output"].Dimensions[1];
+        }
 
 
 		/// <include file='docs/ONNXInference.xml' path='docs/members[@name="ONNXInference"]/Run/*'/>
@@ -49,35 +49,48 @@ namespace GodotONNX
 				span[i] = obs[i];
 			}
 
-			var inputs = new List<NamedOnnxValue>
+			IReadOnlyCollection<NamedOnnxValue> inputs = new List<NamedOnnxValue>
 			{
-			NamedOnnxValue.CreateFromTensor("obs", new DenseTensor<float>(span, new int[] { batchSize, obs.Count }))
+			NamedOnnxValue.CreateFromTensor("obs", new DenseTensor<float>(span, new int[] { batchSize, obs.Count })),
+			NamedOnnxValue.CreateFromTensor("state_ins", new DenseTensor<float>(new float[] { state_ins }, new int[] { batchSize }))
 			};
-			if (session.InputMetadata.ContainsKey("state_ins"))
-			{
-				inputs.Add(NamedOnnxValue.CreateFromTensor("state_ins", new DenseTensor<float>(new float[] { state_ins }, new int[] { batchSize })));
-			}
-			
-			var outputNames = session.OutputMetadata.Keys.ToList();
+			IReadOnlyCollection<string> outputNames = new List<string> { "output", "state_outs" }; //ONNX is sensible to these names, as well as the input names
 
+			IDisposableReadOnlyCollection<DisposableNamedOnnxValue> results; 
+			//We do not use "using" here so we get a better exception explaination later
 			try
 			{
-				using var results = session.Run(inputs, outputNames);
-				var outputDict = new Godot.Collections.Dictionary<string, Godot.Collections.Array<float>>();
-
-				foreach (var result in results)
-				{
-					var valArray = new Godot.Collections.Array<float>();
-					foreach (float f in result.AsEnumerable<float>()) { valArray.Add(f); }
-					outputDict.Add(result.Name, valArray);
-				}
-				return outputDict;
+				results = session.Run(inputs, outputNames);
 			}
 			catch (OnnxRuntimeException e)
 			{
+				//This error usually means that the model is not compatible with the input, beacause of the input shape (size)
 				GD.Print("Error at inference: ", e);
 				return null;
 			}
+			//Can't convert IEnumerable<float> to Variant, so we have to convert it to an array or something
+			Godot.Collections.Dictionary<string, Godot.Collections.Array<float>> output = new Godot.Collections.Dictionary<string, Godot.Collections.Array<float>>();
+			DisposableNamedOnnxValue output1 = results.First();
+			DisposableNamedOnnxValue output2 = results.Last();
+			Godot.Collections.Array<float> output1Array = new Godot.Collections.Array<float>();
+			Godot.Collections.Array<float> output2Array = new Godot.Collections.Array<float>();
+
+			foreach (float f in output1.AsEnumerable<float>())
+			{
+				output1Array.Add(f);
+			}
+
+			foreach (float f in output2.AsEnumerable<float>())
+			{
+				output2Array.Add(f);
+			}
+
+			output.Add(output1.Name, output1Array);
+			output.Add(output2.Name, output2Array);
+
+			//Output is a dictionary of arrays, ex: { "output" : [0.1, 0.2, 0.3, 0.4, ...], "state_outs" : [0.5, ...]}
+			results.Dispose();
+			return output;
 		}
 		/// <include file='docs/ONNXInference.xml' path='docs/members[@name="ONNXInference"]/Load/*'/>
 		public InferenceSession LoadModel(string Path)

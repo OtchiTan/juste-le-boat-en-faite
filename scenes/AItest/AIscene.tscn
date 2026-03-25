@@ -1,0 +1,100 @@
+[gd_scene format=3 uid="uid://bhvmtuw1p13g6"]
+
+[ext_resource type="PackedScene" uid="uid://cimxy72y7w622" path="res://scenes/AItest/AICharacter.tscn" id="1_a7p8y"]
+[ext_resource type="Script" uid="uid://b7e8gyqlinkem" path="res://scenes/target.gd" id="4_fl7rg"]
+[ext_resource type="Texture2D" uid="uid://n4f61x0juple" path="res://assets/textures/Buildings/Enemy/Mausoleum.png" id="5_8bf4v"]
+
+[sub_resource type="GDScript" id="GDScript_a7p8y"]
+script/source = "extends Area2D
+
+func _ready() -> void:
+	if ($\"../Target\") :
+		$\"../Target\".reset_pos()
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t758q"]
+size = Vector2(1880, 22)
+
+[sub_resource type="Gradient" id="Gradient_t758q"]
+offsets = PackedFloat32Array(0, 0.010738255, 0.981208, 0.98791945)
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fl7rg"]
+gradient = SubResource("Gradient_t758q")
+width = 1900
+height = 1060
+fill_from = Vector2(0, 0.40000004)
+fill_to = Vector2(1, 0.40000004)
+metadata/_snap_enabled = true
+metadata/_snap_count = 15
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a7p8y"]
+size = Vector2(20, 1080)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_8bf4v"]
+radius = 35.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_mbxw1"]
+font_size = 128
+font_color = Color(0, 0, 0, 1)
+
+[node name="AIscene" type="Node2D" unique_id=853725166]
+
+[node name="AICharacter" parent="." unique_id=553365638 instance=ExtResource("1_a7p8y")]
+light_mask = 513
+visibility_layer = 513
+
+[node name="World" type="Area2D" parent="." unique_id=653290915]
+collision_layer = 129
+collision_mask = 129
+script = SubResource("GDScript_a7p8y")
+
+[node name="Aera2" type="CollisionShape2D" parent="World" unique_id=1192245496]
+light_mask = 512
+visibility_layer = 512
+position = Vector2(0, 529)
+shape = SubResource("RectangleShape2D_t758q")
+
+[node name="Aera" type="CollisionShape2D" parent="World" unique_id=1313905071]
+light_mask = 512
+visibility_layer = 512
+position = Vector2(2, -519)
+shape = SubResource("RectangleShape2D_t758q")
+
+[node name="Sprite2D" type="Sprite2D" parent="World" unique_id=1678110515]
+z_index = -1
+texture = SubResource("GradientTexture2D_fl7rg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World" unique_id=755713702]
+position = Vector2(937, 0)
+shape = SubResource("RectangleShape2D_a7p8y")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="World" unique_id=865679060]
+position = Vector2(-942, 10)
+shape = SubResource("RectangleShape2D_a7p8y")
+
+[node name="Target" type="Area2D" parent="." unique_id=863920102]
+position = Vector2(512, -303)
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("4_fl7rg")
+
+[node name="Sprite2D" type="Sprite2D" parent="Target" unique_id=582445384]
+texture = ExtResource("5_8bf4v")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Target" unique_id=2123383006]
+light_mask = 3
+visibility_layer = 3
+shape = SubResource("CircleShape2D_8bf4v")
+
+[node name="Label" type="Label" parent="." unique_id=2002457910]
+offset_left = -903.0
+offset_top = -513.0
+offset_right = -831.0
+offset_bottom = -490.0
+text = "Reward..."
+label_settings = SubResource("LabelSettings_mbxw1")
+
+[connection signal="body_entered" from="World" to="AICharacter" method="_on_world_body_entered"]
+[connection signal="body_entered" from="Target" to="AICharacter" method="_on_target_body_entered"]
+[connection signal="body_exited" from="Target" to="AICharacter" method="_on_target_body_exited"]

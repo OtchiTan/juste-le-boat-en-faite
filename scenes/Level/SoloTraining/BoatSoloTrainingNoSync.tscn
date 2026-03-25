@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://bvqb3jk0x4kt"]
+
+[ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="1_wn8yi"]
+
+[sub_resource type="GDScript" id="GDScript_etidm"]
+script/source = "extends Node2D
+
+@export var boat_scene: PackedScene
+@export var label_1: Label
+@export var target: Label
+
+var boat : Boat = null
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	boat = boat_scene.instantiate()
+	boat.position = Vector2(-500,200)
+	boat.setAITrainingController(1, AIControllerBoatSolo.new())
+	add_child(boat)
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	
+	# debug print
+	label_1.text = boat.controller.text_info
+	
+	target.position = boat.targ
+	
+	#label_1.text = \"|reward : \"
+	#label_1.text += str(boat1.controller.reward)
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_etidm"]
+font_size = 100
+font_color = Color(1, 0, 0, 1)
+
+[node name="BoatTraining" type="Node2D" unique_id=742048777 node_paths=PackedStringArray("label_1", "target")]
+script = SubResource("GDScript_etidm")
+boat_scene = ExtResource("1_wn8yi")
+label_1 = NodePath("Label1")
+target = NodePath("target")
+
+[node name="Label1" type="Label" parent="." unique_id=603665215]
+offset_left = -779.0
+offset_top = -498.0
+offset_right = 128.0
+offset_bottom = 72.0
+text = "bloooovaaaa"
+label_settings = SubResource("LabelSettings_etidm")
+
+[node name="target" type="Label" parent="." unique_id=390870893]
+offset_left = 734.0
+offset_top = -36.0
+offset_right = 763.0
+offset_bottom = 33.0
+text = "+"
+label_settings = SubResource("LabelSettings_etidm")
+horizontal_alignment = 1
+vertical_alignment = 1
