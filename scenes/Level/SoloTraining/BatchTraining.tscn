@@ -69,9 +69,11 @@ position = Vector2(3892, -2080)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=301479338]
 position = Vector2(23, 0)
-zoom = Vector2(0.12, 0.12)
+zoom = Vector2(0.2, 0.2)
 
 [node name="Sync" type="Node" parent="." unique_id=534625311]
 script = ExtResource("2_rav2c")
-speed_up = 4.0
+control_mode = 2
+speed_up = 2.0
+onnx_model_path = "python\\models\\SoloBoatTraining\\SoloBoatTraining_1.onnx"
 metadata/_custom_type_script = "uid://ok2c2172j67q"

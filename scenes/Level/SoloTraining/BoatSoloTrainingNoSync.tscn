@@ -41,6 +41,7 @@ label_1 = NodePath("Label1")
 target = NodePath("target")
 
 [node name="Label1" type="Label" parent="." unique_id=603665215]
+visible = false
 offset_left = -779.0
 offset_top = -498.0
 offset_right = 128.0

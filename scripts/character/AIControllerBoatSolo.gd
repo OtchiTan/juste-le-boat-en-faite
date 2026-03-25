@@ -49,12 +49,9 @@ func get_action_space() -> Dictionary:
 func set_action(action) -> void:
 	character.throttle = action["forward"] - 1
 	character.steering = action["rotation"] - 1
-	#if(Input.get_action_strength("Tab") == 0):
-		#character.throttle = action["forward"] - 1
-		#character.steering = action["rotation"] - 1
-	#else :
-		#character.steering = Input.get_action_strength("right") - Input.get_action_strength("left")
-		#character.throttle = Input.get_action_strength("up") - Input.get_action_strength("down")
+	
+	#character.steering = Input.get_action_strength("right") - Input.get_action_strength("left")
+	#character.throttle = Input.get_action_strength("up") - Input.get_action_strength("down")
 
 func update(delta):
 		
@@ -64,33 +61,34 @@ func update(delta):
 		
 	if done:
 		return
-	#print(previous_distance)
+		
 	var current_distance = (character.targ - character.position).length()
 	
 	var progress = previous_distance - current_distance
 	step_reward += progress * 0.01
-	step_reward += character.velocity.length() / 2500
-	
-	previous_distance = current_distance
-	step_reward -= 0.02
+	step_reward -= 0.025
 	step_reward += character.throttle * 0.01
 	
+	if (character.throttle == 0 and character.current_velocity.length() < 5):
+		step_reward -= 10
+
 	if (previous_steering != character.steering):
-		step_reward -= 0.2
+		step_reward -= 0.05
 	
+	previous_distance = current_distance
 	previous_steering = character.steering
 	
 	# good
 	if current_distance < 150:
 		print("----- good")
-		step_reward += 100.0 
+		step_reward += 1000.0 
 		done = true
 		needs_reset = true
 	
 	# bad
 	if current_distance >2500:
 		print("bad  -----")
-		step_reward -= 100.0
+		step_reward -= 200.0
 		done = true
 		needs_reset = true
 	
