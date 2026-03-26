@@ -4,19 +4,11 @@ class_name Boat
 
 @export var label: Label
 
-var max_speed = 250.0
-var current_velocity = Vector2.ZERO
 var friction = 0.995
 var lateral_friction = 0.975
-var max_rotation_speed = 200
-var rotation_friction = 0.95
-var current_rotation_speed = 0
-
-var acceleration = 100
-
-var min_rotation_speed = 0.05
+var acceleration = 80
 var rotation_acceleration = 2000
-
+var front_redistribute_power = 0.3 # suppr le 0.3 et met 2 si t'es un zhomme qui aime le drift !
 
 var life = 20
 var atk :int = 5
@@ -24,6 +16,7 @@ var player_id : int = -1
 
 var target : Boat = null
 var targ : Vector2
+var tpRandomNextFrame = false
 
 @export var projectile_scene: PackedScene
 @export var camera_scene: PackedScene
@@ -39,7 +32,7 @@ func _ready():
 	GameManager.register_boat(self)
 		
 func set_as_player_and_id(id_player: int) -> void:
-	player_id= id_player
+	player_id = id_player
 	if id_player == 0:
 		controller=PlayerController.new()
 		controller.boat = self
@@ -60,7 +53,6 @@ func set_as_player_and_id(id_player: int) -> void:
 		print("Bateau initialisé pour le joueur : ", player_id)
 	else:
 		controller = AIControllerBoat.new()
-		controller.boat = self
 		add_child(controller)
 		
 func setAITrainingController(id_player: int, new_controller):
@@ -101,66 +93,21 @@ func _physics_process(delta: float) -> void:
 	var new_forward_vel = forward_v * friction
 	var new_side_vel = side_v * lateral_friction
 	
-	var transfere_v = (side_v - new_side_vel).length() * 0.4 # suppr le 0.4 et met 2 si t'es un zhomme
+	var transfere_v = (side_v - new_side_vel).length() * front_redistribute_power
 	var transfere_vel = transfere_v * side_dir.orthogonal()
 	
 	linear_velocity = new_forward_vel + new_side_vel + transfere_vel
 	
 	
 	### DEBUG
-	label.text = "Debug Print"
-	
-	
-	
-	
-	#var direction = Vector2.RIGHT.rotated(rotation)
-	#
-	## Applique les input
-	#if(throttle != 0):
-		#if(throttle < 0 and current_velocity.normalized().dot(direction.normalized()) < 0):
-			#current_velocity += direction * throttle * acceleration * delta / 4
-		#else :
-			#current_velocity += direction * throttle * acceleration * delta
-	#
-	#if(steering != 0):
-		#current_rotation_speed += steering * delta 														\
-									#* (rotation_acceleration * current_velocity.length() / max_speed) 	\
-									#* current_velocity.normalized().dot(direction.normalized()) 
-	#
-	## Limiter les vitesses max
-	#if current_velocity.length() > max_speed:
-		#current_velocity = current_velocity.normalized() * max_speed
-		#
-	#if(current_rotation_speed > max_rotation_speed):
-		#current_rotation_speed = max_rotation_speed
-		#
-	#if(current_rotation_speed < -max_rotation_speed):
-		#current_rotation_speed = -max_rotation_speed
-	#
-	#
-	## Applique la rotation
-	#
-	#if(abs(current_rotation_speed) > min_rotation_speed):
-		#rotation += current_rotation_speed * delta
-	#
-	## Friction
-	#var forward_v = current_velocity.dot(direction)
-	#var side_v = current_velocity.dot(direction.orthogonal())
-	#
-	#var new_forward_vel = direction * forward_v * friction
-	#var new_side_vel = direction.orthogonal() * side_v * lateral_friction
-	#
-	#current_velocity = new_forward_vel + new_side_vel
-	#
-	#current_rotation_speed *= rotation_friction
-	
-	### DEBUG
-	#if (current_velocity.length() != 0):
-		#print_debug(current_velocity.length())
+	label.text = "linear_velocity = " + str(linear_velocity) + "\n"
+	label.text += "angular_velocity = " + str(angular_velocity)
 
-	#velocity = current_velocity
-	#move_and_slide()
-
+func _integrate_forces(state):
+	if(tpRandomNextFrame):
+		var target_pos = Vector2(randi_range(-500, 500), randi_range(-500, 500))
+		state.transform.origin = get_parent().to_global(target_pos)
+		tpRandomNextFrame = false
 
 func attack() -> void :
 	var projectile = projectile_scene.instantiate()

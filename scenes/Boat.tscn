@@ -36,7 +36,6 @@ rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_nai5d")
 
 [node name="Label" type="Label" parent="." unique_id=533265940]
-visible = false
 offset_left = -87.0
 offset_top = -104.0
 offset_right = -47.0

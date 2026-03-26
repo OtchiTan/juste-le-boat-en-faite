@@ -27,9 +27,6 @@ func _process(delta: float) -> void:
 	label_1.text = boat.controller.text_info
 	
 	target.position = boat.targ
-	
-	#label_1.text = \"|reward : \"
-	#label_1.text += str(boat1.controller.reward)
 "
 
 [sub_resource type="LabelSettings" id="LabelSettings_etidm"]

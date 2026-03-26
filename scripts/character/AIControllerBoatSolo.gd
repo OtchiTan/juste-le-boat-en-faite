@@ -20,9 +20,9 @@ func get_obs() -> Dictionary:
 	var relative_target_position = character.targ - character.position
 	
 	var relative_target_angle = forward_vector.angle_to(relative_target_position) / PI
-	var relative_target_dist = relative_target_position.length() / 5000.0 # Environ entre 0 et 1
-	var normalized_speed = character.current_velocity.length() / character.max_speed # Entre 0 et 1
-	var normalized_rot_speed = character.current_rotation_speed / character.max_rotation_speed # Entre -1 et 1
+	var relative_target_dist = relative_target_position.length() / 5000 # Environ entre 0 et 1
+	var normalized_speed = character.linear_velocity.length() / 250 # Entre 0 et 1
+	var normalized_rot_speed = character.angular_velocity / 1.5 # Entre -1 et 1
 
 	var obs := [
 		relative_target_angle,
@@ -69,7 +69,7 @@ func update(delta):
 	step_reward -= 0.025
 	step_reward += character.throttle * 0.01
 	
-	if (character.throttle == 0 and character.current_velocity.length() < 5):
+	if (character.throttle == 0 and character.linear_velocity.length() < 5):
 		step_reward -= 10
 
 	if (previous_steering != character.steering):
@@ -78,14 +78,14 @@ func update(delta):
 	previous_distance = current_distance
 	previous_steering = character.steering
 	
-	# good
+	# win
 	if current_distance < 150:
 		print("----- good")
 		step_reward += 1000.0 
 		done = true
 		needs_reset = true
 	
-	# bad
+	# loose
 	if current_distance >2500:
 		print("bad  -----")
 		step_reward -= 200.0
@@ -103,16 +103,16 @@ func reset():
 	needs_reset = false
 	done = false
 	step_reward = 0.0
-	
-	character.position.x = randi_range(-500, 500)
-	character.position.y = randi_range(-500, 500)
-	character.current_velocity = Vector2.ZERO
-	character.current_rotation_speed = 0.0
+	character.tpRandomNextFrame = true
+	character.linear_velocity = Vector2.ZERO
+	character.angular_velocity = 0.0
 	
 	character.targ.x = randi_range(-500, 500)
 	character.targ.y = randi_range(-500, 500)
 	
 	previous_distance = (character.targ - character.position).length()
-	
+
+
+
 func add_reward(reward_mod):
 	reward += reward_mod
