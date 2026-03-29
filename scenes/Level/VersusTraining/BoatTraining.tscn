@@ -33,7 +33,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	label_1.text = boat1.controller.text_info
+	#label_1.text = boat1.controller.text_info
 	#label_2.text = boat2.controller.text_info
 	pass
 "
@@ -72,5 +72,6 @@ horizontal_alignment = 2
 
 [node name="Sync" type="Node" parent="." unique_id=2055402745]
 script = ExtResource("3_8fnnl")
+speed_up = 8.0
 onnx_model_path = "python/model.onnx"
 metadata/_custom_type_script = "uid://ok2c2172j67q"
