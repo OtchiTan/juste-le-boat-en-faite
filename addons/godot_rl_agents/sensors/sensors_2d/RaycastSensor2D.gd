@@ -75,7 +75,7 @@ func _spawn_nodes():
 
 	_angles = []
 	var step = cone_width / (n_rays)
-	var start = step / 2 - cone_width / 2
+	var start = 0
 
 	for i in n_rays:
 		var angle = start + i * step
