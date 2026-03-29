@@ -23,6 +23,7 @@ func register_boat(boat):
 	if boat.player_id == 0:
 		boat.getDamage.connect(_on_getDamage)
 		emit_signal("update_life_hud", boat.life)
+	FactionManager.register_faction(boat.player_id)
 
 func register_island(island):
 	islands.append(island)

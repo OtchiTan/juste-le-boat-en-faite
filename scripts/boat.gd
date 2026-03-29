@@ -10,7 +10,11 @@ var acceleration = 80
 var rotation_acceleration = 2000
 var front_redistribute_power = 0.3 # suppr le 0.3 et met 2 si t'es un zhomme qui aime le drift !
 
-var life = 20
+#used by the AI controller for rewards (and important stuff I guess)
+signal on_health_changed(new_health: float)
+signal on_dealt_damages(dmg_amount:float, dmg_boat:Boat)
+@export var life = 20
+var original_life:int
 var atk :int = 5
 var player_id : int = -1
 
@@ -19,6 +23,8 @@ var targ : Vector2
 var tpRandomNextFrame = false
 
 @export var projectile_scene: PackedScene
+@export var fire_cool_down : int = 1
+var time_since_last_fire = 0
 @export var camera_scene: PackedScene
 signal getDamage(int)
 
@@ -28,10 +34,14 @@ var throttle := 0.0   # -1 → 1
 var steering := 0.0   # -1 → 1
 var want_to_shoot := false
 var controller = null
-		
+
+var dont_die_on_life_equal_0:bool = false
+var useRayCastController:bool = true
+
 func _ready():
 	GameManager.register_boat(self)
-		
+	original_life = life
+
 func set_as_player_and_id(id_player: int) -> void:
 	player_id = id_player
 	if id_player == 0:
@@ -53,8 +63,15 @@ func set_as_player_and_id(id_player: int) -> void:
 			print("Avertissement: camera_scene n'est pas assignée pour le joueur ", player_id)
 		print("Bateau initialisé pour le joueur : ", player_id)
 	else:
-		controller = AIControllerBoat.new()
-		add_child(controller)
+		if (useRayCastController) :
+			controller = AIControllerWithRaycast.new()
+			controller.boat = self
+			controller.raycast_sensor_2d = $RaycastSensor2D_extended
+			add_child(controller)
+		else :
+			controller = AIControllerBoat.new()
+			controller.boat = self
+			add_child(controller)
 		
 func setAITrainingController(id_player: int, new_controller):
 	player_id = id_player
@@ -66,6 +83,7 @@ func _physics_process(delta: float) -> void:
 		controller.update(delta)
 	
 	### Tir
+	time_since_last_fire += delta
 	if want_to_shoot:
 		attack()
 		want_to_shoot = false
@@ -110,7 +128,14 @@ func _integrate_forces(state):
 		state.transform.origin = get_parent().to_global(target_pos)
 		tpRandomNextFrame = false
 
+
+
 func attack() -> void :
+	
+	
+	if time_since_last_fire < fire_cool_down :
+		return 
+	time_since_last_fire = 0
 	var projectile = projectile_scene.instantiate()
 
 	var direction = Vector2.RIGHT.rotated(rotation)
@@ -123,12 +148,27 @@ func attack() -> void :
 	get_parent().add_child(projectile)
 	
 func get_damage(damage: float, tireur) -> void :
+	
 	life -= damage
 	if player_id == 0:
 		emit_signal("getDamage", life)
+	on_health_changed.emit(life)
+	var bot_atk := tireur as Boat
+	if (bot_atk) :
+		bot_atk.on_dealt_damages.emit(damage, self)
+		
 	if life <= 0:
-		GameManager.on_boat_destroyed(self, tireur)
-		queue_free()
+		if not dont_die_on_life_equal_0 : 
+			GameManager.on_boat_destroyed(self, tireur)
+			queue_free()
 
 func set_target(targ_boat : Boat) -> void :
 	target = targ_boat
+	
+func reset() :
+	tpRandomNextFrame = true
+	life = original_life
+
+
+
+	

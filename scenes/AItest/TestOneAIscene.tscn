@@ -11,7 +11,7 @@
 script = ExtResource("6_5obcm")
 control_mode = 2
 action_repeat = 4
-onnx_model_path = "python/models/model_retrained.onnx"
+onnx_model_path = "python/model_cuda.onnx"
 metadata/_custom_type_script = "uid://ok2c2172j67q"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=323178772]

@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://b20seoiq34vqh"]
+
+[ext_resource type="PackedScene" uid="uid://bd8lfogk1peil" path="res://scenes/AItest/BoatAITraining_Anto.tscn" id="1_c8lad"]
+[ext_resource type="Script" uid="uid://ok2c2172j67q" path="res://addons/godot_rl_agents/sync.gd" id="2_35cb4"]
+
+[node name="BoatMultiAiAntonin" type="Node2D" unique_id=278162833]
+
+[node name="Node" type="Node" parent="." unique_id=1553768092]
+
+[node name="BoatAiTraining" parent="Node" unique_id=216534563 instance=ExtResource("1_c8lad")]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=61913495]
+zoom = Vector2(0.45, 0.45)
+
+[node name="Sync" type="Node" parent="." unique_id=1008206700]
+script = ExtResource("2_35cb4")
+control_mode = 2
+onnx_model_path = "python/model_retrained2.onnx"
+metadata/_custom_type_script = "uid://ok2c2172j67q"

@@ -24,8 +24,6 @@ rotation = 0.19198622
 scale = Vector2(0.99999994, 0.99999994)
 script = ExtResource("4_v1kbi")
 add_friend_foe_info = true
-foe_layer = 132
-world_layer = 128
 ray_groupping = 3
 collision_mask = 134
 collide_with_areas = true
@@ -34,6 +32,6 @@ ray_length = 2000
 debug_draw = false
 metadata/_custom_type_script = "uid://bnudskl80vm5q"
 
-[node name="AIController2D" type="Node2D" parent="." unique_id=1817872726]
+[node name="AIControllerWithRaycast" type="Node2D" parent="." unique_id=300581574]
 script = ExtResource("3_ptu11")
-metadata/_custom_type_script = "uid://d0h34wbh1pjqi"
+metadata/_custom_type_script = "uid://brlpknw5n45w"

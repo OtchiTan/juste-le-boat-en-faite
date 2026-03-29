@@ -61,6 +61,6 @@ zoom = Vector2(0.22, 0.22)
 
 [node name="Sync" type="Node" parent="." unique_id=2082133980]
 script = ExtResource("2_tfsnp")
-speed_up = 50.0
-onnx_model_path = "python/model.onnx"
+speed_up = 4.0
+onnx_model_path = "python/models/model.onnx"
 metadata/_custom_type_script = "uid://ok2c2172j67q"

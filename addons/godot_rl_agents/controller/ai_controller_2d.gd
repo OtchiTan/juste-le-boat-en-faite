@@ -2,7 +2,12 @@ extends Node2D
 class_name AIController2D
 
 enum ControlModes { INHERIT_FROM_SYNC, HUMAN, TRAINING, ONNX_INFERENCE, RECORD_EXPERT_DEMOS }
-@export var control_mode: ControlModes = ControlModes.INHERIT_FROM_SYNC
+@export var control_mode: ControlModes = ControlModes.INHERIT_FROM_SYNC:
+	set(value) :
+		
+		control_mode= value
+		OnSetControlMode(value)
+	
 @export var onnx_model_path := ""
 @export var reset_after := 1000
 
@@ -32,6 +37,8 @@ var needs_reset := false
 
 var _player: Node2D
 
+func OnSetControlMode(new_control_mode: ControlModes) :
+	pass
 
 func _ready():
 	add_to_group("AGENT")

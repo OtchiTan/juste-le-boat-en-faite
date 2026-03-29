@@ -11,13 +11,19 @@ config_version=5
 [application]
 
 config/name="Juste le boat en faite"
-run/main_scene="uid://bfmy0g0v4chk6"
+run/main_scene="uid://bd8lfogk1peil"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GameManager="*uid://dpdosp8w3xlhr"
+FactionManager="*uid://d3eut31ba4qe1"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 
 [dotnet]
 

@@ -51,7 +51,7 @@ class_name RaycastSensor2D
 		_update()
 
 var _angles = []
-var rays := []
+var rays := [] as Array[RayCast2D]
 
 
 func _update():

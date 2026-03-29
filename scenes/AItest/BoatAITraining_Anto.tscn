@@ -1,0 +1,119 @@
+[gd_scene format=3 uid="uid://bd8lfogk1peil"]
+
+[ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="1_lf4h0"]
+
+[sub_resource type="GDScript" id="GDScript_dmd83"]
+resource_name = "AIRayCastTraining"
+script/source = "extends Node2D
+
+@onready var boat: Boat = $Boat
+@onready var boat_1: Boat = $Boat1
+
+func _ready() -> void:
+	boat.set_as_player_and_id(1)
+	boat_1.set_as_player_and_id(2)
+	#boat_1.controller.control_mode = AIController2D.ControlModes.HUMAN
+	
+	
+	boat.set_target(boat_1)
+	boat_1.set_target(boat)
+
+
+func _physics_process(delta: float) -> void:
+	if (boat) :
+		$Label.text = str(round(boat.controller.cumulated_rewar *100)/100)
+	if (boat_1) :
+		$Label2.text = str(round(boat_1.controller.cumulated_rewar*100)/100)
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ubajb"]
+size = Vector2(1880, 22)
+
+[sub_resource type="Gradient" id="Gradient_lf4h0"]
+colors = PackedColorArray(0.5411765, 0.5176471, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ubajb"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_2ltf8"]
+width = 3800
+height = 2160
+noise = SubResource("FastNoiseLite_ubajb")
+color_ramp = SubResource("Gradient_lf4h0")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8r3ig"]
+size = Vector2(20, 1080)
+
+[sub_resource type="LabelSettings" id="LabelSettings_0wxyi"]
+font_size = 400
+font_color = Color(0.012617188, 0.012617188, 0.012617188, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_lf4h0"]
+font_size = 400
+font_color = Color(0.012617188, 0.012617188, 0.012617188, 1)
+
+[node name="BoatAiTraining" type="Node2D" unique_id=216534563]
+script = SubResource("GDScript_dmd83")
+
+[node name="Boat" parent="." unique_id=1813145880 instance=ExtResource("1_lf4h0")]
+position = Vector2(-38, -135)
+camera_scene = null
+useRayCastController = true
+
+[node name="Boat1" parent="." unique_id=558970727 instance=ExtResource("1_lf4h0")]
+position = Vector2(-104, 304)
+rotation = -0.92489445
+camera_scene = null
+useRayCastController = true
+
+[node name="World" type="StaticBody2D" parent="." unique_id=1888477537]
+collision_layer = 129
+collision_mask = 129
+
+[node name="Aera2" type="CollisionShape2D" parent="World" unique_id=336050239]
+light_mask = 512
+visibility_layer = 512
+position = Vector2(0, 1091)
+scale = Vector2(2.9199998, 1)
+shape = SubResource("RectangleShape2D_ubajb")
+
+[node name="Aera" type="CollisionShape2D" parent="World" unique_id=1804768403]
+light_mask = 512
+visibility_layer = 512
+position = Vector2(2, -1096)
+scale = Vector2(2.2800057, 1)
+shape = SubResource("RectangleShape2D_ubajb")
+
+[node name="Sprite2D" type="Sprite2D" parent="World" unique_id=231873435]
+z_index = -1
+texture = SubResource("NoiseTexture2D_2ltf8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World" unique_id=506761761]
+position = Vector2(1920, -26)
+scale = Vector2(1, 3.4000008)
+shape = SubResource("RectangleShape2D_8r3ig")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="World" unique_id=1046895694]
+position = Vector2(-1927.0001, 10)
+scale = Vector2(0.6790505, 3.2192764)
+shape = SubResource("RectangleShape2D_8r3ig")
+
+[node name="Label" type="Label" parent="." unique_id=1351062301]
+offset_left = -1899.0
+offset_top = -1072.0
+offset_right = -1157.0
+offset_bottom = -526.0
+text = "test"
+label_settings = SubResource("LabelSettings_0wxyi")
+
+[node name="Label2" type="Label" parent="." unique_id=1732358891]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 1162.0
+offset_top = -1069.0
+offset_right = 1904.0
+offset_bottom = -523.0
+grow_horizontal = 0
+text = "test"
+label_settings = SubResource("LabelSettings_lf4h0")
+horizontal_alignment = 2
