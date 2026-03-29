@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://c5vag0pinjsig"]
+
+[ext_resource type="Texture2D" uid="uid://cib3kdnk7t8o3" path="res://assets/textures/User Interface/Icons-Essentials.png" id="1_7n4fj"]
+[ext_resource type="Script" uid="uid://d2thudnd7yhok" path="res://scripts/UI/hud.gd" id="1_vphgt"]
+[ext_resource type="Texture2D" uid="uid://culi2dg1f6xce" path="res://assets/textures/Buildings/Cyan/CyanKeep.png" id="2_vphgt"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7n4fj"]
+atlas = ExtResource("1_7n4fj")
+region = Rect2(16, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vphgt"]
+atlas = ExtResource("2_vphgt")
+region = Rect2(0, 32, 32, 32)
+
+[node name="hud" type="CanvasLayer" unique_id=1754513234 node_paths=PackedStringArray("life_label", "island_label")]
+script = ExtResource("1_vphgt")
+life_label = NodePath("VBoxContainer/HBoxContainer/Label")
+island_label = NodePath("VBoxContainer/HBoxContainer2/Label")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1008234773]
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 70.0
+offset_bottom = 96.0
+theme_override_constants/separation = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=731601058]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer" unique_id=2028114782]
+layout_mode = 2
+texture = SubResource("AtlasTexture_7n4fj")
+expand_mode = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=963239693]
+layout_mode = 2
+text = "0"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1742531088]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer2" unique_id=1681001598]
+layout_mode = 2
+texture = SubResource("AtlasTexture_vphgt")
+expand_mode = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=316651174]
+layout_mode = 2
+text = "1"

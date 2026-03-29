@@ -5,6 +5,10 @@ var boats = []
 var islands = []
 signal game_won()
 signal game_over()
+signal player_has_more_islands()
+signal update_life_hud(int)
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -16,6 +20,9 @@ func _process(delta: float) -> void:
 	
 func register_boat(boat):
 	boats.append(boat)
+	if boat.player_id == 0:
+		boat.getDamage.connect(_on_getDamage)
+		emit_signal("update_life_hud", boat.life)
 
 func register_island(island):
 	islands.append(island)
@@ -29,6 +36,8 @@ func on_boat_destroyed(boat, tireur):
 	for island in islands:
 		if island.island_owner == dead_player:
 			island.change_owner(new_owner, false)
+	if tireur.player_id == 0:
+		emit_signal("player_has_more_islands")
 	check_victory(boat, tireur)
 
 func check_victory(boat, tireur):
@@ -53,11 +62,12 @@ func check_victory(boat, tireur):
 	#	else:
 	#		print("lose - pas sensé etre atteint")
 	
-	
+func _on_getDamage(i):
+	emit_signal("update_life_hud", i)
 func defeat():
 	print("lose")
 	emit_signal("game_over")
 	
 func victory():
 	print("win")
-	emit_signal("game_won", )
+	emit_signal("game_won")

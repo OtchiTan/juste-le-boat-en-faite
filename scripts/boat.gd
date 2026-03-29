@@ -20,6 +20,7 @@ var tpRandomNextFrame = false
 
 @export var projectile_scene: PackedScene
 @export var camera_scene: PackedScene
+signal getDamage(int)
 
 
 # INPUTS (pilotés par controller)
@@ -123,6 +124,8 @@ func attack() -> void :
 	
 func get_damage(damage: float, tireur) -> void :
 	life -= damage
+	if player_id == 0:
+		emit_signal("getDamage", life)
 	if life <= 0:
 		GameManager.on_boat_destroyed(self, tireur)
 		queue_free()
