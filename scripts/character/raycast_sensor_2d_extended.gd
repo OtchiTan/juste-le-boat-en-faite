@@ -58,7 +58,12 @@ func calculate_raycasts() -> Array:
 			var is_ally = 0.0
 			
 			var collider = ray.get_collider()
-			var is_moving = 1.0 if (collider is RigidBody2D or collider is CharacterBody2D) else 0.0
+			var is_moving = 0.0
+			
+			var norm_relative_target_rotation = 0
+			var norm_target_velocity :Vector2 = Vector2(0,0)
+			
+			var targetHP = 0
 			
 			if collider:
 				var relation = FactionManager.get_relation(BoatOwner, collider)
@@ -69,10 +74,28 @@ func calculate_raycasts() -> Array:
 						is_enemy = 1.0
 					FactionManager.Relation.NEUTRAL:
 						pass
+						
+				var moving_collider = collider as RigidBody2D
+				if moving_collider :
+					is_moving = 1
+					var relative_targ_rot = BoatOwner.rotation - moving_collider.rotation
+					norm_relative_target_rotation =(fmod(relative_targ_rot+3*PI,2*PI)-PI)/PI
 					
+					
+					var owner_forward = BoatOwner.global_transform.x
+					var relative_t_pos = moving_collider.global_position - BoatOwner.global_position
+					var angle_to_target = Vector2.from_angle(owner_forward.angle_to_point(relative_t_pos))
+					norm_target_velocity.x = moving_collider.linear_velocity.dot(angle_to_target) / 250
+					norm_target_velocity.y = (moving_collider.linear_velocity).dot(angle_to_target.rotated(PI/2)) /2500
+				if "life" in collider and "original_life" in collider :
+					targetHP = collider.life / collider.original_life
 			result.append(is_moving)
 			result.append(is_enemy)
 			result.append(is_ally)
+			result.append(norm_target_velocity.x)
+			result.append(norm_target_velocity.y)
+			result.append(norm_relative_target_rotation)
+			
 
 
 	for ray in rays :

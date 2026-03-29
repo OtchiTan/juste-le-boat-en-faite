@@ -16,21 +16,36 @@ var reset_with_time:bool = true
 func get_obs() -> Dictionary:
 	c_frame_obs = raycast_sensor_2d.get_observation()
 	
+	var forward_vector = boat.global_transform.x
+	
 	if obs_history.is_empty():
 		obs_history.resize(obs_frame_stack)
 		obs_history.fill(c_frame_obs)
-	c_frame_obs.append(move.x)
-	c_frame_obs.append(move.y)
+	
+	var normalized_rot_speed = boat.angular_velocity / 3 # Entre -1 et 1
+	var normalized_speed = boat.linear_velocity.length() / 250 # Entre 0 et 1
+	var normalized_speed_angle = forward_vector.angle_to(boat.linear_velocity) / PI
+	
+	c_frame_obs.append(normalized_rot_speed)
+	c_frame_obs.append(normalized_speed)
+	c_frame_obs.append(normalized_speed_angle)
+	
 	obs_history.append(c_frame_obs)
 	obs_history.remove_at(0)
 	
 	var stacked_obs :Array[float]= [
 		randf() *2 - 1
 	]
-
+	
+	
 	for obs_array in obs_history:
 		stacked_obs.append_array(obs_array)
-
+	
+	
+	stacked_obs.append(move.x)
+	stacked_obs.append(move.y)
+	stacked_obs.append(boat.time_since_last_fire / boat.fire_cool_down)
+	stacked_obs.append(boat.life / boat.original_life)
 	return {"obs": stacked_obs}
 
 func get_reward() -> float:
@@ -60,10 +75,6 @@ func set_action(action) -> void:
 	boat.steering = move.y
 	
 	boat.want_to_shoot = action["shoot"]
-	
-	if boat.want_to_shoot :
-		reward -= 10
-		cumulated_rewar -= 10
 
 func _physics_process(delta):
 	if (not reset_with_time) :
@@ -127,8 +138,8 @@ func _ready():
 
 
 func OnSetControlMode(newvalue) :
-	boat.is_training = newvalue == ControlModes.TRAINING
-	boat.is_training = true
+	boat.dont_die_on_life_equal_0 = newvalue == ControlModes.TRAINING
+	boat.dont_die_on_life_equal_0 = true
 
 func on_dealt_damages(dmg_amount: float, targeted_boat: Boat) :
 	var delta_r = dmg_amount

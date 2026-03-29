@@ -73,9 +73,7 @@ func get_action_space() -> Dictionary:
 func set_action(action) -> void:
 	assert(false, "the set_action method is not implemented when extending from ai_controller")
 
-
 #-----------------------------------------------------------------------------#
-
 
 #-- Methods that sometimes need implementing using the "extend script" option in Godot --#
 # Only needed if you are recording expert demos with this AIController

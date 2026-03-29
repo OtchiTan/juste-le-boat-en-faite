@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://bd8lfogk1peil"]
+
+[ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="1_f2sif"]
+[ext_resource type="Script" uid="uid://ok2c2172j67q" path="res://addons/godot_rl_agents/sync.gd" id="2_dmd83"]
+
+[sub_resource type="GDScript" id="GDScript_dmd83"]
+resource_name = "AIRayCastTraining"
+script/source = "extends Node2D
+
+@onready var boat: Boat = $Boat
+@onready var boat_1: Boat = $Boat1
+
+func _ready() -> void:
+	boat.set_as_player_and_id(1)
+	boat_1.set_as_player_and_id(2)
+	
+	boat.set_target(boat_1)
+	boat_1.set_target(boat)
+"
+
+[node name="BoatAiTraining" type="Node2D" unique_id=216534563]
+script = SubResource("GDScript_dmd83")
+
+[node name="Boat" parent="." unique_id=1813145880 instance=ExtResource("1_f2sif")]
+camera_scene = null
+
+[node name="Sync" type="Node" parent="." unique_id=580605010]
+script = ExtResource("2_dmd83")
+metadata/_custom_type_script = "uid://ok2c2172j67q"
+
+[node name="Boat1" parent="." unique_id=558970727 instance=ExtResource("1_f2sif")]
+camera_scene = null

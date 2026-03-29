@@ -27,8 +27,8 @@ func get_relation(observer: Node, target: Node) -> Relation:
 	
 	if "player_id" in observer:
 			obs_id = observer.player_id
-	if "target_id" in target: # Ou "player_id" si tu gardes le même nom partout
-		t_id = target.player_id
+	if "target_id" in target:
+		t_id = target.target_id
 	elif "player_id" in target:
 		t_id = target.player_id
 	if (obs_id > -1 and t_id > -1) :

@@ -57,13 +57,11 @@ script = SubResource("GDScript_dmd83")
 [node name="Boat" parent="." unique_id=1813145880 instance=ExtResource("1_lf4h0")]
 position = Vector2(-38, -135)
 camera_scene = null
-useRayCastController = true
 
 [node name="Boat1" parent="." unique_id=558970727 instance=ExtResource("1_lf4h0")]
-position = Vector2(-104, 304)
+position = Vector2(-150, 95)
 rotation = -0.92489445
 camera_scene = null
-useRayCastController = true
 
 [node name="World" type="StaticBody2D" parent="." unique_id=1888477537]
 collision_layer = 129
