@@ -132,20 +132,37 @@ func _integrate_forces(state):
 
 func attack() -> void :
 	
-	
 	if time_since_last_fire < fire_cool_down :
 		return 
 	time_since_last_fire = 0
-	var projectile = projectile_scene.instantiate()
-
-	var direction = Vector2.RIGHT.rotated(rotation)
-	projectile.position = position + direction * 50
 	
-	projectile.direction = direction
-	projectile.degats = atk
-	projectile.tireur = self
+	var nb_Bullet = 3
+	var dispertion_Angle = PI/4
 	
-	get_parent().add_child(projectile)
+	var angle_btw = 0
+	if nb_Bullet > 1:
+		angle_btw = dispertion_Angle/(nb_Bullet-1)
+		
+	var direction = global_transform.y.rotated(-dispertion_Angle/2)
+	
+	for fire_angle:int in nb_Bullet:
+		var projectile1 = projectile_scene.instantiate()
+		projectile1.position = position + direction * 50
+		projectile1.direction = direction
+		projectile1.degats = atk
+		projectile1.tireur = self
+		get_parent().add_child(projectile1)
+		
+		direction = direction.rotated(PI)
+		var projectile2 = projectile_scene.instantiate()
+		projectile2.position = position + direction * 50
+		projectile2.direction = direction
+		projectile2.degats = atk
+		projectile2.tireur = self
+		get_parent().add_child(projectile2)
+		direction = direction.rotated(PI)
+		
+		direction = direction.rotated(angle_btw)
 	
 func get_damage(damage: float, tireur) -> void :
 	
@@ -168,7 +185,3 @@ func set_target(targ_boat : Boat) -> void :
 func reset() :
 	tpRandomNextFrame = true
 	life = original_life
-
-
-
-	

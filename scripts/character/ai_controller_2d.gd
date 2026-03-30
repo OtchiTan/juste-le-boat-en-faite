@@ -44,8 +44,14 @@ func get_obs() -> Dictionary:
 	
 	stacked_obs.append(move.x)
 	stacked_obs.append(move.y)
-	stacked_obs.append(boat.time_since_last_fire / boat.fire_cool_down)
+	
+	if boat.time_since_last_fire > boat.fire_cool_down:
+		stacked_obs.append(1)
+	else:
+		stacked_obs.append((boat.time_since_last_fire / boat.fire_cool_down)-1)
+	
 	stacked_obs.append(boat.life / boat.original_life)
+
 	return {"obs": stacked_obs}
 
 func get_reward() -> float:

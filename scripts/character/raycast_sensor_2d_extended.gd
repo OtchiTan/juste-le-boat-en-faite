@@ -101,7 +101,7 @@ func calculate_raycasts() -> Array:
 				norm_target_velocity.x = moving_collider.linear_velocity.dot(angle_to_target) / 250
 				norm_target_velocity.y = (moving_collider.linear_velocity).dot(angle_to_target.rotated(PI/2)) /250
 				
-				norm_target_angle = fmod(angle_to_target + 2*PI + first_angle, 2*PI/(n_rays/ray_groupping))/(2*PI/(n_rays/ray_groupping))
+				norm_target_angle = fmod(owner_forward.angle_to_point(relative_t_pos) + 2*PI + first_angle, 2*PI/(n_rays/ray_groupping))/(2*PI/(n_rays/ray_groupping))
 				
 				
 			if "life" in collider and "original_life" in collider :
