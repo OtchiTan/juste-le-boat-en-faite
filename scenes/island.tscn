@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://culi2dg1f6xce" path="res://assets/textures/Buildings/Cyan/CyanKeep.png" id="1_tt7lh"]
 [ext_resource type="Texture2D" uid="uid://bwqvvphk00fws" path="res://assets/textures/Buildings/Red/RedKeep.png" id="3_kxrnx"]
 [ext_resource type="Texture2D" uid="uid://x1q30n6ded2c" path="res://assets/textures/Buildings/Wood/Docks.png" id="4_gt8d0"]
+[ext_resource type="Script" uid="uid://cximee0366rki" path="res://scripts/UI/MinimapMarker.gd" id="5_cngje"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1uhhg"]
 radius = 400.0
@@ -60,3 +61,7 @@ scale = Vector2(5, 5)
 texture = ExtResource("4_gt8d0")
 region_enabled = true
 region_rect = Rect2(32, 0, 16, 32)
+
+[node name="MinimapMarker" type="Node" parent="." unique_id=139808268]
+script = ExtResource("5_cngje")
+metadata/_custom_type_script = "uid://cximee0366rki"

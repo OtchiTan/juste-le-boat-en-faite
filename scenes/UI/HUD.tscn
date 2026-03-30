@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://cib3kdnk7t8o3" path="res://assets/textures/User Interface/Icons-Essentials.png" id="1_7n4fj"]
 [ext_resource type="Script" uid="uid://d2thudnd7yhok" path="res://scripts/UI/hud.gd" id="1_vphgt"]
 [ext_resource type="Texture2D" uid="uid://culi2dg1f6xce" path="res://assets/textures/Buildings/Cyan/CyanKeep.png" id="2_vphgt"]
+[ext_resource type="PackedScene" uid="uid://3dnlhybms5sl" path="res://scenes/UI/Minimap.tscn" id="4_5ip4n"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7n4fj"]
 atlas = ExtResource("1_7n4fj")
@@ -49,3 +50,11 @@ expand_mode = 3
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=316651174]
 layout_mode = 2
 text = "1"
+
+[node name="Minimap" parent="." unique_id=2140094193 instance=ExtResource("4_5ip4n")]
+custom_minimum_size = Vector2(525, 300)
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -525.0
+offset_bottom = 200.0

@@ -41,10 +41,19 @@ var controller = null
 var dont_die_on_life_equal_0:bool = false
 var useRayCastController:bool = true
 
+@onready var minimap_marker: MinimapMarker = $MinimapMarker
+@onready var collision: CollisionShape2D = $CollisionShape2D
+
 func _ready():
 	GameManager.register_boat(self)
 	original_life = life
-	
+	var shape_resource = collision.shape
+	minimap_marker.marker_size = Vector2(shape_resource.height, shape_resource.radius * 2)
+	minimap_marker.is_rect = true
+	if player_id == 0:
+		minimap_marker.marker_color = Color.GREEN
+	else :
+		minimap_marker.marker_color = Color.CRIMSON
 
 func set_as_player_and_id(id_player: int) -> void:
 	player_id = id_player

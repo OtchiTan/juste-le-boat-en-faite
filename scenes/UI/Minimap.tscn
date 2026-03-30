@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://3dnlhybms5sl"]
+
+[ext_resource type="Script" uid="uid://bd7ndnltmmlte" path="res://scripts/UI/minimap.gd" id="1_nkwr6"]
+
+[node name="Minimap" type="Control" unique_id=2140094193]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_nkwr6")
+map_scale = null

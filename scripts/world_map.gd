@@ -36,7 +36,7 @@ func spawn_island_objects() -> void:
 		var world_pos = sea_layer.map_to_local(island_locations[i])
 		island_instance.position = world_pos
 		add_child(island_instance)
-		island_instance.setup(sea_layer, tile_terrain_map)
+		island_instance.setup(sea_layer, tile_terrain_map, island_size)
 		spawn_boat_around_island(world_pos, i)
 
 func spawn_boat_around_island(island_pos: Vector2, i: int) -> void:
