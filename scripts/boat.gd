@@ -24,15 +24,18 @@ var tpRandomNextFrame = false
 
 @export var projectile_scene: PackedScene
 @export var fire_cool_down : int = 1
-var time_since_last_fire = 0
+var time_since_last_fire_left = 0
+var time_since_last_fire_right = 0
 @export var camera_scene: PackedScene
 signal getDamage(int)
 
+@onready var boat_sprite_2d: Sprite2D = $BoatSprite2D
 
 # INPUTS (pilotés par controller)
 var throttle := 0.0   # -1 → 1
 var steering := 0.0   # -1 → 1
-var want_to_shoot := false
+var want_to_shoot_r := false
+var want_to_shoot_l := false
 var controller = null
 
 var dont_die_on_life_equal_0:bool = false
@@ -41,9 +44,12 @@ var useRayCastController:bool = true
 func _ready():
 	GameManager.register_boat(self)
 	original_life = life
+	
 
 func set_as_player_and_id(id_player: int) -> void:
 	player_id = id_player
+	label.text = str(player_id)
+	
 	if id_player == 0:
 		controller=PlayerController.new()
 		controller.boat = self
@@ -77,16 +83,20 @@ func setAITrainingController(id_player: int, new_controller):
 	player_id = id_player
 	controller = new_controller
 	add_child(controller)
-	
+
 func _physics_process(delta: float) -> void:
 	if controller:
 		controller.update(delta)
 	
 	### Tir
-	time_since_last_fire += delta
-	if want_to_shoot:
+	time_since_last_fire_left += delta
+	time_since_last_fire_right += delta
+	
+	
+	if want_to_shoot_l or want_to_shoot_r:
 		attack()
-		want_to_shoot = false
+		want_to_shoot_l = false
+		want_to_shoot_r = false
 	
 	### Deplacement
 	var forward_dir = global_transform.x # L'avant du bateau (équivalent à Vector2.RIGHT.rotated(rotation))
@@ -117,14 +127,16 @@ func _physics_process(delta: float) -> void:
 	
 	linear_velocity = new_forward_vel + new_side_vel + transfere_vel
 	
-	
 	### DEBUG
-	label.text = "linear_velocity = " + str(linear_velocity) + "\n"
-	label.text += "angular_velocity = " + str(angular_velocity)
+	#label.text = "linear_velocity = " + str(linear_velocity) + "\n"
+	#label.text += "angular_velocity = " + str(angular_velocity)
+
+
+@export var spawn_rectancgle:Vector4 = Vector4(-500,500,-500,500)
 
 func _integrate_forces(state):
 	if(tpRandomNextFrame):
-		var target_pos = Vector2(randi_range(-500, 500), randi_range(-500, 500))
+		var target_pos = Vector2(randi_range(spawn_rectancgle.x, spawn_rectancgle.y), randi_range(spawn_rectancgle.z, spawn_rectancgle.w))
 		state.transform.origin = get_parent().to_global(target_pos)
 		tpRandomNextFrame = false
 
@@ -132,38 +144,40 @@ func _integrate_forces(state):
 
 func attack() -> void :
 	
-	if time_since_last_fire < fire_cool_down :
-		return 
-	time_since_last_fire = 0
+
 	
-	var nb_Bullet = 3
-	var dispertion_Angle = PI/4
+	var nb_Bullet = 1
+	var dispertion_Angle = 0
 	
 	var angle_btw = 0
 	if nb_Bullet > 1:
 		angle_btw = dispertion_Angle/(nb_Bullet-1)
-		
-	var direction = global_transform.y.rotated(-dispertion_Angle/2)
 	
-	for fire_angle:int in nb_Bullet:
-		var projectile1 = projectile_scene.instantiate()
-		projectile1.position = position + direction * 50
-		projectile1.direction = direction
-		projectile1.degats = atk
-		projectile1.tireur = self
-		get_parent().add_child(projectile1)
-		
-		direction = direction.rotated(PI)
-		var projectile2 = projectile_scene.instantiate()
-		projectile2.position = position + direction * 50
-		projectile2.direction = direction
-		projectile2.degats = atk
-		projectile2.tireur = self
-		get_parent().add_child(projectile2)
-		direction = direction.rotated(PI)
-		
-		direction = direction.rotated(angle_btw)
-	
+	if ( want_to_shoot_l and time_since_last_fire_left >= fire_cool_down ) :
+		time_since_last_fire_left = 0
+		var direction = global_transform.y.rotated(-dispertion_Angle/2)
+		for fire_angle:int in nb_Bullet:
+			var projectile1 = projectile_scene.instantiate()
+			projectile1.position = position + direction * 50
+			projectile1.direction = (direction + linear_velocity *0.5 / projectile1.vitesse)
+			projectile1.degats = atk
+			projectile1.tireur = self
+			get_parent().add_child(projectile1)
+			direction = direction.rotated(angle_btw)
+	if (want_to_shoot_r and time_since_last_fire_right >= fire_cool_down) :
+		time_since_last_fire_right = 0
+		var direction = global_transform.y.rotated(-dispertion_Angle/2)
+		for fire_angle:int in nb_Bullet:
+			direction = direction.rotated(PI)
+			var projectile1 = projectile_scene.instantiate()
+			projectile1.position = position + direction * 50
+			projectile1.direction = (direction  + linear_velocity * 0.5 / projectile1.vitesse)
+			projectile1.degats = atk
+			projectile1.tireur = self
+			get_parent().add_child(projectile1)
+			direction = direction.rotated(angle_btw)
+
+
 func get_damage(damage: float, tireur) -> void :
 	
 	life -= damage

@@ -11,4 +11,5 @@ func update(delta):
 	boat.throttle = Input.get_action_strength("up") - Input.get_action_strength("down")
 
 	if Input.is_action_just_pressed("attack"):
-		boat.want_to_shoot = true
+		boat.want_to_shoot_l = true
+		boat.want_to_shoot_r = true

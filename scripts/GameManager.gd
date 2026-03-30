@@ -1,7 +1,7 @@
 extends Node
 
 
-var boats = []
+var boats :Array[Boat]= []
 var islands = []
 signal game_won()
 signal game_over()
@@ -18,7 +18,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 	
-func register_boat(boat):
+func register_boat(boat:Boat):
 	boats.append(boat)
 	if boat.player_id == 0:
 		boat.getDamage.connect(_on_getDamage)

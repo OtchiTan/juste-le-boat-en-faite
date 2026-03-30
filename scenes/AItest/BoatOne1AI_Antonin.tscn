@@ -14,7 +14,6 @@ zoom = Vector2(0.45, 0.45)
 
 [node name="Sync" type="Node" parent="." unique_id=1008206700]
 script = ExtResource("2_35cb4")
-control_mode = 0
-speed_up = 50.0
-onnx_model_path = "python/model_retrained2.onnx"
+control_mode = 2
+onnx_model_path = "python/models/model_full_boat.onnx"
 metadata/_custom_type_script = "uid://ok2c2172j67q"

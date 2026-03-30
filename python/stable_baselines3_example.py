@@ -111,7 +111,7 @@ args, extras = parser.parse_known_args()
 
 
 policy_kwargs = dict(
-    net_arch=[128, 128] 
+    net_arch=[256, 256] 
 )
 
 def handle_onnx_export():
@@ -201,12 +201,13 @@ if args.resume_model_path is None:
         env,
         ent_coef=0.001,
         verbose=2,
-        n_steps=256,
+        n_steps=1024,
         policy_kwargs = policy_kwargs,
         tensorboard_log=args.experiment_dir,
         learning_rate=learning_rate,
         device=device,
-        batch_size=1024,
+        batch_size=1024 * 8,
+        n_epochs=5,
     )
 else:
     path_zip = pathlib.Path(args.resume_model_path)

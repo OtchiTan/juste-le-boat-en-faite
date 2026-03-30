@@ -33,13 +33,38 @@ func get_observation() -> Array:
 	var rslts = self.calculate_raycasts()
 	return rslts
 
+func _spawn_nodes():
+	for ray in rays:
+		ray.queue_free()
+	rays = []
+
+	_angles = []
+	var step = cone_width / (n_rays)
+	var start = cone_width / ray_groupping / 2
+
+	for i in n_rays:
+		var angle = start + i * step
+		var ray = RayCast2D.new()
+		ray.set_target_position(
+			Vector2(ray_length * cos(deg_to_rad(angle)), ray_length * sin(deg_to_rad(angle)))
+		)
+		ray.set_name("node_" + str(i))
+		ray.enabled = false
+		ray.collide_with_areas = collide_with_areas
+		ray.collide_with_bodies = collide_with_bodies
+		ray.collision_mask = collision_mask
+		add_child(ray)
+		rays.append(ray)
+
+		_angles.append(start + i * step)
+
 func calculate_raycasts() -> Array:
 	var result = []
 	var range_squared =  ray_length * ray_length
 	var Id_Already_Collid = []
 	
 	var first_angle = BoatOwner.global_transform.x.angle_to(rays[0].target_position)
-	
+	var inv_of_range :float= 1.0 / sqrt(ray_length)
 	for i in range(0, n_rays, ray_groupping) :
 		var min_dist = range_squared
 		var min_d_index = i
@@ -49,15 +74,17 @@ func calculate_raycasts() -> Array:
 			iray.force_raycast_update()
 			
 			if iray.is_colliding():
-				if not Id_Already_Collid.has(iray.get_collider().get_instance_id()):
-					Id_Already_Collid.append(iray.get_collider().get_instance_id())
+				var collider_t = iray.get_collider()
+				if not Id_Already_Collid.has(collider_t.get_instance_id()):
+					if collider_t as Boat : 
+						Id_Already_Collid.append(collider_t.get_instance_id())
 					
 					var distance = (iray.get_collision_point() - iray.global_position).length_squared()
 					if distance < min_dist:
 						min_dist = distance
 						min_d_index = j
-
-		result.append(sqrt(min_dist) / ray_length)
+		var normalized_min_dist = sqrt(sqrt(min_dist)) * inv_of_range
+		result.append(normalized_min_dist)
 		
 		if not add_friend_foe_info:
 			continue

@@ -17,9 +17,11 @@ radius = 36.0
 height = 106.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_4pna2"]
-font_size = 45
+font_size = 75
+outline_size = 25
+outline_color = Color(0.012617188, 0.012617188, 0.012617188, 1)
 
-[node name="RigidBody2D" type="RigidBody2D" unique_id=1813145880 node_paths=PackedStringArray("label")]
+[node name="BoatRigidBody" type="RigidBody2D" unique_id=1813145880 node_paths=PackedStringArray("label")]
 collision_layer = 129
 collision_mask = 129
 physics_material_override = SubResource("PhysicsMaterial_nai5d")
@@ -29,7 +31,7 @@ label = NodePath("Label")
 projectile_scene = ExtResource("2_8jrvy")
 camera_scene = ExtResource("3_q7w65")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=81384593]
+[node name="BoatSprite2D" type="Sprite2D" parent="." unique_id=81384593]
 position = Vector2(-9, 0)
 rotation = 1.5707964
 scale = Vector2(8, 8)
@@ -42,18 +44,20 @@ rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_nai5d")
 
 [node name="Label" type="Label" parent="." unique_id=533265940]
-offset_left = -87.0
-offset_top = -104.0
-offset_right = -47.0
-offset_bottom = -81.0
+offset_left = -88.0
+offset_top = -57.0
+offset_right = 80.0
+offset_bottom = 46.0
+text = "A"
 label_settings = SubResource("LabelSettings_4pna2")
+horizontal_alignment = 1
 
 [node name="RaycastSensor2D_extended" type="Node2D" parent="." unique_id=1203286671]
 script = ExtResource("4_4pna2")
 add_friend_foe_info = true
-ray_groupping = 4
+ray_groupping = 8
 collision_mask = 127
 collide_with_areas = true
 n_rays = 64.0
-ray_length = 2200
+ray_length = 3000
 metadata/_custom_type_script = "uid://dukmfiwpskmss"

@@ -37,6 +37,16 @@ func get_obs() -> Dictionary:
 		randf() *2 - 1
 	]
 	
+	var min_w_dist = 2
+	
+	for i in range(0, (raycast_sensor_2d.n_rays /raycast_sensor_2d.ray_groupping) * 9 , 9) :
+		if c_frame_obs[i+1] == 0.0  and c_frame_obs[i] < min_w_dist:
+			min_w_dist = c_frame_obs[i]
+	if min_w_dist < 2 :
+		var inv_min = (1- min_w_dist)
+		var delta_r =  inv_min * inv_min * 0.1
+		reward -= delta_r
+		cumulated_rewar -= delta_r
 	
 	for obs_array in obs_history:
 		stacked_obs.append_array(obs_array)
@@ -45,10 +55,15 @@ func get_obs() -> Dictionary:
 	stacked_obs.append(move.x)
 	stacked_obs.append(move.y)
 	
-	if boat.time_since_last_fire > boat.fire_cool_down:
+	if boat.time_since_last_fire_left > boat.fire_cool_down:
 		stacked_obs.append(1)
 	else:
-		stacked_obs.append((boat.time_since_last_fire / boat.fire_cool_down)-1)
+		stacked_obs.append((boat.time_since_last_fire_left / boat.fire_cool_down)-1)
+	
+	if boat.time_since_last_fire_right > boat.fire_cool_down:
+		stacked_obs.append(1)
+	else:
+		stacked_obs.append((boat.time_since_last_fire_right / boat.fire_cool_down)-1)
 	
 	stacked_obs.append(boat.life / boat.original_life)
 
@@ -60,7 +75,8 @@ func get_reward() -> float:
 
 func get_action_space() -> Dictionary:
 	var dict = {
-		"shoot": {"size": 2, "action_type": "discrete"},
+		"shoot_left": {"size": 2, "action_type": "discrete"},
+		"shoot_right": {"size": 2, "action_type": "discrete"},
 		"rotate_left_right": { "size": 3,  "action_type": "discrete" },
 		"accelerate_decelerate": { "size": 3, "action_type": "discrete"},
 	}
@@ -80,7 +96,8 @@ func set_action(action) -> void:
 	boat.throttle = move.x
 	boat.steering = move.y
 	
-	boat.want_to_shoot = action["shoot"]
+	boat.want_to_shoot_r = action["shoot_right"]
+	boat.want_to_shoot_l = action["shoot_left"]
 
 func _physics_process(delta):
 	if (not reset_with_time) :
@@ -91,18 +108,10 @@ func _physics_process(delta):
 	if (ControlModes.HUMAN == control_mode):
 			move.y = Input.get_action_strength("right") - Input.get_action_strength("left")
 			move.x = Input.get_action_strength("up") - Input.get_action_strength("down")
-			boat.want_to_shoot = Input.get_action_strength("attack")
+			boat.want_to_shoot_l = Input.get_action_strength("attack")
+			boat.want_to_shoot_r = boat.want_to_shoot_l
 			boat.throttle = move.x
 			boat.steering = move.y
-
-
-	var min_w_dist = 1
-	for i in range(0, c_frame_obs.size(), 4) :
-		if c_frame_obs[i+1] == 0.0 and c_frame_obs[i] < min_w_dist :
-			min_w_dist = c_frame_obs[i]
-	
-	#reward -= (1- min_w_dist) *0.1 * (1- min_w_dist) 
-	#cumulated_rewar -= (1-min_w_dist) *0.1 * (1- min_w_dist) 
 		
 	#reward -= target_dist *0.00001
 	#cumulated_rewar -= target_dist *0.00001
@@ -123,8 +132,11 @@ func _physics_process(delta):
 	
 	var speed = boat.linear_velocity.length()
 	
-	#reward += speed *0.001
-	#cumulated_rewar += speed * 0.001
+	reward += speed *0.01 * delta
+	cumulated_rewar += speed * 0.01 * delta
+	
+	reward -= delta *0.1
+	cumulated_rewar -= delta *0.1
 	super._physics_process(delta)
 	
 func reset():
@@ -159,14 +171,12 @@ func on_dealt_damages(dmg_amount: float, targeted_boat: Boat) :
 			other_controller.reward -= delta_r
 			other_controller.cumulated_rewar -= delta_r
 		FactionManager.Relation.ALLY :
-			reward -= delta_r
-			cumulated_rewar -=delta_r
+			reward -= delta_r * 11
+			cumulated_rewar -=delta_r * 11
 	
 	if ( targeted_boat.life <= 0) :
 		other_controller.needs_reset = true
 		other_controller.done = true
-		needs_reset = true
-		done = true
 
 func update(delta:float):
 	pass
