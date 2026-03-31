@@ -1,6 +1,8 @@
-using Godot;
 using System;
+using Godot;
 using Godot.Collections;
+
+namespace Justeleboatenfaite.scripts;
 
 [GlobalClass]
 public partial class WorldGen : TileMapLayer
