@@ -1,38 +1,51 @@
 [gd_resource type="TileSet" format=3 uid="uid://bka0l1fm562ok"]
 
 [ext_resource type="Texture2D" uid="uid://dtd8vvmw1isw2" path="res://assets/textures/Ground/Shore.png" id="1_m2vqf"]
+[ext_resource type="Texture2D" uid="uid://u720cj22ydoi" path="res://assets/textures/Ground/Grass.png" id="2_vdcxm"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4dvvg"]
 texture = ExtResource("1_m2vqf")
 0:0/0 = 0
 0:0/0/terrain_set = 0
-0:0/0/terrain = 0
+0:0/0/terrain = 1
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:0/0 = 0
 1:0/0/terrain_set = 0
-1:0/0/terrain = 1
-1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:0/0/terrain = 2
 2:0/0 = 0
 2:0/0/terrain_set = 0
-2:0/0/terrain = 2
+2:0/0/terrain = 3
 3:0/0 = 0
 3:0/0/terrain_set = 0
-3:0/0/terrain = 3
+3:0/0/terrain = 4
 4:0/0 = 0
 4:0/0/terrain_set = 0
-4:0/0/terrain = 4
+4:0/0/terrain = 5
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_is7as"]
+texture = ExtResource("2_vdcxm")
+0:0/0 = 0
+1:0/0 = 0
+1:0/0/terrain_set = 0
+1:0/0/terrain = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
 
 [resource]
 physics_layer_0/collision_layer = 1
 terrain_set_0/mode = 0
-terrain_set_0/terrain_0/name = "Sand"
-terrain_set_0/terrain_0/color = Color(0.90588236, 0.8352941, 0.5764706, 1)
-terrain_set_0/terrain_1/name = "WaterSand"
-terrain_set_0/terrain_1/color = Color(0.69411767, 0.7882353, 0.654902, 1)
-terrain_set_0/terrain_2/name = "Water"
-terrain_set_0/terrain_2/color = Color(0.46666667, 0.7529412, 0.7058824, 1)
-terrain_set_0/terrain_3/name = "WaterDeep"
-terrain_set_0/terrain_3/color = Color(0.30588236, 0.7372549, 0.7254902, 1)
-terrain_set_0/terrain_4/name = "WaterDeepDeep"
-terrain_set_0/terrain_4/color = Color(0.25882354, 0.6745098, 0.6862745, 1)
+terrain_set_0/terrain_0/name = "Grass"
+terrain_set_0/terrain_0/color = Color(0.25, 0.5, 0.3125, 1)
+terrain_set_0/terrain_1/name = "Sand"
+terrain_set_0/terrain_1/color = Color(0.90588236, 0.8352941, 0.5764706, 1)
+terrain_set_0/terrain_2/name = "WaterSand"
+terrain_set_0/terrain_2/color = Color(0.69411767, 0.7882353, 0.654902, 1)
+terrain_set_0/terrain_3/name = "Water"
+terrain_set_0/terrain_3/color = Color(0.46666667, 0.7529412, 0.7058824, 1)
+terrain_set_0/terrain_4/name = "WaterDeep"
+terrain_set_0/terrain_4/color = Color(0.30588236, 0.7372549, 0.7254902, 1)
+terrain_set_0/terrain_5/name = "WaterDeepDeep"
+terrain_set_0/terrain_5/color = Color(0.25882354, 0.6745098, 0.6862745, 1)
 sources/0 = SubResource("TileSetAtlasSource_4dvvg")
+sources/1 = SubResource("TileSetAtlasSource_is7as")

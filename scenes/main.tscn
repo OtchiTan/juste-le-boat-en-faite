@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://db7vu88a6jeey" path="res://scenes/UI/game_over.tscn" id="6_tefeu"]
 [ext_resource type="PackedScene" uid="uid://c5vag0pinjsig" path="res://scenes/UI/HUD.tscn" id="7_o6xl0"]
 [ext_resource type="Script" uid="uid://ok2c2172j67q" path="res://addons/godot_rl_agents/sync.gd" id="8_tipki"]
+[ext_resource type="PackedScene" uid="uid://c4g67s2yuwyx8" path="res://scenes/UI/loading_screen.tscn" id="9_choun"]
+[ext_resource type="Script" uid="uid://br1fv6edo4c16" path="res://scripts/UI/loading_screen.gd" id="10_ya4ey"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_jyhfs"]
 
@@ -44,6 +46,11 @@ rotation = -1.5707964
 shape = SubResource("WorldBoundaryShape2D_jyhfs")
 
 [node name="UI" type="Node" parent="." unique_id=1726997890]
+
+[node name="LoadingScreen" parent="UI" unique_id=83714599 instance=ExtResource("9_choun")]
+layer = 999
+visible = false
+script = ExtResource("10_ya4ey")
 
 [node name="victory" parent="UI" unique_id=1513328342 instance=ExtResource("5_tbgi4")]
 

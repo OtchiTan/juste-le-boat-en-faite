@@ -27,6 +27,10 @@ func setup_map_data(grid_size: Vector2i, terrain_map: Dictionary, islands_data: 
 	
 	_calculate_stretch_scale()
 	_generate_texture(terrain_map, initial_colors)
+	
+	var loading_screen = get_tree().get_first_node_in_group("loading_screen")
+	if loading_screen != null:
+		loading_screen.close_loading_screen()
 
 func _generate_texture(terrain_map: Dictionary, initial_colors: Dictionary) -> void:
 	_minimap_image = Image.create(_map_size.x, _map_size.y, false, Image.FORMAT_RGBA8)

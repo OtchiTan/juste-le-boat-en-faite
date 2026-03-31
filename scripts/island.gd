@@ -103,7 +103,7 @@ func _hide_all_dock_sprites() -> void:
 func _is_shore_tile(tile: Vector2i) -> bool:
 	if not tile_terrain_map.has(tile):
 		return false
-	if tile_terrain_map[tile] != 0:
+	if tile_terrain_map[tile] != 1:
 		return false
 
 	var neighbors: Array[Vector2i] = [
@@ -113,7 +113,7 @@ func _is_shore_tile(tile: Vector2i) -> bool:
 		tile + Vector2i(0, -1),
 	]
 	for neighbor in neighbors:
-		if tile_terrain_map.get(neighbor, 1) == 1:
+		if tile_terrain_map.get(neighbor, 1) == 2:
 			return true
 
 	return false

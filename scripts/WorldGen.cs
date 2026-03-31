@@ -107,8 +107,8 @@ public partial class WorldGen : TileMapLayer
 		{
 			for (var j = 0; j < gridSize; j++)
 			{
-				var baseX = i * cellWidth + (cellWidth / 2.0f);
-				var baseY = j * cellHeight + (cellHeight / 2.0f);
+				var baseX = i * cellWidth + cellWidth / 2.0f;
+				var baseY = j * cellHeight + cellHeight / 2.0f;
 
 				var offsetX = _rng.RandfRange(-cellWidth * 0.3f, cellWidth * 0.3f);
 				var offsetY = _rng.RandfRange(-cellHeight * 0.3f, cellHeight * 0.3f);
@@ -136,7 +136,7 @@ public partial class WorldGen : TileMapLayer
 
 
 			var owner = (int)islandInstance.Get("island_owner");
-			_initialIslandColors[i] = (owner == 0) ? Colors.DarkGreen : Colors.DarkRed;
+			_initialIslandColors[i] = owner == 0 ? Colors.DarkGreen : Colors.DarkRed;
 
 			var worldPos = MapToLocal(_islandLocations[i]);
 			islandInstance.Position = worldPos;
@@ -152,13 +152,13 @@ public partial class WorldGen : TileMapLayer
 		var boatInstance = BoatScene.Instantiate<Node2D>();
 		var attempt = 0;
 		var randomDirection = Vector2.Right.Rotated(_rng.RandfRange(0, Mathf.Tau));
-		var tilePos = LocalToMap(islandPos + (randomDirection * BoatOffset));
+		var tilePos = LocalToMap(islandPos + randomDirection * BoatOffset);
 
 		while (GetTileValue(tilePos) < 2 && attempt < 10)
 		{
 			attempt++;
 			randomDirection = Vector2.Right.Rotated(_rng.RandfRange(0, Mathf.Tau));
-			tilePos = LocalToMap(islandPos + (randomDirection * BoatOffset));
+			tilePos = LocalToMap(islandPos + randomDirection * BoatOffset);
 		}
 
 		if (attempt >= 10)
@@ -172,7 +172,7 @@ public partial class WorldGen : TileMapLayer
 		}
 		else
 		{
-			boatInstance.Position = islandPos + (randomDirection * BoatOffset);
+			boatInstance.Position = islandPos + randomDirection * BoatOffset;
 		}
 
 		boatInstance.Call("set_as_player_and_id", id);
@@ -185,14 +185,14 @@ public partial class WorldGen : TileMapLayer
 		var islandDistance = nearestIslandDist / (float)Math.Pow(IslandSize, 2);
 
 		islandDistance += _terrainNoise.GetNoise2D(index.X, index.Y);
-		var result = Mathf.Clamp((int)islandDistance, 0, 4);
+		var result = (int)islandDistance;
 
-		if (result > 2)
+		if (result > 3)
 		{
-			result = 2 + (int)(_seaNoise.GetNoise2D(index.X, index.Y) + 1.0f);
+			result = 3 + (int)(_seaNoise.GetNoise2D(index.X, index.Y) + 1.0f);
 		}
 
-		return result;
+		return Mathf.Clamp(result, 0, GetTileSet().GetTerrainsCount(0) - 1);
 	}
 
 	private float GetDistanceToNearestIsland(Vector2I index)
