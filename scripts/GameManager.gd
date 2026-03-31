@@ -47,35 +47,28 @@ func on_boat_destroyed(boat, tireur):
 	var new_owner = tireur.player_id
 	for island in islands:
 		if island.island_owner == dead_player:
-			island.change_owner(new_owner, false)
+			island.change_owner(-1, false)
 	if tireur.player_id == 0:
 		emit_signal("player_has_more_islands")
 	check_victory(boat, tireur)
 
 func check_victory(boat, tireur):
-	# check rapide qui fonctionne avec le fonctionnement actuel
-	if (boats.size() <= 1): 
+	var own0 = islands[0].island_owner
+	var is_all_same_owner = true
+	for island in islands:
+		if island.island_owner != own0:
+			is_all_same_owner = false
+			break
+	if is_all_same_owner:
 		if (tireur.player_id == 0):
+			print("win")
 			victory()
 		else:
 			print("lose - pas sensé etre atteint")
-			defeat()
-			
-	#check plus complet si on a toutes les iles
-	#var own0 = islands[0].island_owner
-	#var is_all_same_owner = true
-	#for island in islands:
-	#	if island.island_owner != own0:
-	#		is_all_same_owner = false
-	#		break
-	#if is_all_same_owner:
-	#	if (tireur.player_id == 0):
-	#		print("win")
-	#	else:
-	#		print("lose - pas sensé etre atteint")
 	
 func _on_getDamage(i):
 	emit_signal("update_life_hud", i)
+	
 func defeat():
 	print("lose")
 	emit_signal("game_over")
