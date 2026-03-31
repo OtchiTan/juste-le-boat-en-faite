@@ -40,7 +40,8 @@ func _spawn_nodes():
 
 	_angles = []
 	var step = cone_width / (n_rays)
-	var start = cone_width / ray_groupping / 2
+	var group_step = cone_width / ray_groupping
+	var start = -(cone_width /ray_groupping  / 2.0) + (step / 2.0)
 
 	for i in n_rays:
 		var angle = start + i * step
@@ -57,12 +58,17 @@ func _spawn_nodes():
 		rays.append(ray)
 
 		_angles.append(start + i * step)
+		
+@onready var collision_shape_2d: CollisionShape2D = $"../CollisionShape2D"
 
 func calculate_raycasts() -> Array:
 	var result = []
 	var range_squared =  ray_length * ray_length
 	var Id_Already_Collid = []
-	
+	var real0_for_raycast_dist = 0
+	if collision_shape_2d and "radius" in collision_shape_2d.shape :
+		real0_for_raycast_dist = collision_shape_2d.shape.radius 
+		real0_for_raycast_dist *= real0_for_raycast_dist * 1.1
 	var first_angle = BoatOwner.global_transform.x.angle_to(rays[0].target_position)
 	var inv_of_range :float= 1.0 / sqrt(ray_length)
 	for i in range(0, n_rays, ray_groupping) :
@@ -83,7 +89,8 @@ func calculate_raycasts() -> Array:
 					if distance < min_dist:
 						min_dist = distance
 						min_d_index = j
-		var normalized_min_dist = sqrt(sqrt(min_dist)) * inv_of_range
+		
+		var normalized_min_dist = sqrt(sqrt(max(min_dist - real0_for_raycast_dist, 0))) * inv_of_range
 		result.append(normalized_min_dist)
 		
 		if not add_friend_foe_info:
@@ -116,11 +123,9 @@ func calculate_raycasts() -> Array:
 			var moving_collider = collider as RigidBody2D
 			if moving_collider :
 				is_moving = 1
-				var relative_targ_rot = BoatOwner.rotation - moving_collider.rotation
+				var relative_targ_rot = angle_difference(moving_collider.rotation, BoatOwner.rotation)
 				
-				
-				norm_relative_target_rotation =(fmod(relative_targ_rot+3*PI,2*PI)-PI)/PI
-				
+				norm_relative_target_rotation = relative_targ_rot / PI
 				
 				var owner_forward = BoatOwner.global_transform.x
 				var relative_t_pos = moving_collider.global_position - BoatOwner.global_position

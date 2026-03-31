@@ -10,10 +10,10 @@
 [node name="BoatAiTraining" parent="Node" unique_id=216534563 instance=ExtResource("1_c8lad")]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=61913495]
-zoom = Vector2(0.45, 0.45)
+zoom = Vector2(0.35, 0.35)
 
 [node name="Sync" type="Node" parent="." unique_id=1008206700]
 script = ExtResource("2_35cb4")
 control_mode = 2
-onnx_model_path = "python/models/model_full_boat.onnx"
+onnx_model_path = "python/model_retrained2.onnx"
 metadata/_custom_type_script = "uid://ok2c2172j67q"

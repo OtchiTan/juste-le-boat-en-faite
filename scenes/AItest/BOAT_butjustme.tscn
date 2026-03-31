@@ -1,0 +1,93 @@
+[gd_scene format=3 uid="uid://lvl18p6tks81"]
+
+[ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="1_nffn4"]
+
+[sub_resource type="GDScript" id="GDScript_dmd83"]
+resource_name = "AIRayCastTraining"
+script/source = "extends Node2D
+
+@onready var boat: Boat = $Boat
+
+func _ready() -> void:
+	boat.set_as_player_and_id(1)
+	boat.controller.control_mode = AIController2D.ControlModes.HUMAN
+	
+
+func _process(delta: float) -> void:
+	if (boat) :
+		$Label.text = str(round(boat.controller.cumulated_rewar *100)/100)
+
+		
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ubajb"]
+size = Vector2(1880, 22)
+
+[sub_resource type="Gradient" id="Gradient_lf4h0"]
+colors = PackedColorArray(0.5411765, 0.5176471, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ubajb"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_2ltf8"]
+width = 3800
+height = 2160
+noise = SubResource("FastNoiseLite_ubajb")
+color_ramp = SubResource("Gradient_lf4h0")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8r3ig"]
+size = Vector2(20, 1080)
+
+[sub_resource type="LabelSettings" id="LabelSettings_0wxyi"]
+font_size = 400
+font_color = Color(0.012617188, 0.012617188, 0.012617188, 1)
+
+[node name="BoatAiTraining" type="Node2D" unique_id=216534563]
+script = SubResource("GDScript_dmd83")
+
+[node name="Boat" parent="." unique_id=1813145880 instance=ExtResource("1_nffn4")]
+position = Vector2(-204.99998, -199.00002)
+rotation = -1.5728018
+camera_scene = null
+
+[node name="World" type="StaticBody2D" parent="." unique_id=1888477537]
+collision_layer = 129
+collision_mask = 129
+
+[node name="Aera2" type="CollisionShape2D" parent="World" unique_id=336050239]
+light_mask = 512
+visibility_layer = 512
+position = Vector2(0, 1091)
+scale = Vector2(2.9199998, 1)
+shape = SubResource("RectangleShape2D_ubajb")
+
+[node name="Aera" type="CollisionShape2D" parent="World" unique_id=1804768403]
+light_mask = 512
+visibility_layer = 512
+position = Vector2(2, -1096)
+scale = Vector2(2.2800057, 1)
+shape = SubResource("RectangleShape2D_ubajb")
+
+[node name="Sprite2D" type="Sprite2D" parent="World" unique_id=231873435]
+z_index = -1
+texture = SubResource("NoiseTexture2D_2ltf8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World" unique_id=506761761]
+position = Vector2(1920, -26)
+scale = Vector2(1, 3.4000008)
+shape = SubResource("RectangleShape2D_8r3ig")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="World" unique_id=1046895694]
+position = Vector2(-1927.0001, 10)
+scale = Vector2(0.6790505, 3.2192764)
+shape = SubResource("RectangleShape2D_8r3ig")
+
+[node name="Label" type="Label" parent="." unique_id=1351062301]
+offset_left = -1899.0
+offset_top = -1072.0
+offset_right = -1157.0
+offset_bottom = -526.0
+text = "test"
+label_settings = SubResource("LabelSettings_0wxyi")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1301421163]
+zoom = Vector2(0.5, 0.5)

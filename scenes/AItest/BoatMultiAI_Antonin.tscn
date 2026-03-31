@@ -8,36 +8,58 @@
 [node name="Node" type="Node" parent="." unique_id=1553768092]
 
 [node name="BoatAiTraining" parent="Node" unique_id=216534563 instance=ExtResource("1_1s5by")]
+position = Vector2(-2710, -1534)
 
 [node name="BoatAiTraining2" parent="Node" unique_id=1447526643 instance=ExtResource("1_1s5by")]
-position = Vector2(3840, 0)
+position = Vector2(2700, -1534)
 
 [node name="BoatAiTraining3" parent="Node" unique_id=1075683285 instance=ExtResource("1_1s5by")]
-position = Vector2(-3840, 0)
+position = Vector2(-8120, -1534)
 
 [node name="BoatAiTraining4" parent="Node" unique_id=1615383530 instance=ExtResource("1_1s5by")]
-position = Vector2(0, -2187)
+position = Vector2(-2710, -4605)
 
 [node name="BoatAiTraining5" parent="Node" unique_id=496530748 instance=ExtResource("1_1s5by")]
-position = Vector2(3840, -2187)
+position = Vector2(2700, -4605)
 
 [node name="BoatAiTraining6" parent="Node" unique_id=1546512670 instance=ExtResource("1_1s5by")]
-position = Vector2(-3840, -2187)
+position = Vector2(-8120, -4605)
 
 [node name="BoatAiTraining7" parent="Node" unique_id=1219968138 instance=ExtResource("1_1s5by")]
-position = Vector2(0, 2187)
+position = Vector2(-2710, 1525)
 
 [node name="BoatAiTraining8" parent="Node" unique_id=724414159 instance=ExtResource("1_1s5by")]
-position = Vector2(3840, 2187)
+position = Vector2(2700, 1525)
 
 [node name="BoatAiTraining9" parent="Node" unique_id=1944608975 instance=ExtResource("1_1s5by")]
-position = Vector2(-3840, 2187)
+position = Vector2(-8120, 1525)
+
+[node name="BoatAiTraining10" parent="Node" unique_id=1490240930 instance=ExtResource("1_1s5by")]
+position = Vector2(-2710, 4606)
+
+[node name="BoatAiTraining11" parent="Node" unique_id=1677417549 instance=ExtResource("1_1s5by")]
+position = Vector2(2700, 4606)
+
+[node name="BoatAiTraining12" parent="Node" unique_id=1190491443 instance=ExtResource("1_1s5by")]
+position = Vector2(-8120, 4606)
+
+[node name="BoatAiTraining13" parent="Node" unique_id=1094280552 instance=ExtResource("1_1s5by")]
+position = Vector2(8135, -1534)
+
+[node name="BoatAiTraining14" parent="Node" unique_id=1620171564 instance=ExtResource("1_1s5by")]
+position = Vector2(8135, -4605)
+
+[node name="BoatAiTraining15" parent="Node" unique_id=416017122 instance=ExtResource("1_1s5by")]
+position = Vector2(8135, 1525)
+
+[node name="BoatAiTraining16" parent="Node" unique_id=509074116 instance=ExtResource("1_1s5by")]
+position = Vector2(8135, 4606)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=61913495]
-zoom = Vector2(0.16, 0.16)
+zoom = Vector2(0.089, 0.089)
 
 [node name="Sync" type="Node" parent="." unique_id=1008206700]
 script = ExtResource("2_46qyx")
 speed_up = 16.0
-onnx_model_path = "python/model_retrained2.onnx"
+onnx_model_path = "python/model_retrained.onnx"
 metadata/_custom_type_script = "uid://ok2c2172j67q"

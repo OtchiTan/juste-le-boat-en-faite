@@ -44,6 +44,11 @@ var useRayCastController:bool = true
 @onready var minimap_marker: MinimapMarker = $MinimapMarker
 @onready var collision: CollisionShape2D = $CollisionShape2D
 
+var wind_angle = 0
+#if the angle is between windangle +/- wind_acceptance_angle take the wind, else not. 
+var wind_acceptance_angle = 30 * PI / 180
+var wind_strenght = 50
+
 func _ready():
 	GameManager.register_boat(self)
 	original_life = life
@@ -111,9 +116,13 @@ func _physics_process(delta: float) -> void:
 	var forward_dir = global_transform.x # L'avant du bateau (équivalent à Vector2.RIGHT.rotated(rotation))
 	
 	if throttle != 0:
-		var force = forward_dir * throttle * acceleration
+		var force  = forward_dir * throttle * acceleration 
+		var relative_wind_angle = fmod(abs(forward_dir.angle() - wind_angle),  PI)
+		#print(forward_dir.angle()," / ",wind_angle," : ",  relative_wind_angle, relative_wind_angle < wind_acceptance_angle)
 		if throttle < 0 and linear_velocity.dot(forward_dir) < 0:
 			force /= 4
+		elif ( relative_wind_angle < wind_acceptance_angle) :
+			force += force.normalized()* wind_strenght
 		apply_central_force(force)
 	
 	### rotation
@@ -127,7 +136,7 @@ func _physics_process(delta: float) -> void:
 	var side_dir = global_transform.y
 	var forward_v = side_dir.orthogonal() * linear_velocity.dot(side_dir.orthogonal())
 	var side_v = side_dir * linear_velocity.dot(side_dir)
-	
+
 	var new_forward_vel = forward_v * friction
 	var new_side_vel = side_v * lateral_friction
 	

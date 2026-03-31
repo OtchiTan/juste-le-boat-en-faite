@@ -14,7 +14,7 @@ script/source = "extends Node2D
 func _ready() -> void:
 	boat.set_as_player_and_id(1)
 	boat_1.set_as_player_and_id(1)
-	#boat_1.controller.control_mode = AIController2D.ControlModes.HUMAN
+	boat_1.controller.control_mode = AIController2D.ControlModes.HUMAN
 	boat.set_target(boat_1)
 	boat_1.set_target(boat)
 	
@@ -66,7 +66,17 @@ func set_boat_spawn2(boat, input : CollisionShape2D) :
 	boat.spawn_rectancgle.z = -half_height + input.position.y
 	boat.spawn_rectancgle.w = half_height + input.position.y
 
+var elapsed_time = 0
+var change_wind_time = 1
 func _process(delta: float) -> void:
+	elapsed_time += delta
+	if elapsed_time > change_wind_time :
+		elapsed_time = 0
+		var new_wind_dir = boat.wind_angle + randf_range(-0.1,0.1)
+		boat.wind_angle = new_wind_dir
+		boat_1.wind_angle = new_wind_dir
+		boat_2.wind_angle = new_wind_dir
+		boat_3.wind_angle = new_wind_dir
 	if (boat and boat_1) :
 		$Label.text = str(round(boat.controller.cumulated_rewar *100)/100)
 		$Label2.text = str(round(boat_1.controller.cumulated_rewar *100)/100)
@@ -78,21 +88,18 @@ func _process(delta: float) -> void:
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ubajb"]
-size = Vector2(1880, 22)
+size = Vector2(5324, 22)
 
-[sub_resource type="Gradient" id="Gradient_lf4h0"]
-colors = PackedColorArray(0.5411765, 0.5176471, 1, 1, 1, 1, 1, 1)
+[sub_resource type="Gradient" id="Gradient_0wxyi"]
+colors = PackedColorArray(0.33524078, 0.5781251, 1, 1, 0, 0.37254903, 0.9254902, 1)
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_ubajb"]
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_2ltf8"]
-width = 3800
-height = 2160
-noise = SubResource("FastNoiseLite_ubajb")
-color_ramp = SubResource("Gradient_lf4h0")
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_lf4h0"]
+gradient = SubResource("Gradient_0wxyi")
+width = 5333
+height = 3000
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8r3ig"]
-size = Vector2(20, 1080)
+size = Vector2(20, 3020)
 
 [sub_resource type="LabelSettings" id="LabelSettings_0wxyi"]
 font_size = 400
@@ -154,36 +161,32 @@ collision_mask = 129
 [node name="Aera2" type="CollisionShape2D" parent="World" unique_id=336050239]
 light_mask = 512
 visibility_layer = 512
-position = Vector2(0, 1091)
-scale = Vector2(2.9199998, 1)
+position = Vector2(0, 1495)
 shape = SubResource("RectangleShape2D_ubajb")
 
 [node name="Aera" type="CollisionShape2D" parent="World" unique_id=1804768403]
 light_mask = 512
 visibility_layer = 512
-position = Vector2(2, -1096)
-scale = Vector2(2.2800057, 1)
+position = Vector2(0, -1500)
 shape = SubResource("RectangleShape2D_ubajb")
 
 [node name="Sprite2D" type="Sprite2D" parent="World" unique_id=231873435]
 z_index = -1
-texture = SubResource("NoiseTexture2D_2ltf8")
+texture = SubResource("GradientTexture2D_lf4h0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World" unique_id=506761761]
-position = Vector2(1920, -26)
-scale = Vector2(1, 3.4000008)
+position = Vector2(2666, 0)
 shape = SubResource("RectangleShape2D_8r3ig")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="World" unique_id=1046895694]
-position = Vector2(-1927.0001, 10)
-scale = Vector2(0.6790505, 3.2192764)
+position = Vector2(-2666, 0)
 shape = SubResource("RectangleShape2D_8r3ig")
 
 [node name="Label" type="Label" parent="." unique_id=1351062301]
-offset_left = -1899.0
-offset_top = -1072.0
-offset_right = -1157.0
-offset_bottom = -526.0
+offset_left = -2573.0
+offset_top = -1439.0
+offset_right = -1831.0
+offset_bottom = -893.0
 text = "test"
 label_settings = SubResource("LabelSettings_0wxyi")
 
@@ -191,10 +194,10 @@ label_settings = SubResource("LabelSettings_0wxyi")
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = 1153.0
-offset_top = -1069.0
-offset_right = 1895.0
-offset_bottom = -523.0
+offset_left = 1861.0
+offset_top = -1450.0
+offset_right = 2603.0
+offset_bottom = -904.0
 grow_horizontal = 0
 text = "test"
 label_settings = SubResource("LabelSettings_lf4h0")
@@ -206,12 +209,12 @@ collision_mask = 0
 script = SubResource("GDScript_0wxyi")
 
 [node name="spawn1" type="CollisionShape2D" parent="spawner" unique_id=217561396]
-position = Vector2(-818, 30)
+position = Vector2(-758, 6.000004)
 scale = Vector2(0.9200006, 0.95999753)
 shape = SubResource("RectangleShape2D_0wxyi")
 
 [node name="spawn2" type="CollisionShape2D" parent="spawner" unique_id=2078804550]
-position = Vector2(832, 12)
+position = Vector2(777.99994, 7)
 scale = Vector2(0.96000123, 0.96000105)
 shape = SubResource("RectangleShape2D_0wxyi")
 
@@ -226,10 +229,10 @@ rotation = -1.2194724
 camera_scene = null
 
 [node name="Label2" type="Label" parent="." unique_id=2137089932]
-offset_left = -1899.0
-offset_top = 547.0
-offset_right = -1157.0
-offset_bottom = 1093.0
+offset_left = -2597.0
+offset_top = 867.0
+offset_right = -1855.0
+offset_bottom = 1413.0
 text = "test"
 label_settings = SubResource("LabelSettings_0wxyi")
 
@@ -237,10 +240,10 @@ label_settings = SubResource("LabelSettings_0wxyi")
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = 1162.0
-offset_top = 550.0
-offset_right = 1904.0
-offset_bottom = 1096.0
+offset_left = 1849.0
+offset_top = 884.0
+offset_right = 2591.0
+offset_bottom = 1430.0
 grow_horizontal = 0
 text = "test"
 label_settings = SubResource("LabelSettings_lf4h0")
