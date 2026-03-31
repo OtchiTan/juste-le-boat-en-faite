@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://bfmy0g0v4chk6"]
 
 [ext_resource type="Script" uid="uid://b4tdte0od7vt3" path="res://scripts/main.gd" id="1_o5qli"]
-[ext_resource type="PackedScene" uid="uid://ddgk1s8xjb5id" path="res://scenes/world_map.tscn" id="2_0wfyh"]
+[ext_resource type="TileSet" uid="uid://bka0l1fm562ok" path="res://assets/tile_set/world_map.tres" id="2_85g3d"]
+[ext_resource type="Script" uid="uid://dqv2sewh5xtf7" path="res://scripts/WorldGen.cs" id="2_tipki"]
 [ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="3_sugp2"]
 [ext_resource type="PackedScene" uid="uid://bn0kngi6cvs5f" path="res://scenes/island.tscn" id="3_tefeu"]
 [ext_resource type="PackedScene" uid="uid://cp5wyt6eikplx" path="res://scenes/UI/victory.tscn" id="5_tbgi4"]
@@ -14,12 +15,12 @@
 [node name="Main" type="Node2D" unique_id=1828361990]
 script = ExtResource("1_o5qli")
 
-[node name="WorldMap" parent="." unique_id=1127148850 instance=ExtResource("2_0wfyh")]
-island_number = 9
-island_size = 30.0
-map_size = Vector2i(700, 400)
-island_scene = ExtResource("3_tefeu")
-boat_scene = ExtResource("3_sugp2")
+[node name="WorldGen" type="TileMapLayer" parent="." unique_id=505153361]
+tile_set = ExtResource("2_85g3d")
+script = ExtResource("2_tipki")
+IslandScene = ExtResource("3_tefeu")
+BoatScene = ExtResource("3_sugp2")
+metadata/_custom_type_script = "uid://dqv2sewh5xtf7"
 
 [node name="Bordures" type="StaticBody2D" parent="." unique_id=309844219]
 collision_layer = 129

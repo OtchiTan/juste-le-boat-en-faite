@@ -5,3 +5,5 @@
 python/venv/
 python/logs/
 python/__pycache__/
+
+.idea
