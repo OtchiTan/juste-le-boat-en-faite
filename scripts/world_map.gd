@@ -17,6 +17,13 @@ var thread: Thread
 @export var boat_scene: PackedScene
 @export var boat_offset: float = 900.0
 
+# Gestion minimap
+
+var island_tiles: Dictionary[int, Array] = {}
+var minimap_image: Image
+var minimap_texture: ImageTexture
+var initial_island_colors: Dictionary = {}
+
 func _ready() -> void:
 	terrain_noise.seed = 3630
 	terrain_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
@@ -32,11 +39,16 @@ func _ready() -> void:
 func spawn_island_objects() -> void:
 	for i in island_locations.size():
 		var island_instance = island_scene.instantiate()
+		island_instance.island_id = i
 		island_instance.change_owner(i, true)
+		if island_instance.island_owner == 0:
+			initial_island_colors[i] = Color.DARK_GREEN
+		else:
+			initial_island_colors[i] = Color.DARK_RED
 		var world_pos = sea_layer.map_to_local(island_locations[i])
 		island_instance.position = world_pos
 		add_child(island_instance)
-		island_instance.setup(sea_layer, tile_terrain_map, island_size)
+		island_instance.setup(sea_layer, tile_terrain_map)
 		spawn_boat_around_island(world_pos, i)
 
 func spawn_boat_around_island(island_pos: Vector2, i: int) -> void:
@@ -76,7 +88,12 @@ func generate_map() -> void:
 			var terrain = _get_tile_value(index)
 			terrains.get_or_add(terrain, []).push_back(index)
 			# 0 = terre, 1 = eau
-			tile_terrain_map[index] = 0 if _is_land_tile(index) else 1
+			if _is_land_tile(index):
+				tile_terrain_map[index] = 0
+				var island_id = _get_nearest_island_id(index)
+				island_tiles.get_or_add(island_id, []).push_back(index)
+			else:
+				tile_terrain_map[index] = 1
 
 	call_deferred("render_terrain")
 
@@ -84,6 +101,14 @@ func render_terrain() -> void:
 	for terrain in terrains:
 		sea_layer.set_cells_terrain_connect(terrains.get(terrain), 0, terrain)
 	spawn_island_objects()
+	
+	var uis = get_tree().get_nodes_in_group("minimap_ui")
+	if not uis.is_empty():
+		var tile_size = sea_layer.tile_set.tile_size
+		
+		var real_world_size = Vector2(map_size) * Vector2(tile_size)
+		
+		uis[0].setup_map_data(map_size, tile_terrain_map, island_tiles, real_world_size, initial_island_colors)
 
 # Retourne true si la tuile est de la terre.
 # On utilise la valeur brute AVANT la transformation sea_noise.
@@ -132,3 +157,13 @@ func _get_distance_to_nearest_island(index: Vector2i) -> float:
 			nearest_distance = island_length
 
 	return nearest_distance
+	
+func _get_nearest_island_id(index: Vector2i) -> int:
+	var nearest_distance = 999999999.0
+	var nearest_id = -1
+	for i in island_locations.size():
+		var dist = island_locations[i].distance_squared_to(index)
+		if dist < nearest_distance:
+			nearest_distance = dist
+			nearest_id = i
+	return nearest_id

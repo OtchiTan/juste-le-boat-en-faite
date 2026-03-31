@@ -67,5 +67,5 @@ metadata/_custom_type_script = "uid://dukmfiwpskmss"
 script = ExtResource("5_wdn3g")
 marker_color = Color(0.14921707, 0.5176453, 0.9999998, 1)
 is_rect = true
-marker_size = Vector2(100, 100)
+marker_size = Vector2(1000, 1000)
 metadata/_custom_type_script = "uid://cximee0366rki"

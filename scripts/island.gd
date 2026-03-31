@@ -13,7 +13,6 @@ var island_id: int
 @onready var sprite_down: Sprite2D = $Dock/SpriteDown
 @onready var sprite_up: Sprite2D = $Dock/SpriteUp
 @onready var capture_bar: ProgressBar = $Dock/CaptureBar  # Supprime si pas de ProgressBar
-@onready var minimap_marker: MinimapMarker = $MinimapMarker
 
 # === Capture ===
 const CAPTURE_TIME: float = 3.0
@@ -35,14 +34,9 @@ func _ready() -> void:
 	_hide_all_dock_sprites()
 
 # Appelé par world_map.gd après le spawn de l'île
-func setup(tilemap_ref: TileMapLayer, terrain_map: Dictionary, island_size: int) -> void:
+func setup(tilemap_ref: TileMapLayer, terrain_map: Dictionary) -> void:
 	tilemap = tilemap_ref
 	tile_terrain_map = terrain_map
-	if island_owner == 0 :
-		minimap_marker.marker_color = Color.DARK_GREEN
-	else :
-		minimap_marker.marker_color = Color.DARK_RED
-	minimap_marker.marker_size = Vector2i(island_size*16, island_size*16)
 	_place_dock_on_shore()
 
 func _process(delta: float) -> void:
@@ -180,16 +174,27 @@ func change_owner(new_owner: int, is_needed_to_await_ready: bool) -> void:
 	if is_needed_to_await_ready:
 		await ready
 	update_visual()
+	var team_color: Color
+	print(new_owner)
+	if new_owner == 0:
+		team_color = Color.DARK_GREEN
+	else:
+		team_color = Color.DARK_RED
+	if not is_needed_to_await_ready:
+		_update_minimap_color(team_color)
+
+func _update_minimap_color(color: Color) -> void:
+	var uis = get_tree().get_nodes_in_group("minimap_ui")
+	if not uis.is_empty():
+		uis[0].change_island_color(island_id, color)
 
 func update_visual() -> void:
 	if island_owner == 0:
 		castle_player.visible = true
 		castle_ai.visible = false
-		minimap_marker.marker_color = Color.DARK_GREEN
 	else:
 		castle_player.visible = false
 		castle_ai.visible = true
-		minimap_marker.marker_color = Color.DARK_RED
 		
 func _get_water_direction(shore_tile: Vector2i) -> Vector2:
 	if tile_terrain_map.get(shore_tile + Vector2i(1, 0), 1) == 1:
