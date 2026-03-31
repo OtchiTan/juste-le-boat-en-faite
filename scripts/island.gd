@@ -178,6 +178,8 @@ func change_owner(new_owner: int, is_needed_to_await_ready: bool) -> void:
 	print(new_owner)
 	if new_owner == 0:
 		team_color = Color.DARK_GREEN
+	elif new_owner == -1:
+		team_color = Color.SLATE_GRAY
 	else:
 		team_color = Color.DARK_RED
 	if not is_needed_to_await_ready:
