@@ -13,11 +13,15 @@ func update_island() -> void :
 			i += 1
 	island_label.text = str(i)
 
+func _on_wind_change(newAngle:float) :
+	$WindNode/TextureRect.rotation = newAngle
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	GameManager.update_life_hud.connect(_on_getDamage)
 	GameManager.player_has_more_islands.connect(update_island)
+	GameManager.wind_changed.connect(_on_wind_change)
+	_on_wind_change(GameManager.wind_direction)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

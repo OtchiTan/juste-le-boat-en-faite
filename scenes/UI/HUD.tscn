@@ -3,7 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://cib3kdnk7t8o3" path="res://assets/textures/User Interface/Icons-Essentials.png" id="1_7n4fj"]
 [ext_resource type="Script" uid="uid://d2thudnd7yhok" path="res://scripts/UI/hud.gd" id="1_vphgt"]
 [ext_resource type="Texture2D" uid="uid://culi2dg1f6xce" path="res://assets/textures/Buildings/Cyan/CyanKeep.png" id="2_vphgt"]
-[ext_resource type="PackedScene" uid="uid://3dnlhybms5sl" path="res://scenes/UI/Minimap.tscn" id="4_5ip4n"]
+[ext_resource type="PackedScene" path="res://scenes/UI/Minimap.tscn" id="4_5ip4n"]
+[ext_resource type="Texture2D" uid="uid://yt3ypfvkeh66" path="res://assets/fleche.png" id="5_l8xe2"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7n4fj"]
 atlas = ExtResource("1_7n4fj")
@@ -59,3 +60,19 @@ anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -525.0
 offset_bottom = 200.0
+
+[node name="WindNode" type="Control" parent="." unique_id=781783466]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 27.0
+offset_top = 112.0
+offset_right = 27.0
+offset_bottom = 112.0
+
+[node name="TextureRect" type="TextureRect" parent="WindNode" unique_id=1645550399]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 30.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("5_l8xe2")
+expand_mode = 1

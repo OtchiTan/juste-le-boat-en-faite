@@ -11,7 +11,9 @@ var lastDist = -1
 var c_frame_obs = []
 var obs_history: Array[Array]
 var cumulated_rewar = 0
-var reset_with_time:bool = true
+var reset_with_time:bool = false
+var inference_cheat:bool = true
+
 #-- Methods that need implementing using the "extend script" option in Godot --#
 func get_obs() -> Dictionary:
 	c_frame_obs = raycast_sensor_2d.get_observation()
@@ -44,8 +46,7 @@ func get_obs() -> Dictionary:
 		var inv_min = (1- min_w_dist)
 		var inv_min2 = inv_min * inv_min
 		var delta_r = inv_min2 * inv_min2
-		reward -= delta_r
-		cumulated_rewar -= delta_r
+		add_reward(- delta_r )
 	
 	for obs_array in obs_history:
 		stacked_obs.append_array(obs_array)
@@ -65,6 +66,7 @@ func get_obs() -> Dictionary:
 		stacked_obs.append((boat.time_since_last_fire_right / boat.fire_cool_down)-1)
 	
 	stacked_obs.append(boat.life / boat.original_life)
+	
 	stacked_obs.append(cumulative_rotation /( PI * 12))
 	
 	var relative_wind_angle = angle_difference(boat.global_rotation, boat.wind_angle) / PI
@@ -93,31 +95,29 @@ func get_action_space() -> Dictionary:
 func set_action(action) -> void:
 	var newx = action["rotate_left_right"] - 1
 	var newy = action["accelerate_decelerate"] - 1
-	#
-	#if (newx != move.x) :
-	#	reward -= 0.1
-	#if (newy != move.y) :
-	#	reward -= 0.1
+
 	move.x = newx
 	move.y = newy
 	boat.throttle = move.x
 	boat.steering = move.y
 	
 	boat.want_to_shoot_r = action["shoot_right"]
-	if boat.want_to_shoot_r :
-		var truc :bool= false
-		for i in [5,6,7] :
-			var real_index = i * 9
-			truc = truc or c_frame_obs[real_index+2]
-		boat.want_to_shoot_r = truc and boat.want_to_shoot_r
-	
 	boat.want_to_shoot_l = action["shoot_left"]
-	if boat.want_to_shoot_l :
-		var truc :bool= false
-		for i in [1,2,3] :
-			var real_index = i * 9
-			truc = truc or c_frame_obs[real_index+2]
-		boat.want_to_shoot_l = truc and boat.want_to_shoot_l
+	
+	if control_mode == ControlModes.ONNX_INFERENCE and inference_cheat:
+		# empêche de trop tirer dans le vide quand on le montre.
+		if boat.want_to_shoot_r :
+			var truc :bool= false
+			for i in [5,6,7] :
+				var real_index = i * 9
+				truc = truc or c_frame_obs[real_index+2]
+			boat.want_to_shoot_r = truc and boat.want_to_shoot_r
+		if boat.want_to_shoot_l :
+			var truc :bool= false
+			for i in [1,2,3] :
+				var real_index = i * 9
+				truc = truc or c_frame_obs[real_index+2]
+			boat.want_to_shoot_l = truc and boat.want_to_shoot_l
 var cumulative_rotation = 0
 
 func _physics_process(delta):
@@ -154,25 +154,20 @@ func _physics_process(delta):
 	
 	var speed = boat.linear_velocity.length()
 	
-	reward += speed *0.01 * delta
-	cumulated_rewar += speed * 0.01 * delta
-	
-	reward -= delta * 2
-	cumulated_rewar -= delta * 2
+	add_reward(speed *0.01 * delta)
+	add_reward( - delta * 2)
 	if speed < 20 and move.x == 0 and move.y == 0 and not boat.want_to_shoot_r and not boat.want_to_shoot_l:
-		reward-= delta * 60
-		cumulated_rewar -= delta * 60
+		add_reward(- delta * 60)
 	
 	
 	
 	# On ajoute la rotation effectuée à cette frame
 	cumulative_rotation += boat.angular_velocity * delta
 	if abs(cumulative_rotation) > PI * 4: # Plus de 2 tours complets
-		reward -= 0.5 * abs(cumulative_rotation) * delta
-		cumulated_rewar -= 0.5 * abs(cumulative_rotation) * delta
+		add_reward(-0.5 * abs(cumulative_rotation) * delta)
 		cumulative_rotation *= 0.99
 	super._physics_process(delta)
-	
+
 func reset():
 	super.reset()
 	obs_history.clear()
@@ -184,14 +179,12 @@ func _ready():
 	super._ready()
 	
 	boat.on_dealt_damages.connect(on_dealt_damages)
-	boat.dont_die_on_life_equal_0 = true
 	
 	reset_after = 60 * 60 * 4
 
 
 func OnSetControlMode(newvalue) :
-	boat.dont_die_on_life_equal_0 = newvalue == ControlModes.TRAINING
-	boat.dont_die_on_life_equal_0 = true
+	pass
 
 func on_dealt_damages(dmg_amount: float, targeted_boat: Boat) :
 	var delta_r = dmg_amount
@@ -200,17 +193,19 @@ func on_dealt_damages(dmg_amount: float, targeted_boat: Boat) :
 	var other_controller = targeted_boat.controller
 	match FactionManager.get_relation(boat, targeted_boat) :
 		FactionManager.Relation.ENEMY :
-			reward += delta_r * 10
-			cumulated_rewar +=  delta_r * 10
-			other_controller.reward -= delta_r
-			other_controller.cumulated_rewar -= delta_r
+			add_reward(delta_r * 10)
+			if other_controller.has_method("add_reward") :
+				other_controller.add_reward(-delta_r)
 		FactionManager.Relation.ALLY :
-			reward -= delta_r * 8
-			cumulated_rewar -=delta_r * 8
+			add_reward(- delta_r * 8)
 	
 	if ( targeted_boat.life <= 0) :
-		other_controller.needs_reset = true
-		other_controller.done = true
+		if ("needs_reset" in other_controller and "done" in other_controller) : 
+			other_controller.needs_reset = true
+			other_controller.done = true
+func add_reward(delta) : 
+	reward += delta
+	cumulated_rewar += delta
 
 func update(delta:float):
 	pass

@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bd8lfogk1peil"]
 
 [ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="1_lf4h0"]
+[ext_resource type="Texture2D" uid="uid://yt3ypfvkeh66" path="res://assets/fleche.png" id="2_lf4h0"]
 
 [sub_resource type="GDScript" id="GDScript_dmd83"]
 resource_name = "AIRayCastTraining"
@@ -14,9 +15,19 @@ script/source = "extends Node2D
 func _ready() -> void:
 	boat.set_as_player_and_id(1)
 	boat_1.set_as_player_and_id(1)
-	boat_1.controller.control_mode = AIController2D.ControlModes.HUMAN
-	boat.set_target(boat_1)
-	boat_1.set_target(boat)
+	#boat_1.controller.control_mode = AIController2D.ControlModes.HUMAN
+	boat.set_target(boat_3)
+	boat_1.set_target(boat_3)
+	
+	boat.controller.reset_with_time = true
+	boat_1.controller.reset_with_time = true
+	boat_2.controller.reset_with_time = true
+	boat_3.controller.reset_with_time = true
+	
+	boat.dont_die_on_life_equal_0 = true
+	boat_1.dont_die_on_life_equal_0 = true
+	boat_2.dont_die_on_life_equal_0 = true
+	boat_3.dont_die_on_life_equal_0 = true
 	
 	boat_2.set_as_player_and_id(2)
 	boat_3.set_as_player_and_id(2)
@@ -56,7 +67,7 @@ func set_boat_spawn(boat:Boat,spawn:Vector2) :
 	boat.spawn_rectancgle.w = spawn.y
 
 func set_boat_spawn2(boat, input : CollisionShape2D) :
-	
+
 	var rect_shape = input.shape as RectangleShape2D
 	var half_width = rect_shape.size.x / 2.0
 	var half_height = rect_shape.size.y / 2.0
@@ -66,17 +77,19 @@ func set_boat_spawn2(boat, input : CollisionShape2D) :
 	boat.spawn_rectancgle.z = -half_height + input.position.y
 	boat.spawn_rectancgle.w = half_height + input.position.y
 
-var elapsed_time = 0
+var elapsed_time_since_wind_changed = 0
 var change_wind_time = 1
 func _process(delta: float) -> void:
-	elapsed_time += delta
-	if elapsed_time > change_wind_time :
-		elapsed_time = 0
+	elapsed_time_since_wind_changed += delta
+	if elapsed_time_since_wind_changed > change_wind_time :
+		elapsed_time_since_wind_changed = 0
 		var new_wind_dir = boat.wind_angle + randf_range(-0.1,0.1)
+		$WindNode.global_rotation = new_wind_dir
 		boat.wind_angle = new_wind_dir
 		boat_1.wind_angle = new_wind_dir
 		boat_2.wind_angle = new_wind_dir
 		boat_3.wind_angle = new_wind_dir
+		
 	if (boat and boat_1) :
 		$Label.text = str(round(boat.controller.cumulated_rewar *100)/100)
 		$Label2.text = str(round(boat_1.controller.cumulated_rewar *100)/100)
@@ -248,3 +261,10 @@ grow_horizontal = 0
 text = "test"
 label_settings = SubResource("LabelSettings_lf4h0")
 horizontal_alignment = 2
+
+[node name="WindNode" type="Node2D" parent="." unique_id=1651118086]
+position = Vector2(5, -1310)
+
+[node name="Sprite2D" type="Sprite2D" parent="WindNode" unique_id=1564709479]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_lf4h0")

@@ -7,17 +7,28 @@ signal game_won()
 signal game_over()
 signal player_has_more_islands()
 signal update_life_hud(int)
-
+signal wind_changed(float)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+var elapsed_time_since_wind_changed = 0
+var change_wind_time = 1
+var wind_direction = randf_range(-PI,PI)
+var wind_str = 100
+
 func _process(delta: float) -> void:
-	pass
-	
+	elapsed_time_since_wind_changed += delta
+	if elapsed_time_since_wind_changed > change_wind_time :
+		elapsed_time_since_wind_changed = 0
+		wind_direction += randf_range(-0.1,0.1)
+		for boat in boats :
+			boat.wind_angle = wind_direction
+			boat.wind_strenght = wind_str
+		wind_changed.emit(wind_direction)
+		
 func register_boat(boat:Boat):
 	boats.append(boat)
 	if boat.player_id == 0:

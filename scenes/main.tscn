@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cp5wyt6eikplx" path="res://scenes/UI/victory.tscn" id="5_tbgi4"]
 [ext_resource type="PackedScene" uid="uid://db7vu88a6jeey" path="res://scenes/UI/game_over.tscn" id="6_tefeu"]
 [ext_resource type="PackedScene" uid="uid://c5vag0pinjsig" path="res://scenes/UI/HUD.tscn" id="7_o6xl0"]
+[ext_resource type="Script" uid="uid://ok2c2172j67q" path="res://addons/godot_rl_agents/sync.gd" id="8_tipki"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_jyhfs"]
 
@@ -21,6 +22,8 @@ island_scene = ExtResource("3_tefeu")
 boat_scene = ExtResource("3_sugp2")
 
 [node name="Bordures" type="StaticBody2D" parent="." unique_id=309844219]
+collision_layer = 129
+collision_mask = 129
 
 [node name="CollisionShape_up" type="CollisionShape2D" parent="Bordures" unique_id=223622771]
 rotation = 3.1415927
@@ -46,3 +49,9 @@ shape = SubResource("WorldBoundaryShape2D_jyhfs")
 [node name="gameOver" parent="UI" unique_id=916379606 instance=ExtResource("6_tefeu")]
 
 [node name="hud" parent="UI" unique_id=1754513234 instance=ExtResource("7_o6xl0")]
+
+[node name="Sync" type="Node" parent="." unique_id=1330921170]
+script = ExtResource("8_tipki")
+control_mode = 2
+onnx_model_path = "python/models/model_retrained2.onnx"
+metadata/_custom_type_script = "uid://ok2c2172j67q"

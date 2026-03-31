@@ -202,7 +202,8 @@ func get_damage(damage: float, tireur) -> void :
 	if player_id == 0:
 		emit_signal("getDamage", life)
 	on_health_changed.emit(life)
-	var bot_atk := tireur as Boat
+	
+	var bot_atk := tireur as Boat if tireur else null
 	if (bot_atk) :
 		bot_atk.on_dealt_damages.emit(damage, self)
 		

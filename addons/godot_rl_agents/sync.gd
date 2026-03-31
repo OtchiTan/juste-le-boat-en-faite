@@ -51,11 +51,16 @@ var _obs_space_training: Array[Dictionary] = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	
+	get_tree().node_added.connect(_on_node_added)
+	get_tree().node_removed.connect(_on_node_removed)
+	
 	await get_tree().root.ready
 	get_tree().set_pause(true)
 	_initialize()
 	await get_tree().create_timer(1.0).timeout
 	get_tree().set_pause(false)
+	
 
 
 func _initialize():
@@ -220,13 +225,17 @@ func _inference_process():
 		var actions = []
 
 		for agent_id in range(0, agents_inference.size()):
-			var model: ONNXModel = agents_inference[agent_id].onnx_model
+			var agent = agents_inference[agent_id] 
+			var model: ONNXModel = agent.onnx_model
+			
 			var action = model.run_inference(
 				obs[agent_id]["obs"], 1.0
 			)
+			
 			var action_dict = _extract_action_dict(
-				action["output"], _action_space_inference[agent_id], model.action_means_only
+				action["output"], agent.get_action_space(), model.action_means_only
 			)
+			
 			actions.append(action_dict)
 
 		_set_agent_actions(actions, agents_inference)
@@ -577,3 +586,46 @@ func _notification(what):
 		file.store_line(json_string)
 		var error = file.get_error()
 		assert(not error, "There was an error after trying to write to the file: %d" % error)
+
+func _on_node_added(node: Node):
+	if node is AIController2D:
+		# On attend la fin de la frame pour s'assurer que son _ready() est terminé
+		register_agent.call_deferred(node)
+
+func register_agent(agent: Node):
+	if agent in all_agents:
+		return
+	all_agents.append(agent)
+	_set_agent_mode(agent)
+
+	if agent.control_mode == agent.ControlModes.ONNX_INFERENCE:
+		agents_inference.append(agent)
+		
+		# On doit charger le modèle ONNX pour ce nouvel agent
+		var agent_onnx_model: ONNXModel
+		var path = agent.onnx_model_path if not agent.onnx_model_path.is_empty() else onnx_model_path
+		
+		if not onnx_models.has(path):
+			onnx_models[path] = ONNXModel.new(path, 1)
+			
+		agent_onnx_model = onnx_models[path]
+		agent.onnx_model = agent_onnx_model
+		
+		if not agent_onnx_model.action_means_only_set:
+			agent_onnx_model.set_action_means_only(agent.get_action_space())
+			
+		agent.set_heuristic("model")
+
+func _on_node_removed(node: Node):
+	if node is AIController2D:
+		unregister_agent(node)
+		
+func unregister_agent(agent: Node):
+	if agent in all_agents:
+		all_agents.erase(agent)
+	if agent in agents_inference:
+		agents_inference.erase(agent)
+	if agent in agents_heuristic:
+		agents_heuristic.erase(agent)
+	if agent in agents_training:
+		agents_training.erase(agent)

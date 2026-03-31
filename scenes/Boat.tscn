@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://b6u1ubbrve3xx" path="res://scenes/projectile.tscn" id="2_8jrvy"]
 [ext_resource type="PackedScene" uid="uid://643adwfdt1lf" path="res://scenes/camera_2d.tscn" id="3_q7w65"]
 [ext_resource type="Script" uid="uid://dukmfiwpskmss" path="res://scripts/character/raycast_sensor_2d_extended.gd" id="4_4pna2"]
-[ext_resource type="Script" uid="uid://cximee0366rki" path="res://scripts/UI/MinimapMarker.gd" id="5_wdn3g"]
+[ext_resource type="Script" path="res://scripts/UI/MinimapMarker.gd" id="5_wdn3g"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nai5d"]
 friction = 0.2
@@ -68,4 +68,3 @@ script = ExtResource("5_wdn3g")
 marker_color = Color(0.14921707, 0.5176453, 0.9999998, 1)
 is_rect = true
 marker_size = Vector2(1000, 1000)
-metadata/_custom_type_script = "uid://cximee0366rki"
