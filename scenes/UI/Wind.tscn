@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://cmp5of1dtwbgn"]
+
+[ext_resource type="Script" uid="uid://dbumk6dyxbwob" path="res://scripts/UI/wind.gd" id="1_i3piw"]
+[ext_resource type="Texture2D" uid="uid://cwtwmp8yqxt6r" path="res://assets/textures/Particles/wind.png" id="2_ehhwp"]
+
+[sub_resource type="Gradient" id="Gradient_ejg3c"]
+offsets = PackedFloat32Array(0, 0.5098315, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_64bk3"]
+gradient = SubResource("Gradient_ejg3c")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_n7gmm"]
+particle_flag_align_y = true
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(3000, 2000, 0)
+spread = 0.0
+initial_velocity_min = 400.0
+initial_velocity_max = 600.0
+gravity = Vector3(0, 98, 0)
+color_ramp = SubResource("GradientTexture1D_64bk3")
+
+[node name="Wind" type="CanvasLayer" unique_id=964546308 node_paths=PackedStringArray("wind_particle")]
+script = ExtResource("1_i3piw")
+wind_particle = NodePath("WindParticle")
+
+[node name="WindParticle" type="GPUParticles2D" parent="." unique_id=1427941449]
+amount = 50
+texture = ExtResource("2_ehhwp")
+lifetime = 2.0
+process_material = SubResource("ParticleProcessMaterial_n7gmm")

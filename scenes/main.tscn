@@ -9,8 +9,9 @@
 [ext_resource type="PackedScene" uid="uid://db7vu88a6jeey" path="res://scenes/UI/game_over.tscn" id="6_tefeu"]
 [ext_resource type="PackedScene" uid="uid://c5vag0pinjsig" path="res://scenes/UI/HUD.tscn" id="7_o6xl0"]
 [ext_resource type="Script" uid="uid://ok2c2172j67q" path="res://addons/godot_rl_agents/sync.gd" id="8_tipki"]
-[ext_resource type="PackedScene" uid="uid://c4g67s2yuwyx8" path="res://scenes/UI/loading_screen.tscn" id="9_choun"]
-[ext_resource type="Script" uid="uid://br1fv6edo4c16" path="res://scripts/UI/loading_screen.gd" id="10_ya4ey"]
+[ext_resource type="PackedScene" path="res://scenes/UI/loading_screen.tscn" id="9_choun"]
+[ext_resource type="Script" path="res://scripts/UI/loading_screen.gd" id="10_ya4ey"]
+[ext_resource type="PackedScene" uid="uid://cmp5of1dtwbgn" path="res://scenes/UI/Wind.tscn" id="11_eb6dy"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_jyhfs"]
 
@@ -22,7 +23,6 @@ tile_set = ExtResource("2_85g3d")
 script = ExtResource("2_tipki")
 IslandScene = ExtResource("3_tefeu")
 BoatScene = ExtResource("3_sugp2")
-metadata/_custom_type_script = "uid://dqv2sewh5xtf7"
 
 [node name="Bordures" type="StaticBody2D" parent="." unique_id=309844219]
 collision_layer = 129
@@ -57,6 +57,8 @@ script = ExtResource("10_ya4ey")
 [node name="gameOver" parent="UI" unique_id=916379606 instance=ExtResource("6_tefeu")]
 
 [node name="hud" parent="UI" unique_id=1754513234 instance=ExtResource("7_o6xl0")]
+
+[node name="Wind" parent="UI" unique_id=964546308 instance=ExtResource("11_eb6dy")]
 
 [node name="Sync" type="Node" parent="." unique_id=1330921170]
 script = ExtResource("8_tipki")
