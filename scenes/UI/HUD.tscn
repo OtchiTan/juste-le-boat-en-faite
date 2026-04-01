@@ -3,8 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://cib3kdnk7t8o3" path="res://assets/textures/User Interface/Icons-Essentials.png" id="1_7n4fj"]
 [ext_resource type="Script" uid="uid://d2thudnd7yhok" path="res://scripts/UI/hud.gd" id="1_vphgt"]
 [ext_resource type="Texture2D" uid="uid://culi2dg1f6xce" path="res://assets/textures/Buildings/Cyan/CyanKeep.png" id="2_vphgt"]
-[ext_resource type="PackedScene" path="res://scenes/UI/Minimap.tscn" id="4_5ip4n"]
-[ext_resource type="Texture2D" uid="uid://yt3ypfvkeh66" path="res://assets/fleche.png" id="5_l8xe2"]
+[ext_resource type="PackedScene" uid="uid://3dnlhybms5sl" path="res://scenes/UI/Minimap.tscn" id="4_5ip4n"]
+[ext_resource type="Texture2D" uid="uid://d4m16jyo305c3" path="res://assets/textures/User Interface/UiIcons.png" id="5_l8xe2"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7n4fj"]
 atlas = ExtResource("1_7n4fj")
@@ -13,6 +13,10 @@ region = Rect2(16, 32, 16, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_vphgt"]
 atlas = ExtResource("2_vphgt")
 region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0qpk7"]
+atlas = ExtResource("5_l8xe2")
+region = Rect2(0, 64, 16, 16)
 
 [node name="hud" type="CanvasLayer" unique_id=1754513234 node_paths=PackedStringArray("life_label", "island_label")]
 script = ExtResource("1_vphgt")
@@ -74,5 +78,5 @@ layout_mode = 0
 offset_right = 30.0
 offset_bottom = 30.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("5_l8xe2")
+texture = SubResource("AtlasTexture_0qpk7")
 expand_mode = 1

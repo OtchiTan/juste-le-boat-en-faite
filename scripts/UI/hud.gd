@@ -4,7 +4,7 @@ extends CanvasLayer
 @export var island_label: Label
 
 func _on_getDamage(i):
-	life_label.text = str(i)
+	life_label.text = str(int(i))
 
 func update_island() -> void :
 	var i = 0
