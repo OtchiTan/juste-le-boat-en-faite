@@ -73,7 +73,7 @@ func _place_dock_on_shore() -> void:
 		var world_pos: Vector2 = tilemap.to_global(tilemap.map_to_local(best_tile))
 		# Décale le dock vers le bord de la tuile côté eau (demi-tuile = 8px)
 		var water_dir: Vector2 = _get_water_direction(best_tile)
-		dock.global_position = world_pos - water_dir * 150.0
+		dock.global_position = world_pos
 		_orient_dock(best_tile)
 	else:
 		push_warning("Island: aucun bord de tuile trouvé, le quai reste au centre.")
@@ -103,7 +103,10 @@ func _hide_all_dock_sprites() -> void:
 func _is_shore_tile(tile: Vector2i) -> bool:
 	if not tile_terrain_map.has(tile):
 		return false
-	if tile_terrain_map[tile] != 1:
+	
+	# Selon WorldGen.cs : 1 est l'eau, 0 est l'île (terre)
+	# On cherche si la tuile actuelle est de l'eau
+	if tile_terrain_map[tile] != 1: 
 		return false
 
 	var neighbors: Array[Vector2i] = [
@@ -112,8 +115,10 @@ func _is_shore_tile(tile: Vector2i) -> bool:
 		tile + Vector2i(0, 1),
 		tile + Vector2i(0, -1),
 	]
+	
 	for neighbor in neighbors:
-		if tile_terrain_map.get(neighbor, 1) == 2:
+		# Si un voisin est de la terre (0), on est sur un rivage !
+		if tile_terrain_map.get(neighbor, 1) == 0:
 			return true
 
 	return false
