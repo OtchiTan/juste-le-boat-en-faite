@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://dxcwxmtl8ss3y"]
+
+[ext_resource type="TileSet" uid="uid://bka0l1fm562ok" path="res://assets/tile_set/world_map.tres" id="1_pls23"]
+[ext_resource type="Script" uid="uid://1canm43uxcsf" path="res://scripts/world_map.gd" id="1_qj3iy"]
+[ext_resource type="Script" uid="uid://dqv2sewh5xtf7" path="res://scripts/WorldGen.cs" id="2_qj3iy"]
+[ext_resource type="PackedScene" uid="uid://bn0kngi6cvs5f" path="res://scenes/island.tscn" id="3_sh0tg"]
+[ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="4_27p3u"]
+[ext_resource type="Texture2D" uid="uid://5wwfklkxb4hk" path="res://assets/textures/Nature/CoconutTrees.png" id="6_sh0tg"]
+[ext_resource type="Texture2D" uid="uid://bx7p2o4sqx4g0" path="res://assets/textures/Nature/Rocks.png" id="8_0hitc"]
+[ext_resource type="Texture2D" uid="uid://doy53j5va1fry" path="res://assets/textures/Nature/Trees.png" id="9_6a477"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_27p3u"]
+texture = ExtResource("6_sh0tg")
+texture_region_size = Vector2i(64, 64)
+2:0/next_alternative_id = 3
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+1:0/0 = 0
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jc8yp"]
+texture = ExtResource("8_0hitc")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+1:1/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+2:1/0 = 0
+2:0/0 = 0
+0:1/0 = 0
+0:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_c7uu0"]
+texture = ExtResource("9_6a477")
+texture_region_size = Vector2i(64, 64)
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_gqm84"]
+sources/0 = SubResource("TileSetAtlasSource_27p3u")
+sources/2 = SubResource("TileSetAtlasSource_jc8yp")
+sources/3 = SubResource("TileSetAtlasSource_c7uu0")
+
+[node name="WorldMap" type="Node2D" unique_id=347694320]
+script = ExtResource("1_qj3iy")
+
+[node name="WorldGen" type="TileMapLayer" parent="." unique_id=773267870]
+tile_set = ExtResource("1_pls23")
+script = ExtResource("2_qj3iy")
+IslandScene = ExtResource("3_sh0tg")
+BoatScene = ExtResource("4_27p3u")
+metadata/_custom_type_script = "uid://dqv2sewh5xtf7"
+
+[node name="DecorationLayer" type="TileMapLayer" parent="." unique_id=270391075]
+tile_set = SubResource("TileSet_gqm84")
+
+[connection signal="OnMapReady" from="WorldGen" to="." method="_on_world_gen_on_map_ready"]

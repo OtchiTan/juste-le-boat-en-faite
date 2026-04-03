@@ -14,6 +14,9 @@ public partial class WorldGen : TileMapLayer
 	[Export] public PackedScene BoatScene;
 	[Export] public float BoatOffset = 900.0f;
 
+	[Signal]
+	public delegate void OnMapReadyEventHandler(Dictionary<int, Array<Vector2I>> terrains);
+
 	private FastNoiseLite _terrainNoise = new();
 	private FastNoiseLite _seaNoise = new();
 	private RandomNumberGenerator _rng = new();
@@ -84,6 +87,8 @@ public partial class WorldGen : TileMapLayer
 			SetCellsTerrainConnect(entry.Value, 0, entry.Key);
 		}
 
+		EmitSignal(SignalName.OnMapReady, _terrains);
+		
 		SpawnIslandObjects();
 
 		var uis = GetTree().GetNodesInGroup("minimap_ui");
