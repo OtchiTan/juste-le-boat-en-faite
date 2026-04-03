@@ -8,11 +8,20 @@ var island_id: int
 @onready var castle_ai: Sprite2D = $castle_ai
 @onready var dock: Node2D = $Dock
 @onready var dock_area: Area2D = $Dock/Area2D
-@onready var sprite_right: Sprite2D = $Dock/SpriteRight
-@onready var sprite_left: Sprite2D = $Dock/SpriteLeft
-@onready var sprite_down: Sprite2D = $Dock/SpriteDown
-@onready var sprite_up: Sprite2D = $Dock/SpriteUp
 @onready var capture_bar: ProgressBar = $Dock/CaptureBar  # Supprime si pas de ProgressBar
+
+# === Nodes de Groupement ===
+@onready var sprite_node_cyan: Node2D = $Dock/Cyan
+@onready var sprite_node_red: Node2D = $Dock/Red
+@onready var upgrade_label: Label = $Dock/UpgradeLabel
+
+
+# On met à jour les références pour pointer vers les sprites à l'intérieur d'un des dossiers
+# (On les ré-assignera dynamiquement dans _orient_dock)
+var sprite_right: Sprite2D
+var sprite_left: Sprite2D
+var sprite_down: Sprite2D
+var sprite_up: Sprite2D
 
 # === Capture ===
 const CAPTURE_TIME: float = 3.0
@@ -25,12 +34,26 @@ var tile_terrain_map: Dictionary = {}  # Vector2i → 0 (terre) ou 1 (eau)
 
 const SCAN_RADIUS: int = 60
 
+# === Paramètres de la Forteresse ===
+const CAPTURE_TIME_NORMAL: float = 3.0
+const CAPTURE_TIME_FORTRESS: float = 8.0  # Plus long à capturer
+var is_fortress: bool = false
+
+# On remplace la constante CAPTURE_TIME par une variable dynamique
+var current_capture_time: float = CAPTURE_TIME_NORMAL
+
 func _ready() -> void:
 	GameManager.register_island(self)
+	
+	# INITIALISATION CRITIQUE : On définit d'abord quel dossier utiliser
+	# Cela va remplir les variables sprite_right, sprite_left, etc.
+	_update_dock_appearance() 
+	
 	update_visual()
 	dock_area.body_entered.connect(_on_dock_body_entered)
 	dock_area.body_exited.connect(_on_dock_body_exited)
-	# Cache tous les sprites par défaut
+	
+	# Maintenant on peut les cacher sans erreur
 	_hide_all_dock_sprites()
 
 # Appelé par world_map.gd après le spawn de l'île
@@ -38,9 +61,6 @@ func setup(tilemap_ref: TileMapLayer, terrain_map: Dictionary) -> void:
 	tilemap = tilemap_ref
 	tile_terrain_map = terrain_map
 	_place_dock_on_shore()
-
-func _process(delta: float) -> void:
-	_handle_capture(delta)
 
 # =============================================
 # === Placement dynamique du quai ===
@@ -90,12 +110,16 @@ func _orient_dock(shore_tile: Vector2i) -> void:
 		sprite_down.visible = true
 	elif tile_terrain_map.get(shore_tile + Vector2i(0, -1), 1) == 1:
 		sprite_up.visible = true
+		
+	# Ajoute ceci pour que la tour s'affiche sur le bon nouveau sprite si déjà amélioré
+	_update_fortress_visual()
 
 func _hide_all_dock_sprites() -> void:
-	sprite_right.visible = false
-	sprite_left.visible = false
-	sprite_down.visible = false
-	sprite_up.visible = false
+	# Ajout d'une sécurité "if" pour éviter le crash si les sprites sont nuls
+	if sprite_right: sprite_right.visible = false
+	if sprite_left: sprite_left.visible = false
+	if sprite_down: sprite_down.visible = false
+	if sprite_up: sprite_up.visible = false
 
 # =============================================
 # === Détection de bord ===
@@ -140,9 +164,11 @@ func _handle_capture(delta: float) -> void:
 
 	if attacker != null:
 		capture_progress += delta
-		if capture_progress >= CAPTURE_TIME:
-			capture_progress = CAPTURE_TIME
+		if capture_progress >= current_capture_time: # Utilise la variable
+			capture_progress = current_capture_time
 			change_owner(attacker.player_id, false)
+			# Si l'île est capturée, elle perd son statut de forteresse
+			reset_fortress()
 	else:
 		capture_progress = max(0.0, capture_progress - delta)
 
@@ -154,8 +180,8 @@ func _get_sole_attacker(enemy_boats: Array, friendly_boats: Array):
 	return null
 
 func _update_capture_bar() -> void:
-	if capture_bar:
-		capture_bar.value = (capture_progress / CAPTURE_TIME) * 100.0
+	if capture_bar and island_owner != 0: # N'affiche la barre que pour l'ennemi/neutre
+		capture_bar.value = (capture_progress / current_capture_time) * 100.0
 
 # =============================================
 # === Signaux du quai ===
@@ -175,7 +201,7 @@ func _on_dock_body_exited(body: Node2D) -> void:
 func change_owner(new_owner: int, is_needed_to_await_ready: bool) -> void:
 	island_owner = new_owner
 	capture_progress = 0.0
-	boats_in_zone.clear()
+	
 	if is_needed_to_await_ready:
 		await ready
 	update_visual()
@@ -189,6 +215,8 @@ func change_owner(new_owner: int, is_needed_to_await_ready: bool) -> void:
 		team_color = Color.DARK_RED
 	if not is_needed_to_await_ready:
 		_update_minimap_color(team_color)
+	
+	_update_dock_appearance()
 
 func _update_minimap_color(color: Color) -> void:
 	var uis = get_tree().get_nodes_in_group("minimap_ui")
@@ -213,3 +241,72 @@ func _get_water_direction(shore_tile: Vector2i) -> Vector2:
 	elif tile_terrain_map.get(shore_tile + Vector2i(0, -1), 1) == 1:
 		return Vector2.UP
 	return Vector2.ZERO
+	
+func _process(delta: float) -> void:
+	_handle_capture(delta)
+	_handle_upgrade_input() # Nouvelle fonction à appeler
+
+func _handle_upgrade_input() -> void:
+	if Input.is_action_just_pressed("interact"): # Ta touche E
+		if not is_fortress and island_owner == 0:
+			# On vérifie les bateaux présents
+			for boat in boats_in_zone:
+				# On s'assure que le bateau existe encore et appartient au joueur
+				if is_instance_valid(boat) and boat.player_id == 0:
+					upgrade_to_fortress()
+					return # On arrête dès qu'on a trouvé un bateau valide
+
+func upgrade_to_fortress() -> void:
+	is_fortress = true
+	current_capture_time = CAPTURE_TIME_FORTRESS
+	upgrade_label.visible = false # Cache le texte [E]
+	_update_fortress_visual()
+
+func reset_fortress() -> void:
+	is_fortress = false
+	current_capture_time = CAPTURE_TIME_NORMAL
+	_hide_all_towers() # Cache toutes les tours
+	
+func _hide_all_towers() -> void:
+	sprite_right.get_node("SpriteTower").visible = false
+	sprite_left.get_node("SpriteTower").visible = false
+	sprite_down.get_node("SpriteTower").visible = false
+	sprite_up.get_node("SpriteTower").visible = false
+
+func _update_fortress_visual() -> void:
+	_hide_all_towers()
+	if not is_fortress: return
+	
+	# On cherche la tour dans le sprite actuellement visible
+	if sprite_right.visible: sprite_right.get_node("SpriteTower").visible = true
+	elif sprite_left.visible: sprite_left.get_node("SpriteTower").visible = true
+	elif sprite_down.visible: sprite_down.get_node("SpriteTower").visible = true
+	elif sprite_up.visible: sprite_up.get_node("SpriteTower").visible = true
+	
+func _update_dock_appearance() -> void:
+	# 1. Sélection du dossier de sprites 
+	var active_node: Node2D = sprite_node_cyan if island_owner == 0 else sprite_node_red
+	var inactive_node: Node2D = sprite_node_red if island_owner == 0 else sprite_node_cyan
+	
+	active_node.visible = true
+	inactive_node.visible = false
+	
+	# 2. Mise à jour des références (Assignation avant toute utilisation) 
+	sprite_right = active_node.get_node("SpriteRight")
+	sprite_left = active_node.get_node("SpriteLeft")
+	sprite_down = active_node.get_node("SpriteDown")
+	sprite_up = active_node.get_node("SpriteUp")
+	
+	# 3. Gestion de l'UI 
+	if island_owner == 0:
+		if capture_bar: capture_bar.visible = false
+		if upgrade_label:
+			upgrade_label.visible = !is_fortress
+			upgrade_label.text = "[E] Upgrade"
+	else:
+		if capture_bar: capture_bar.visible = true
+		if upgrade_label: upgrade_label.visible = false
+	
+	# 4. On replace le dock (ce qui appellera _orient_dock)
+	if tilemap != null:
+		_place_dock_on_shore()
