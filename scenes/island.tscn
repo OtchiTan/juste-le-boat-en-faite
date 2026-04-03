@@ -40,12 +40,22 @@ offset_right = 69.0
 offset_bottom = -94.0
 
 [node name="UpgradeLabel" type="Label" parent="Dock" unique_id=300777245]
-visible = false
-offset_left = -45.0
-offset_top = -121.0
-offset_right = 45.0
-offset_bottom = -98.0
-text = "[E] Upgrade"
+z_index = 100
+offset_left = -67.0
+offset_top = -158.0
+offset_right = 78.0
+offset_bottom = -123.0
+theme_override_font_sizes/font_size = 25
+text = "[U] Upgrade"
+
+[node name="HealLabel" type="Label" parent="Dock" unique_id=1135863892]
+z_index = 100
+offset_left = -68.0
+offset_top = -125.0
+offset_right = 72.0
+offset_bottom = -90.0
+theme_override_font_sizes/font_size = 25
+text = "[H] Heal"
 
 [node name="Cyan" type="Node2D" parent="Dock" unique_id=444523490]
 

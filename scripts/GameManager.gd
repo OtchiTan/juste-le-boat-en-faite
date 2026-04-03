@@ -8,6 +8,12 @@ signal game_over()
 signal player_has_more_islands()
 signal update_life_hud(int)
 signal wind_changed(float)
+signal gold_changed(new_amount: int)
+
+var player_gold: int = 0:
+	set(value):
+		player_gold = value
+		gold_changed.emit(player_gold)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

@@ -218,3 +218,10 @@ func set_target(targ_boat : Boat) -> void :
 func reset() :
 	tpRandomNextFrame = true
 	life = original_life
+	
+func repair(amount: int) -> void:
+	life = min(original_life, life + amount)
+	# On émet le signal pour que le HUD se mette à jour immédiatement
+	if player_id == 0:
+		emit_signal("getDamage", life) # On réutilise ce signal pour rafraîchir l'affichage
+	on_health_changed.emit(life)
