@@ -56,7 +56,6 @@ z_index = -2
 scale = Vector2(2, 2)
 tile_set = ExtResource("1_pls23")
 script = ExtResource("2_qj3iy")
-IslandSize = 15.0
 MapSize = Vector2i(350, 200)
 IslandScene = ExtResource("3_sh0tg")
 BoatScene = ExtResource("4_27p3u")

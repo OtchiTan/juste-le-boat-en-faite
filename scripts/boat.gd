@@ -17,6 +17,7 @@ signal on_dealt_damages(dmg_amount:float, dmg_boat:Boat)
 var original_life:int
 var atk :int = 5
 var player_id : int = -1
+var player_island: Island
 
 var target : Boat = null
 var targ : Vector2
@@ -59,10 +60,15 @@ func _ready():
 		minimap_marker.marker_color = Color.GREEN
 	else :
 		minimap_marker.marker_color = Color.CRIMSON
+		
+	global_position = player_island.dock.global_position
+	global_rotation = 0.0
+	rotate(deg_to_rad(player_island.dock_orientation))
 
-func set_as_player_and_id(id_player: int) -> void:
+func set_as_player_and_id(id_player: int, island: Island) -> void:
 	player_id = id_player
 	label.text = str(player_id)
+	player_island = island
 	
 	if id_player == 0:
 		controller=PlayerController.new()

@@ -20,7 +20,7 @@ func _on_world_gen_on_map_ready(terrains: Dictionary[int, Array]) -> void:
 		decoration_layer.set_cell(tile_location, 0, tree)
 		
 	var grass_tiles = terrains.get(0)
-	var num_grass_decorations = grass_tiles.size() * 0.01
+	var num_grass_decorations = grass_tiles.size() * 0.02
 	
 	for i in num_grass_decorations:
 		var decoration = Vector2i(rng.randi_range(0,2), 0)

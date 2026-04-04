@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c5ffp6xuxwlkk" path="res://scripts/island.gd" id="1_stbqp"]
 [ext_resource type="Texture2D" uid="uid://culi2dg1f6xce" path="res://assets/textures/Buildings/Cyan/CyanKeep.png" id="1_tt7lh"]
+[ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="2_mifw5"]
 [ext_resource type="Texture2D" uid="uid://bwqvvphk00fws" path="res://assets/textures/Buildings/Red/RedKeep.png" id="3_kxrnx"]
 [ext_resource type="Texture2D" uid="uid://bckke5u0lpx5x" path="res://assets/textures/Buildings/Cyan/CyanDocks.png" id="4_cngje"]
 [ext_resource type="Texture2D" uid="uid://dqsg7j6lny8mj" path="res://assets/textures/Buildings/Cyan/CyanTower.png" id="5_cngje"]
@@ -13,6 +14,7 @@ radius = 400.0
 
 [node name="Island" type="Node2D" unique_id=1055533821]
 script = ExtResource("1_stbqp")
+boat_scene = ExtResource("2_mifw5")
 
 [node name="castle_player" type="Sprite2D" parent="." unique_id=782191194]
 visible = false
