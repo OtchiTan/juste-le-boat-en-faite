@@ -52,13 +52,19 @@ sources/3 = SubResource("TileSetAtlasSource_c7uu0")
 script = ExtResource("1_qj3iy")
 
 [node name="WorldGen" type="TileMapLayer" parent="." unique_id=773267870]
+z_index = -2
+scale = Vector2(2, 2)
 tile_set = ExtResource("1_pls23")
 script = ExtResource("2_qj3iy")
+IslandSize = 15.0
+MapSize = Vector2i(350, 200)
 IslandScene = ExtResource("3_sh0tg")
 BoatScene = ExtResource("4_27p3u")
 metadata/_custom_type_script = "uid://dqv2sewh5xtf7"
 
 [node name="DecorationLayer" type="TileMapLayer" parent="." unique_id=270391075]
+z_index = -1
+scale = Vector2(2, 2)
 tile_set = SubResource("TileSet_gqm84")
 
 [connection signal="OnMapReady" from="WorldGen" to="." method="_on_world_gen_on_map_ready"]

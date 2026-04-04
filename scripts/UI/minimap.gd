@@ -23,7 +23,7 @@ func _calculate_stretch_scale():
 func setup_map_data(grid_size: Vector2i, terrain_map: Dictionary, islands_data: Dictionary, real_world_size: Vector2, initial_colors: Dictionary) -> void:
 	_map_size = grid_size
 	_island_tiles = islands_data
-	world_size = real_world_size
+	world_size = real_world_size * 2
 	
 	_calculate_stretch_scale()
 	_generate_texture(terrain_map, initial_colors)
