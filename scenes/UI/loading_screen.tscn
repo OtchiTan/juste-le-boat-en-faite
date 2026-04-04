@@ -8,16 +8,3 @@
 position = Vector2(960, 539.99994)
 scale = Vector2(0.50000006, 0.5)
 texture = ExtResource("1_35dpi")
-
-[node name="ProgressBar" type="ProgressBar" parent="." unique_id=647606617]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -664.0
-offset_top = -448.0
-offset_right = -164.0
-offset_bottom = -421.0
-grow_horizontal = 2
-grow_vertical = 0

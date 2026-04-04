@@ -1,28 +1,21 @@
 [gd_scene format=3 uid="uid://bfmy0g0v4chk6"]
 
 [ext_resource type="Script" uid="uid://b4tdte0od7vt3" path="res://scripts/main.gd" id="1_o5qli"]
-[ext_resource type="TileSet" uid="uid://bka0l1fm562ok" path="res://assets/tile_set/world_map.tres" id="2_85g3d"]
-[ext_resource type="Script" uid="uid://dqv2sewh5xtf7" path="res://scripts/WorldGen.cs" id="2_tipki"]
-[ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="3_sugp2"]
-[ext_resource type="PackedScene" uid="uid://bn0kngi6cvs5f" path="res://scenes/island.tscn" id="3_tefeu"]
 [ext_resource type="PackedScene" uid="uid://cp5wyt6eikplx" path="res://scenes/UI/victory.tscn" id="5_tbgi4"]
 [ext_resource type="PackedScene" uid="uid://db7vu88a6jeey" path="res://scenes/UI/game_over.tscn" id="6_tefeu"]
 [ext_resource type="PackedScene" uid="uid://c5vag0pinjsig" path="res://scenes/UI/HUD.tscn" id="7_o6xl0"]
 [ext_resource type="Script" uid="uid://ok2c2172j67q" path="res://addons/godot_rl_agents/sync.gd" id="8_tipki"]
+[ext_resource type="PackedScene" uid="uid://dxcwxmtl8ss3y" path="res://scenes/world_map.tscn" id="9_85g3d"]
 [ext_resource type="PackedScene" uid="uid://c4g67s2yuwyx8" path="res://scenes/UI/loading_screen.tscn" id="9_choun"]
 [ext_resource type="Script" uid="uid://br1fv6edo4c16" path="res://scripts/UI/loading_screen.gd" id="10_ya4ey"]
+[ext_resource type="PackedScene" uid="uid://cmp5of1dtwbgn" path="res://scenes/UI/Wind.tscn" id="11_eb6dy"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_jyhfs"]
 
 [node name="Main" type="Node2D" unique_id=1828361990]
 script = ExtResource("1_o5qli")
 
-[node name="WorldGen" type="TileMapLayer" parent="." unique_id=505153361]
-tile_set = ExtResource("2_85g3d")
-script = ExtResource("2_tipki")
-IslandScene = ExtResource("3_tefeu")
-BoatScene = ExtResource("3_sugp2")
-metadata/_custom_type_script = "uid://dqv2sewh5xtf7"
+[node name="WorldMap" parent="." unique_id=347694320 instance=ExtResource("9_85g3d")]
 
 [node name="Bordures" type="StaticBody2D" parent="." unique_id=309844219]
 collision_layer = 129
@@ -57,6 +50,8 @@ script = ExtResource("10_ya4ey")
 [node name="gameOver" parent="UI" unique_id=916379606 instance=ExtResource("6_tefeu")]
 
 [node name="hud" parent="UI" unique_id=1754513234 instance=ExtResource("7_o6xl0")]
+
+[node name="Wind" parent="UI" unique_id=964546308 instance=ExtResource("11_eb6dy")]
 
 [node name="Sync" type="Node" parent="." unique_id=1330921170]
 script = ExtResource("8_tipki")

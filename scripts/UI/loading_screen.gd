@@ -1,7 +1,5 @@
 extends CanvasLayer
 
-@onready var progress_bar: ProgressBar = $ProgressBar
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	visible = true
@@ -11,9 +9,5 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 
-func close_loading_screen() -> void:
-	progress_bar.value = 100
-	
-	await get_tree().create_timer(0.5).timeout
-	
+func close_loading_screen() -> void:		
 	visible = false
