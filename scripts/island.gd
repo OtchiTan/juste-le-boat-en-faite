@@ -246,6 +246,7 @@ func change_owner(new_owner: int, is_needed_to_await_ready: bool) -> void:
 		_update_minimap_color(team_color)
 	
 	_update_dock_appearance()
+	GameManager.check_victory(new_owner)
 
 func _update_minimap_color(color: Color) -> void:
 	var uis = get_tree().get_nodes_in_group("minimap_ui")

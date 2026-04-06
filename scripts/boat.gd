@@ -73,6 +73,13 @@ func set_as_player_and_id(id_player: int, island: Island = null) -> void:
 	player_id = id_player
 	label.text = str(player_id)
 	player_island = island
+	await _ready()
+	if island.island_owner == 0:
+		boat_cyan.visible = true
+		boat_red.visible = false
+	else:
+		boat_cyan.visible = false
+		boat_red.visible = true
 	#On ne créé pas de controlleur si un est déjà assigné.
 	if controller :
 		return
@@ -93,9 +100,6 @@ func set_as_player_and_id(id_player: int, island: Island = null) -> void:
 				camera_instance.queue_free() # On nettoie si c'est le mauvais type
 		else:
 			print("Avertissement: camera_scene n'est pas assignée pour le joueur ", player_id)
-		await _ready()
-		boat_cyan.visible = true
-		boat_red.visible = false
 		print("Bateau initialisé pour le joueur : ", player_id)
 	else:
 		if (useRayCastController) :
@@ -107,9 +111,6 @@ func set_as_player_and_id(id_player: int, island: Island = null) -> void:
 			controller = AIControllerBoat.new()
 			controller.boat = self
 			add_child(controller)
-		await _ready()
-		boat_cyan.visible = false
-		boat_red.visible = true
 
 func setAITrainingController(id_player: int, new_controller):
 	player_id = id_player

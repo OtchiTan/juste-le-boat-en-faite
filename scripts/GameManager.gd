@@ -57,9 +57,11 @@ func on_boat_destroyed(boat, tireur):
 			island.change_owner(-1, false)
 	if tireur.player_id == 0:
 		emit_signal("player_has_more_islands")
-	check_victory(boat, tireur)
+	check_victory(tireur.player_id)
 
-func check_victory(boat, tireur):
+func check_victory(tireur_id):
+	if islands.size() < 2:
+		return # ça arrive a la construction
 	var own0 = islands[0].island_owner
 	var is_all_same_owner = true
 	for island in islands:
@@ -67,7 +69,7 @@ func check_victory(boat, tireur):
 			is_all_same_owner = false
 			break
 	if is_all_same_owner:
-		if (tireur.player_id == 0):
+		if (tireur_id == 0):
 			print("win")
 			victory()
 		else:
