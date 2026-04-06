@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c5ffp6xuxwlkk" path="res://scripts/island.gd" id="1_stbqp"]
 [ext_resource type="Texture2D" uid="uid://culi2dg1f6xce" path="res://assets/textures/Buildings/Cyan/CyanKeep.png" id="1_tt7lh"]
+[ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="2_mifw5"]
 [ext_resource type="Texture2D" uid="uid://bwqvvphk00fws" path="res://assets/textures/Buildings/Red/RedKeep.png" id="3_kxrnx"]
 [ext_resource type="Texture2D" uid="uid://bckke5u0lpx5x" path="res://assets/textures/Buildings/Cyan/CyanDocks.png" id="4_cngje"]
 [ext_resource type="Texture2D" uid="uid://dqsg7j6lny8mj" path="res://assets/textures/Buildings/Cyan/CyanTower.png" id="5_cngje"]
@@ -13,14 +14,18 @@ radius = 400.0
 
 [node name="Island" type="Node2D" unique_id=1055533821]
 script = ExtResource("1_stbqp")
+boat_scene = ExtResource("2_mifw5")
 
 [node name="castle_player" type="Sprite2D" parent="." unique_id=782191194]
+visible = false
+z_as_relative = false
 scale = Vector2(5, 5)
 texture = ExtResource("1_tt7lh")
 region_enabled = true
 region_rect = Rect2(0.9449959, 33.03382, 30.135582, 30.813114)
 
 [node name="castle_ai" type="Sprite2D" parent="." unique_id=1966312059]
+z_as_relative = false
 scale = Vector2(5, 5)
 texture = ExtResource("3_kxrnx")
 region_enabled = true
@@ -60,6 +65,7 @@ text = "[H] Heal"
 [node name="Cyan" type="Node2D" parent="Dock" unique_id=444523490]
 
 [node name="SpriteRight" type="Sprite2D" parent="Dock/Cyan" unique_id=1326151122]
+z_as_relative = false
 scale = Vector2(5, 5)
 texture = ExtResource("4_cngje")
 region_enabled = true
@@ -67,6 +73,7 @@ region_rect = Rect2(0, 17, 32, 15)
 
 [node name="SpriteTower" type="Sprite2D" parent="Dock/Cyan/SpriteRight" unique_id=1087059589]
 visible = false
+z_as_relative = false
 position = Vector2(-8.599999, -0.6)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("5_cngje")
@@ -75,6 +82,7 @@ region_rect = Rect2(0, 48, 16, 17)
 region_filter_clip_enabled = true
 
 [node name="SpriteLeft" type="Sprite2D" parent="Dock/Cyan" unique_id=163519743]
+z_as_relative = false
 scale = Vector2(5, 5)
 texture = ExtResource("4_cngje")
 flip_h = true
@@ -83,6 +91,7 @@ region_rect = Rect2(0, 17, 32, 15)
 
 [node name="SpriteTower" type="Sprite2D" parent="Dock/Cyan/SpriteLeft" unique_id=1753354659]
 visible = false
+z_as_relative = false
 position = Vector2(8.999999, -0.79999995)
 scale = Vector2(0.99999976, 0.99999976)
 texture = ExtResource("5_cngje")
@@ -91,6 +100,7 @@ region_rect = Rect2(0, 48, 16, 17)
 region_filter_clip_enabled = true
 
 [node name="SpriteUp" type="Sprite2D" parent="Dock/Cyan" unique_id=590646753]
+z_as_relative = false
 scale = Vector2(5, 5)
 texture = ExtResource("4_cngje")
 region_enabled = true
@@ -98,6 +108,7 @@ region_rect = Rect2(48, 0, 16, 32)
 
 [node name="SpriteTower" type="Sprite2D" parent="Dock/Cyan/SpriteUp" unique_id=749819713]
 visible = false
+z_as_relative = false
 position = Vector2(0, 8.4)
 scale = Vector2(0.99999964, 0.99999964)
 texture = ExtResource("5_cngje")
@@ -106,6 +117,7 @@ region_rect = Rect2(0, 48, 16, 17)
 region_filter_clip_enabled = true
 
 [node name="SpriteDown" type="Sprite2D" parent="Dock/Cyan" unique_id=978719559]
+z_as_relative = false
 scale = Vector2(5, 5)
 texture = ExtResource("4_cngje")
 region_enabled = true
@@ -113,6 +125,7 @@ region_rect = Rect2(32, 0, 16, 32)
 
 [node name="SpriteTower" type="Sprite2D" parent="Dock/Cyan/SpriteDown" unique_id=299776281]
 visible = false
+z_as_relative = false
 position = Vector2(0.20000076, -8.000002)
 scale = Vector2(0.99999946, 0.99999946)
 texture = ExtResource("5_cngje")
@@ -123,6 +136,7 @@ region_filter_clip_enabled = true
 [node name="Red" type="Node2D" parent="Dock" unique_id=1598038465]
 
 [node name="SpriteRight" type="Sprite2D" parent="Dock/Red" unique_id=1070312006]
+z_as_relative = false
 scale = Vector2(5, 5)
 texture = ExtResource("6_ftju0")
 region_enabled = true
@@ -130,6 +144,7 @@ region_rect = Rect2(0, 17, 32, 15)
 
 [node name="SpriteTower" type="Sprite2D" parent="Dock/Red/SpriteRight" unique_id=1734732833]
 visible = false
+z_as_relative = false
 position = Vector2(-8.599999, -0.6)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("7_mifw5")
@@ -138,6 +153,7 @@ region_rect = Rect2(0, 48, 16, 17)
 region_filter_clip_enabled = true
 
 [node name="SpriteLeft" type="Sprite2D" parent="Dock/Red" unique_id=158632603]
+z_as_relative = false
 scale = Vector2(5, 5)
 texture = ExtResource("6_ftju0")
 flip_h = true
@@ -146,6 +162,7 @@ region_rect = Rect2(0, 17, 32, 15)
 
 [node name="SpriteTower" type="Sprite2D" parent="Dock/Red/SpriteLeft" unique_id=1377232077]
 visible = false
+z_as_relative = false
 position = Vector2(8.999999, -0.79999995)
 scale = Vector2(0.99999976, 0.99999976)
 texture = ExtResource("7_mifw5")
@@ -154,6 +171,7 @@ region_rect = Rect2(0, 48, 16, 17)
 region_filter_clip_enabled = true
 
 [node name="SpriteUp" type="Sprite2D" parent="Dock/Red" unique_id=2089215150]
+z_as_relative = false
 scale = Vector2(5, 5)
 texture = ExtResource("6_ftju0")
 region_enabled = true
@@ -161,6 +179,7 @@ region_rect = Rect2(48, 0, 16, 32)
 
 [node name="SpriteTower" type="Sprite2D" parent="Dock/Red/SpriteUp" unique_id=1670743475]
 visible = false
+z_as_relative = false
 position = Vector2(0, 8.4)
 scale = Vector2(0.99999964, 0.99999964)
 texture = ExtResource("7_mifw5")
@@ -169,6 +188,7 @@ region_rect = Rect2(0, 48, 16, 17)
 region_filter_clip_enabled = true
 
 [node name="SpriteDown" type="Sprite2D" parent="Dock/Red" unique_id=300224820]
+z_as_relative = false
 scale = Vector2(5, 5)
 texture = ExtResource("6_ftju0")
 region_enabled = true
@@ -176,6 +196,7 @@ region_rect = Rect2(32, 0, 16, 32)
 
 [node name="SpriteTower" type="Sprite2D" parent="Dock/Red/SpriteDown" unique_id=952824446]
 visible = false
+z_as_relative = false
 position = Vector2(0.20000076, -8.000002)
 scale = Vector2(0.99999946, 0.99999946)
 texture = ExtResource("7_mifw5")

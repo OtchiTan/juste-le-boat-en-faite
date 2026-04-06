@@ -163,6 +163,7 @@ projectile_scene = ExtResource("2_8jrvy")
 camera_scene = ExtResource("3_q7w65")
 
 [node name="BoatSprite2D" type="Sprite2D" parent="." unique_id=81384593]
+z_index = 2
 visible = false
 position = Vector2(-9, 0)
 rotation = 1.5707964

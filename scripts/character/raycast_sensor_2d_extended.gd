@@ -40,7 +40,6 @@ func _spawn_nodes():
 
 	_angles = []
 	var step = cone_width / (n_rays)
-	var group_step = cone_width / ray_groupping
 	var start = -(cone_width /ray_groupping  / 2.0) + (step / 2.0)
 
 	for i in n_rays:

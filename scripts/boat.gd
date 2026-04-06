@@ -17,15 +17,16 @@ signal on_dealt_damages(dmg_amount:float, dmg_boat:Boat)
 var original_life:int
 var atk :int = 5
 var player_id : int = -1
+var player_island: Island
 
 var target : Boat = null
 var targ : Vector2
 var tpRandomNextFrame = false
 
 @export var projectile_scene: PackedScene
-@export var fire_cool_down : int = 1
-var time_since_last_fire_left = 0
-var time_since_last_fire_right = 0
+@export var fire_cool_down : float = 1
+var time_since_last_fire_left :float= 0
+var time_since_last_fire_right :float= 0
 @export var camera_scene: PackedScene
 signal getDamage(int)
 
@@ -40,8 +41,9 @@ var want_to_shoot_r := false
 var want_to_shoot_l := false
 var controller = null
 
-var dont_die_on_life_equal_0:bool = false
-var useRayCastController:bool = true
+
+@export var dont_die_on_life_equal_0:bool = false
+@export var useRayCastController:bool = true
 
 @onready var minimap_marker: MinimapMarker = $MinimapMarker
 @onready var collision: CollisionShape2D = $CollisionShape2D
@@ -49,7 +51,8 @@ var useRayCastController:bool = true
 var wind_angle = 0
 #if the angle is between windangle +/- wind_acceptance_angle take the wind, else not. 
 var wind_acceptance_angle = 30 * PI / 180
-var wind_strenght = 50
+#par combien le vent multiplie l'accélération
+var wind_strenght = 2
 
 func _ready():
 	GameManager.register_boat(self)
@@ -61,11 +64,18 @@ func _ready():
 		minimap_marker.marker_color = Color.GREEN
 	else :
 		minimap_marker.marker_color = Color.CRIMSON
+		
+	global_position = player_island.dock.global_position
+	global_rotation = 0.0
+	rotate(deg_to_rad(player_island.dock_orientation))
 
-func set_as_player_and_id(id_player: int) -> void:
+func set_as_player_and_id(id_player: int, island: Island = null) -> void:
 	player_id = id_player
 	label.text = str(player_id)
-	
+	player_island = island
+	#On ne créé pas de controlleur si un est déjà assigné.
+	if controller :
+		return
 	if id_player == 0:
 		controller=PlayerController.new()
 		controller.boat = self
@@ -125,12 +135,12 @@ func _physics_process(delta: float) -> void:
 	
 	if throttle != 0:
 		var force  = forward_dir * throttle * acceleration 
-		var relative_wind_angle = fmod(abs(forward_dir.angle() - wind_angle),  PI)
+		var relative_wind_angle = angle_difference(forward_dir.angle(), wind_angle)
 		#print(forward_dir.angle()," / ",wind_angle," : ",  relative_wind_angle, relative_wind_angle < wind_acceptance_angle)
 		if throttle < 0 and linear_velocity.dot(forward_dir) < 0:
 			force /= 4
 		elif ( relative_wind_angle < wind_acceptance_angle) :
-			force += force.normalized()* wind_strenght
+			force *= wind_strenght
 		apply_central_force(force)
 	
 	### rotation
@@ -162,7 +172,7 @@ func _physics_process(delta: float) -> void:
 
 func _integrate_forces(state):
 	if(tpRandomNextFrame):
-		var target_pos = Vector2(randi_range(spawn_rectancgle.x, spawn_rectancgle.y), randi_range(spawn_rectancgle.z, spawn_rectancgle.w))
+		var target_pos = Vector2(randf_range(spawn_rectancgle.x, spawn_rectancgle.y), randi_range(spawn_rectancgle.z, spawn_rectancgle.w))
 		state.transform.origin = get_parent().to_global(target_pos)
 		tpRandomNextFrame = false
 
@@ -173,11 +183,11 @@ func attack() -> void :
 
 	
 	var nb_Bullet = 1
-	var dispertion_Angle = 0
+	var dispertion_Angle = 0.0
 	
 	var angle_btw = 0
 	if nb_Bullet > 1:
-		angle_btw = dispertion_Angle/(nb_Bullet-1)
+		angle_btw = dispertion_Angle/(nb_Bullet-1) as float
 	
 	if ( want_to_shoot_l and time_since_last_fire_left >= fire_cool_down ) :
 		time_since_last_fire_left = 0
@@ -203,10 +213,9 @@ func attack() -> void :
 			get_parent().add_child(projectile1)
 			direction = direction.rotated(angle_btw)
 
-
 func get_damage(damage: float, tireur) -> void :
-	
-	life -= damage
+	if not tireur or FactionManager.get_should_deal_damage(tireur, self) : 
+		life -= damage
 	if player_id == 0:
 		emit_signal("getDamage", life)
 	on_health_changed.emit(life)
@@ -214,7 +223,7 @@ func get_damage(damage: float, tireur) -> void :
 	var bot_atk := tireur as Boat if tireur else null
 	if (bot_atk) :
 		bot_atk.on_dealt_damages.emit(damage, self)
-		
+
 	if life <= 0:
 		if not dont_die_on_life_equal_0 : 
 			GameManager.on_boat_destroyed(self, tireur)

@@ -8,7 +8,6 @@ namespace Justeleboatenfaite.scripts;
 public partial class WorldGen : TileMapLayer
 {
 	[Export] public int IslandNumber = 7;
-	[Export] public float IslandSize = 30.0f;
 	[Export] public Vector2I MapSize = new(700, 400);
 	[Export] public PackedScene IslandScene;
 	[Export] public PackedScene BoatScene;
@@ -17,6 +16,7 @@ public partial class WorldGen : TileMapLayer
 	[Signal]
 	public delegate void OnMapReadyEventHandler(Dictionary<int, Array<Vector2I>> terrains);
 
+	private float _islandSize = 15.0f;
 	private FastNoiseLite _terrainNoise = new();
 	private FastNoiseLite _seaNoise = new();
 	private RandomNumberGenerator _rng = new();
@@ -37,6 +37,8 @@ public partial class WorldGen : TileMapLayer
 
 		_seaNoise.Seed = 67;
 		_seaNoise.NoiseType = FastNoiseLite.NoiseTypeEnum.Simplex;
+
+		_islandSize = (new Vector2(MapSize.X, MapSize.Y) * (float)0.035).Length();
 
 		SpawnIslands();
 
@@ -88,7 +90,7 @@ public partial class WorldGen : TileMapLayer
 		}
 
 		EmitSignal(SignalName.OnMapReady, _terrains);
-		
+
 		SpawnIslandObjects();
 
 		var uis = GetTree().GetNodesInGroup("minimap_ui");
@@ -115,8 +117,11 @@ public partial class WorldGen : TileMapLayer
 				var baseX = i * cellWidth + cellWidth / 2.0f;
 				var baseY = j * cellHeight + cellHeight / 2.0f;
 
-				var offsetX = _rng.RandfRange(-cellWidth * 0.3f, cellWidth * 0.3f);
-				var offsetY = _rng.RandfRange(-cellHeight * 0.3f, cellHeight * 0.3f);
+				var width = cellWidth / 2 - _islandSize * (float)2.0;
+				var height = cellHeight / 2 - _islandSize * (float)2.0;
+				
+				var offsetX = _rng.RandfRange(-width, width);
+				var offsetY = _rng.RandfRange(-height, height);
 
 				_islandLocations.Add(new Vector2I((int)(baseX + offsetX), (int)(baseY + offsetY)));
 			}
@@ -135,7 +140,6 @@ public partial class WorldGen : TileMapLayer
 		{
 			var islandInstance = IslandScene.Instantiate<Node2D>();
 
-
 			islandInstance.Set("island_id", i);
 			islandInstance.Call("change_owner", i, true);
 
@@ -148,46 +152,13 @@ public partial class WorldGen : TileMapLayer
 			AddChild(islandInstance);
 
 			islandInstance.Call("setup", this, _tileTerrainMap);
-			SpawnBoatAroundIsland(worldPos, i);
 		}
-	}
-
-	private void SpawnBoatAroundIsland(Vector2 islandPos, int id)
-	{
-		var boatInstance = BoatScene.Instantiate<Node2D>();
-		var attempt = 0;
-		var randomDirection = Vector2.Right.Rotated(_rng.RandfRange(0, Mathf.Tau));
-		var tilePos = LocalToMap(islandPos + randomDirection * BoatOffset);
-
-		while (GetTileValue(tilePos) < 2 && attempt < 10)
-		{
-			attempt++;
-			randomDirection = Vector2.Right.Rotated(_rng.RandfRange(0, Mathf.Tau));
-			tilePos = LocalToMap(islandPos + randomDirection * BoatOffset);
-		}
-
-		if (attempt >= 10)
-		{
-			var waterTiles = _terrains.ContainsKey(2) ? _terrains[2] : new Array<Vector2I>();
-			if (waterTiles.Count > 0)
-			{
-				var randWater = _rng.RandiRange(0, waterTiles.Count - 1);
-				boatInstance.Position = MapToLocal(waterTiles[randWater]);
-			}
-		}
-		else
-		{
-			boatInstance.Position = islandPos + randomDirection * BoatOffset;
-		}
-
-		boatInstance.Call("set_as_player_and_id", id);
-		AddChild(boatInstance);
 	}
 
 	private int GetTileValue(Vector2I index)
 	{
 		var nearestIslandDist = GetDistanceToNearestIsland(index);
-		var islandDistance = nearestIslandDist / (float)Math.Pow(IslandSize, 2);
+		var islandDistance = nearestIslandDist / (float)Math.Pow(_islandSize, 2);
 
 		islandDistance += _terrainNoise.GetNoise2D(index.X, index.Y);
 		var result = (int)islandDistance;

@@ -44,4 +44,13 @@ func get_player_relation(obs_player_id: int, target_player_id: int) -> Relation:
 		return diplomacy_matrix[obs_player_id][target_player_id]
 	
 	return Relation.ENEMY
+
+@export var firendly_fire_on := true
+func get_should_deal_damage(tireur: Node, target: Node) -> bool:
+	if firendly_fire_on :
+		return true
 	
+	if get_relation(tireur, target) == Relation.ALLY:
+		return firendly_fire_on
+		
+	return true

@@ -12,6 +12,12 @@ func _ready() -> void:
 	boat.set_as_player_and_id(1)
 	boat.controller.control_mode = AIController2D.ControlModes.HUMAN
 	
+	boat.wind_angle = 0
+	boat.wind_strenght = 1.5
+	
+	boat.controller.b_goto_target = 1
+	boat.controller.target_point = $target.global_position
+	
 
 func _process(delta: float) -> void:
 	if (boat) :
@@ -45,8 +51,8 @@ font_color = Color(0.012617188, 0.012617188, 0.012617188, 1)
 script = SubResource("GDScript_dmd83")
 
 [node name="Boat" parent="." unique_id=1813145880 instance=ExtResource("1_nffn4")]
-position = Vector2(-204.99998, -199.00002)
-rotation = -1.5728018
+position = Vector2(-1636.0001, 1.0000305)
+rotation = -0.029205322
 camera_scene = null
 
 [node name="World" type="StaticBody2D" parent="." unique_id=1888477537]
@@ -91,3 +97,6 @@ label_settings = SubResource("LabelSettings_0wxyi")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1301421163]
 zoom = Vector2(0.5, 0.5)
+
+[node name="target" type="Node2D" parent="." unique_id=1135836736]
+position = Vector2(1201, -237)

@@ -23,7 +23,7 @@ func _ready() -> void:
 var elapsed_time_since_wind_changed = 0
 var change_wind_time = 1
 var wind_direction = randf_range(-PI,PI)
-var wind_str = 100
+var wind_str = 2
 
 func _process(delta: float) -> void:
 	elapsed_time_since_wind_changed += delta

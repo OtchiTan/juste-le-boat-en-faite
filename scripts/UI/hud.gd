@@ -30,5 +30,5 @@ func _ready() -> void:
 	_on_gold_changed(GameManager.player_gold) # Initialisation
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
