@@ -31,8 +31,9 @@ func _process(delta: float) -> void:
 		elapsed_time_since_wind_changed = 0
 		wind_direction += randf_range(-0.1,0.1)
 		for boat in boats :
-			boat.wind_angle = wind_direction
-			boat.wind_strenght = wind_str
+			if is_instance_valid(boat):
+				boat.wind_angle = wind_direction
+				boat.wind_strenght = wind_str
 		wind_changed.emit(wind_direction)
 		
 func register_boat(boat:Boat):
