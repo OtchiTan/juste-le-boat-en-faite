@@ -64,8 +64,9 @@ func _ready():
 		minimap_marker.marker_color = Color.GREEN
 	else :
 		minimap_marker.marker_color = Color.CRIMSON
-		
-	global_position = player_island.dock.global_position
+
+	var offset := Vector2(player_island.shore_tile_direction * 64)
+	global_position = player_island.dock.global_position + offset
 	global_rotation = 0.0
 	rotate(deg_to_rad(player_island.dock_orientation))
 

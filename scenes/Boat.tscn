@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://b6u1ubbrve3xx" path="res://scenes/projectile.tscn" id="2_8jrvy"]
 [ext_resource type="PackedScene" uid="uid://643adwfdt1lf" path="res://scenes/camera_2d.tscn" id="3_q7w65"]
 [ext_resource type="Script" uid="uid://dukmfiwpskmss" path="res://scripts/character/raycast_sensor_2d_extended.gd" id="4_4pna2"]
-[ext_resource type="Script" uid="uid://cximee0366rki" path="res://scripts/UI/MinimapMarker.gd" id="5_wdn3g"]
+[ext_resource type="Script" path="res://scripts/UI/MinimapMarker.gd" id="5_wdn3g"]
 [ext_resource type="Texture2D" uid="uid://p7idp61bqldb" path="res://assets/PrettyBoat/prettyBoatIdleSpriteSheetRed.png" id="6_3afor"]
 [ext_resource type="Texture2D" uid="uid://cedf6crj2vdhl" path="res://assets/PrettyBoat/prettyBoatIdleCyanSpriteSheet.png" id="14_iyrcj"]
 
@@ -16,8 +16,8 @@ bounce = 0.8
 load_path = "res://.godot/imported/Boat.png-35589654e32fd06d4321846cfa571870.ctex"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nai5d"]
-radius = 36.0
-height = 106.0
+radius = 54.0
+height = 218.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_4pna2"]
 font_size = 75
@@ -163,8 +163,8 @@ projectile_scene = ExtResource("2_8jrvy")
 camera_scene = ExtResource("3_q7w65")
 
 [node name="BoatSprite2D" type="Sprite2D" parent="." unique_id=81384593]
-z_index = 2
 visible = false
+z_index = 2
 position = Vector2(-9, 0)
 rotation = 1.5707964
 scale = Vector2(8, 8)
@@ -202,13 +202,17 @@ is_rect = true
 marker_size = Vector2(1000, 1000)
 
 [node name="RedBoat" type="AnimatedSprite2D" parent="." unique_id=1153752836]
+z_index = 2
 rotation = -1.5707964
-scale = Vector2(0.36, 0.36)
+scale = Vector2(0.65, 0.65)
 sprite_frames = SubResource("SpriteFrames_rbe23")
+autoplay = "default"
 frame_progress = 0.087032475
 
 [node name="CyanBoat" type="AnimatedSprite2D" parent="." unique_id=907082831]
+z_index = 2
 rotation = -1.5707964
-scale = Vector2(0.36, 0.36)
+scale = Vector2(0.65, 0.65)
 sprite_frames = SubResource("SpriteFrames_oswpr")
+autoplay = "default"
 frame_progress = 0.87082994

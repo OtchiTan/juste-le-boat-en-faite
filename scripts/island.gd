@@ -5,6 +5,8 @@ class_name Island
 var island_owner: int = -1  # -1 = neutre
 var island_id: int
 var dock_orientation: float
+var shore_tile_direction := Vector2i.ZERO
+var alreay_spawn_boat = false
 
 @export var boat_scene: PackedScene
 
@@ -121,27 +123,32 @@ func _orient_dock(shore_tile: Vector2i) -> void:
 	if tile_terrain_map.get(shore_tile + Vector2i(1, 0), 1) == 1:
 		sprite_right.visible = true
 		dock_orientation = 0
+		shore_tile_direction =  Vector2i(1, 0)
 	elif tile_terrain_map.get(shore_tile + Vector2i(-1, 0), 1) == 1:
 		sprite_left.visible = true
 		dock_orientation = 180
+		shore_tile_direction =  Vector2i(-1, 0)
 	elif tile_terrain_map.get(shore_tile + Vector2i(0, 1), 1) == 1:
 		sprite_down.visible = true
 		dock_orientation = 90
+		shore_tile_direction =  Vector2i(0, 1)
 	elif tile_terrain_map.get(shore_tile + Vector2i(0, -1), 1) == 1:
 		sprite_up.visible = true
 		dock_orientation = 270
+		shore_tile_direction =  Vector2i(0, -1)
 		
 	# Ajoute ceci pour que la tour s'affiche sur le bon nouveau sprite si déjà amélioré
 	_update_fortress_visual()
 	
-	_spawn_boat()
+	if !alreay_spawn_boat:
+		_spawn_boat()
 	
 func _spawn_boat() -> void :
+	alreay_spawn_boat = true
 	var boat = boat_scene.instantiate()
 	if boat is Node2D:
 		boat.set_as_player_and_id(island_id, self)
 		get_parent().call_deferred("add_child", boat)
-		boat.global_scale = Vector2(1, 1);
 
 func _hide_all_dock_sprites() -> void:
 	# Ajout d'une sécurité "if" pour éviter le crash si les sprites sont nuls
