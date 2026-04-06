@@ -14,6 +14,9 @@ var cumulated_rewar = 0
 var reset_with_time:bool = false
 var inference_cheat:bool = true
 
+var target_point:Vector2 # global coordonates.
+var b_goto_target:float = 0 # -1 : ???? /// 0 : s'en fout /// 1 VAS Y IMMEDIATEMENT
+
 #-- Methods that need implementing using the "extend script" option in Godot --#
 func get_obs() -> Dictionary:
 	c_frame_obs = raycast_sensor_2d.get_observation()
@@ -65,16 +68,22 @@ func get_obs() -> Dictionary:
 	else:
 		stacked_obs.append((boat.time_since_last_fire_right / boat.fire_cool_down)-1)
 	
-	stacked_obs.append(boat.life / boat.original_life)
+	stacked_obs.append(boat.life / (boat.original_life as float))
 	
 	stacked_obs.append(cumulative_rotation /( PI * 12))
 	
 	var relative_wind_angle = angle_difference(boat.global_rotation, boat.wind_angle) / PI
 	stacked_obs.append(relative_wind_angle)
+	stacked_obs.append(boat.wind_strenght / 2 -0.5)
 	
-	# je génère 5 cases de libre à la fin... Pour des trucs bonus ?
-	for i in range(5) : 
-		stacked_obs.append(0)
+	var relative_target_point = target_point - boat.global_position
+	var relative_target_angle = boat.get_angle_to(target_point)
+	
+	stacked_obs.append(relative_target_angle)
+	stacked_obs.append(sqrt(relative_target_point.length()) / 100)
+	stacked_obs.append(b_goto_target)
+	
+	stacked_obs.append(0)
 
 	return {"obs": stacked_obs}
 
@@ -120,6 +129,9 @@ func set_action(action) -> void:
 			boat.want_to_shoot_l = truc and boat.want_to_shoot_l
 var cumulative_rotation = 0
 
+func update(_delta) :
+	pass
+
 func _physics_process(delta):
 	if (not reset_with_time) :
 		n_steps = -1
@@ -137,36 +149,22 @@ func _physics_process(delta):
 		
 	#reward -= target_dist *0.00001
 	#cumulated_rewar -= target_dist *0.00001
-	var forward_dir = boat.global_transform.x.normalized()
-	
-	if (boat.target) : 
-		var target_dist = (boat.target.global_position - boat.global_position).length_squared()
-		var dir_to_target = (boat.target.global_position - boat.global_position).normalized()
-		# 2. Vecteur "avant" du bateau (sur Godot 2D, c'est souvent global_transform.x)
-		# 3. Produit scalaire
-		var dot = forward_dir.dot(dir_to_target)
-		#if (dot>0) : 
-		#	reward += dot * dot * 0.01
-		#	cumulated_rewar += dot * dot *0.01
-		#else :
-		#	reward += dot * dot * 0.001
-		#	cumulated_rewar += dot * dot *0.001
+	#reward proportionnel à la distance ; : 
+	var relative_target_point = target_point - boat.global_position
+	var dist = relative_target_point.length() * 0.001
+	add_reward(- dist * b_goto_target)
 	
 	var speed = boat.linear_velocity.length()
 	
-	add_reward(speed *0.01 * delta)
-	add_reward( - delta * 2)
+	# SPEED & TIME reward
+	#add_reward(speed *0.01 * delta)
+	#add_reward( - delta * 2)
 	if speed < 20 and move.x == 0 and move.y == 0 and not boat.want_to_shoot_r and not boat.want_to_shoot_l:
 		add_reward(- delta * 60)
 	
-	
-	
 	# On ajoute la rotation effectuée à cette frame
 	cumulative_rotation += boat.angular_velocity * delta
-	if abs(cumulative_rotation) > PI * 4: # Plus de 2 tours complets
-		add_reward(-0.5 * abs(cumulative_rotation) * delta)
-		cumulative_rotation *= 0.99
-	super._physics_process(delta)
+	add_reward(-0.05 * abs(cumulative_rotation) * delta)
 
 func reset():
 	super.reset()
@@ -183,32 +181,32 @@ func _ready():
 	reset_after = 60 * 60 * 4
 
 
-func OnSetControlMode(newvalue) :
+func OnSetControlMode(_newvalue) :
 	pass
 
 func on_dealt_damages(dmg_amount: float, targeted_boat: Boat) :
 	var delta_r = dmg_amount
 	delta_r += 100 if targeted_boat.life <= 0 else 0
-	
 	var other_controller = targeted_boat.controller
+	
 	match FactionManager.get_relation(boat, targeted_boat) :
 		FactionManager.Relation.ENEMY :
 			add_reward(delta_r * 10)
-			if other_controller.has_method("add_reward") :
+			if other_controller and other_controller.has_method("add_reward") :
 				other_controller.add_reward(-delta_r)
 		FactionManager.Relation.ALLY :
-			add_reward(- delta_r * 8)
+			# le friendly fire est désactivé pour que l'IA n'apprenne pas 
+			# que c'est dangereux d'avoir un allié à coté de soi
+			add_reward(- 100)
 	
 	if ( targeted_boat.life <= 0) :
-		if ("needs_reset" in other_controller and "done" in other_controller) : 
+		if ("needs_reset" in other_controller) : 
 			other_controller.needs_reset = true
+		if ("done" in other_controller) :
 			other_controller.done = true
-func add_reward(delta) : 
-	reward += delta
-	cumulated_rewar += delta
-
-func update(delta:float):
-	pass
-	
-	
-	
+			
+var isolateOneReward = false
+func add_reward(delta, isolate:bool = false) : 
+	if (not isolateOneReward) || isolate : 
+		reward += delta
+		cumulated_rewar += delta

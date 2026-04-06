@@ -4,7 +4,7 @@ var vitesse = 1000
 var direction = Vector2.ZERO
 var degats : int = 20
 var tireur
-var duree_vie :float = 0.8
+var duree_vie :float = 1
 
 
 func _ready() -> void:

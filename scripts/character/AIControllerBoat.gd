@@ -71,7 +71,7 @@ func set_action(action) -> void:
 	character.steering = action["rotation"] - 1
 	
 
-func update(delta):
+func update(_delta):
 	
 	#if(character.player_id == 1):
 		#character.steering = Input.get_action_strength("right") - Input.get_action_strength("left")

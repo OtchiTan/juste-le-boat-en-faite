@@ -3,7 +3,7 @@ class_name PlayerController
 
 var boat : Boat
 
-func update(delta):
+func update(_delta):
 	if boat == null:
 		return
 

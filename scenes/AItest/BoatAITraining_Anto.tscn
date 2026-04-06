@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="1_lf4h0"]
 [ext_resource type="Texture2D" uid="uid://yt3ypfvkeh66" path="res://assets/fleche.png" id="2_lf4h0"]
+[ext_resource type="Texture2D" uid="uid://d1yix7r4c2n8n" path="res://assets/textures/Miscellaneous/Well.png" id="3_ubajb"]
 
 [sub_resource type="GDScript" id="GDScript_dmd83"]
 resource_name = "AIRayCastTraining"
@@ -11,12 +12,30 @@ script/source = "extends Node2D
 @onready var boat_1: Boat = $Boat1
 @onready var boat_2: Boat = $Boat2
 @onready var boat_3: Boat = $Boat3
+@onready var dummyboat: Boat = $Dummyboat
+
+var wind_str :float= 1
+
+var time_between_target = 45
+var target_active_time = 30
+var assign_target_timer : Timer
+var delete_target_timer : Timer
 
 func _ready() -> void:
+	
+	FactionManager.firendly_fire_on = false
+	
+	wind_str = randf() + 1 #multiplie l'accélération entre 1 et 2
+	
 	boat.set_as_player_and_id(1)
 	boat_1.set_as_player_and_id(1)
 	#boat_1.controller.control_mode = AIController2D.ControlModes.HUMAN
-	boat.set_target(boat_3)
+
+	boat_2.set_as_player_and_id(2)
+	boat_3.set_as_player_and_id(2)
+	boat_2.set_target(boat)
+	boat_3.set_target(boat_1)
+	boat.set_target(boat_2)
 	boat_1.set_target(boat_3)
 	
 	boat.controller.reset_with_time = true
@@ -24,72 +43,62 @@ func _ready() -> void:
 	boat_2.controller.reset_with_time = true
 	boat_3.controller.reset_with_time = true
 	
-	boat.dont_die_on_life_equal_0 = true
-	boat_1.dont_die_on_life_equal_0 = true
-	boat_2.dont_die_on_life_equal_0 = true
-	boat_3.dont_die_on_life_equal_0 = true
-	
-	boat_2.set_as_player_and_id(2)
-	boat_3.set_as_player_and_id(2)
-	boat_2.set_target(boat)
-	boat_3.set_target(boat_1)
-	
-	boat.on_health_changed.connect(on_boat_hp_change)
-	boat_1.on_health_changed.connect(on_boat_hp_change)
-	boat_2.on_health_changed.connect(on_boat_hp_change)
-	boat_3.on_health_changed.connect(on_boat_hp_change)
 	set_boat_spawn2(boat, $spawner/spawn1)
 	set_boat_spawn2(boat_1, $spawner/spawn1)
 	set_boat_spawn2(boat_2, $spawner/spawn2)
 	set_boat_spawn2(boat_2, $spawner/spawn2)
 	
 	
-func on_boat_hp_change(newlife) :
-	return
-	if (boat.life <= 0) :
-		var spawn = $spawner.get_random_point_forsp1()
-		set_boat_spawn(boat, spawn)
-	if (boat_1.life <= 0) :
-		var spawn = $spawner.get_random_point_forsp1()
-		set_boat_spawn(boat_1, spawn)
-	if (boat_2.life <= 0) :
-		var spawn = $spawner.get_random_point_forsp2()
-		set_boat_spawn(boat_2, spawn)
-	if (boat_3.life <= 0) :
-		var spawn = $spawner.get_random_point_forsp2()
-		set_boat_spawn(boat_3, spawn)
-	pass
+	boat.wind_strenght = wind_str
+	boat_1.wind_strenght = wind_str
+	boat_2.wind_strenght = wind_str
+	boat_3.wind_strenght = wind_str
 	
-func set_boat_spawn(boat:Boat,spawn:Vector2) :
-	boat.spawn_rectancgle.x = spawn.x
-	boat.spawn_rectancgle.y = spawn.x
-	boat.spawn_rectancgle.z = spawn.y
-	boat.spawn_rectancgle.w = spawn.y
+	
+	assign_target_timer = Timer.new()
+	assign_target_timer.one_shot = true
+	assign_target_timer.wait_time = time_between_target
+	assign_target_timer.timeout.connect(set_all_boat_target)
+	add_child(assign_target_timer)
+	
+	delete_target_timer = Timer.new()
+	delete_target_timer.one_shot = true
+	delete_target_timer.wait_time = target_active_time
+	delete_target_timer.timeout.connect(reset_targets)
+	add_child(delete_target_timer)
+	
+	reset_targets()
+	
+	
+	dummyboat.set_as_player_and_id(3)
 
-func set_boat_spawn2(boat, input : CollisionShape2D) :
 
+func set_boat_spawn2(_boat, input : CollisionShape2D) :
 	var rect_shape = input.shape as RectangleShape2D
 	var half_width = rect_shape.size.x / 2.0
 	var half_height = rect_shape.size.y / 2.0
 	
-	boat.spawn_rectancgle.x = -half_width + input.position.x
-	boat.spawn_rectancgle.y = half_width + input.position.x
-	boat.spawn_rectancgle.z = -half_height + input.position.y
-	boat.spawn_rectancgle.w = half_height + input.position.y
+	_boat.spawn_rectancgle.x = -half_width + input.position.x
+	_boat.spawn_rectancgle.y = half_width + input.position.x
+	_boat.spawn_rectancgle.z = -half_height + input.position.y
+	_boat.spawn_rectancgle.w = half_height + input.position.y
 
 var elapsed_time_since_wind_changed = 0
 var change_wind_time = 1
+
+
 func _process(delta: float) -> void:
 	elapsed_time_since_wind_changed += delta
 	if elapsed_time_since_wind_changed > change_wind_time :
 		elapsed_time_since_wind_changed = 0
-		var new_wind_dir = boat.wind_angle + randf_range(-0.1,0.1)
+		var new_wind_dir = boat.wind_angle + randf_range(-0.05,0.05)
 		$WindNode.global_rotation = new_wind_dir
 		boat.wind_angle = new_wind_dir
 		boat_1.wind_angle = new_wind_dir
 		boat_2.wind_angle = new_wind_dir
 		boat_3.wind_angle = new_wind_dir
-		
+		dummyboat.wind_angle =new_wind_dir
+	
 	if (boat and boat_1) :
 		$Label.text = str(round(boat.controller.cumulated_rewar *100)/100)
 		$Label2.text = str(round(boat_1.controller.cumulated_rewar *100)/100)
@@ -98,6 +107,36 @@ func _process(delta: float) -> void:
 		$Label3.text = str(round(boat_2.controller.cumulated_rewar *100)/100)
 		$Label4.text = str(round(boat_3.controller.cumulated_rewar *100)/100)
 		
+@onready var target_1_sprite: Sprite2D = $targeting/target1
+@onready var target_2_sprite: Sprite2D = $targeting/target2
+
+func reset_targets() :
+	assign_target_timer.start()
+	target_1_sprite.visible = false
+	target_2_sprite.visible = false
+	boat.controller.b_goto_target = 0
+	boat_1.controller.b_goto_target = 0
+	boat_2.controller.b_goto_target = 0
+	boat_3.controller.b_goto_target = 0
+
+func set_all_boat_target() :
+	delete_target_timer.start()
+	var target1 = $targeting.get_random_point_forsp1()
+	set_boat_target(boat,target1)
+	set_boat_target(boat_1,target1)
+	
+	var target2 = $targeting.get_random_point_forsp2()
+	set_boat_target(boat_2,target2)
+	set_boat_target(boat_3,target2)
+	
+	target_1_sprite.visible = true
+	target_2_sprite.visible = true
+	target_1_sprite.position = target1
+	target_2_sprite.position = target2
+	
+func set_boat_target(_boat : Boat, target : Vector2) :
+	_boat.controller.target_point = target
+	_boat.controller.b_goto_target =1
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ubajb"]
@@ -154,6 +193,65 @@ func get_random_point_in_shape(collisionshape:CollisionShape2D) :
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0wxyi"]
 size = Vector2(1888, 1916.9109)
 
+[sub_resource type="GDScript" id="GDScript_ubajb"]
+resource_name = "DummyBoatController"
+script/source = "extends Node
+
+@onready var boat: Boat = $\"..\"
+
+var needs_reset = false
+
+var is_immobile := false
+var state_timer: Timer
+
+# Variables pour éviter la \"convulsion\" (Jitter)
+var target_throttle := 0.0
+var target_steering := 0.0
+var random_direction_timer := 0.0
+
+func _ready():
+	boat.controller = self
+	# --- LE TIMER DE CYCLE (10s on / 10s off) ---
+	state_timer = Timer.new()
+	state_timer.wait_time = 10.0
+	state_timer.autostart = true
+	state_timer.timeout.connect(_on_state_timer_timeout)
+	add_child(state_timer)
+
+func _on_state_timer_timeout():
+	# À chaque fois que le timer de 10s sonne, on inverse l'état
+	is_immobile = !is_immobile
+	
+	if is_immobile:
+		target_throttle = 0.0
+		target_steering = 0.0
+		boat.throttle = 0.0
+		boat.steering = 0.0
+
+func update(delta):
+	if (needs_reset) : 
+		boat.reset()
+		needs_reset = false
+	
+	if is_immobile:
+		boat.throttle = 0.0
+		boat.steering = 0.0
+		return
+		
+	random_direction_timer -= delta
+	if random_direction_timer <= 0.0:
+		# randf_range donne un float entre -1.0 et 1.0
+		target_throttle = randf_range(-1.0, 1.0)
+		target_steering = randf_range(-1.0, 1.0)
+		
+		# On relance le petit chrono interne (ex: il garde ce cap pendant 1.5 à 3 secondes)
+		random_direction_timer = randf_range(1.5, 3.0)
+		
+	# 3. Lissage (Lerp) pour que le bateau ne tourne pas de façon robotique et instantanée
+	boat.throttle = lerp(boat.throttle, target_throttle, 2.0 * delta)
+	boat.steering = lerp(boat.steering, target_steering, 2.0 * delta)
+"
+
 [node name="BoatAiTraining" type="Node2D" unique_id=216534563]
 script = SubResource("GDScript_dmd83")
 
@@ -161,11 +259,13 @@ script = SubResource("GDScript_dmd83")
 position = Vector2(-204.99998, -199.00002)
 rotation = -1.5728018
 camera_scene = null
+dont_die_on_life_equal_0 = true
 
 [node name="Boat1" parent="." unique_id=558970727 instance=ExtResource("1_lf4h0")]
 position = Vector2(-160, 316.99997)
 rotation = -0.92489445
 camera_scene = null
+dont_die_on_life_equal_0 = true
 
 [node name="World" type="StaticBody2D" parent="." unique_id=1888477537]
 collision_layer = 129
@@ -235,11 +335,13 @@ shape = SubResource("RectangleShape2D_0wxyi")
 position = Vector2(215.00003, -181)
 rotation = -1.5721577
 camera_scene = null
+dont_die_on_life_equal_0 = true
 
 [node name="Boat3" parent="." unique_id=840857634 instance=ExtResource("1_lf4h0")]
 position = Vector2(157.00003, 426.00003)
 rotation = -1.2194724
 camera_scene = null
+dont_die_on_life_equal_0 = true
 
 [node name="Label2" type="Label" parent="." unique_id=2137089932]
 offset_left = -2597.0
@@ -268,3 +370,55 @@ position = Vector2(5, -1310)
 [node name="Sprite2D" type="Sprite2D" parent="WindNode" unique_id=1564709479]
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("2_lf4h0")
+
+[node name="targeting" type="StaticBody2D" parent="." unique_id=1048346531]
+collision_layer = 0
+collision_mask = 0
+script = SubResource("GDScript_0wxyi")
+
+[node name="spawn1" type="CollisionShape2D" parent="targeting" unique_id=344740371]
+position = Vector2(-1281, 6)
+scale = Vector2(0.9200006, 0.95999753)
+shape = SubResource("RectangleShape2D_0wxyi")
+
+[node name="spawn2" type="CollisionShape2D" parent="targeting" unique_id=2138737066]
+position = Vector2(1390, 3)
+scale = Vector2(0.96000123, 0.96000105)
+shape = SubResource("RectangleShape2D_0wxyi")
+
+[node name="target1" type="Sprite2D" parent="targeting" unique_id=2065723665]
+position = Vector2(-1253, -4.999998)
+scale = Vector2(5, 5)
+texture = ExtResource("3_ubajb")
+hframes = 3
+vframes = 2
+
+[node name="Label" type="Label" parent="targeting/target1" unique_id=1873206631]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -8.0
+offset_top = -8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="target2" type="Sprite2D" parent="targeting" unique_id=264272102]
+position = Vector2(888.99994, 9.999999)
+scale = Vector2(5, 5)
+texture = ExtResource("3_ubajb")
+hframes = 3
+vframes = 2
+
+[node name="Dummyboat" parent="." unique_id=1152827146 instance=ExtResource("1_lf4h0")]
+position = Vector2(40, 777)
+rotation = -0.92489445
+camera_scene = null
+dont_die_on_life_equal_0 = true
+
+[node name="LocalCustomController" type="Node" parent="Dummyboat" unique_id=356251648]
+script = SubResource("GDScript_ubajb")

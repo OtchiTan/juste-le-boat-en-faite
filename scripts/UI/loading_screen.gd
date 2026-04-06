@@ -6,7 +6,7 @@ func _ready() -> void:
 	add_to_group("loading_screen")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 func close_loading_screen() -> void:		
