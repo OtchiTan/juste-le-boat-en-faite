@@ -1,7 +1,9 @@
 extends Control
 
-@export var track_player: Node2D
 @export_group("World Settings")
+@export var default_sand_color: Color = Color("c2b280")
+@export var default_water_color: Color = Color(0, 0, 0, 0)
+@export var default_grass_color: Color = Color("60992dff")
 
 var world_size: Vector2 = Vector2.ZERO
 var _computed_scale: Vector2 = Vector2.ONE 
@@ -20,51 +22,37 @@ func _calculate_stretch_scale():
 		return
 	_computed_scale = Vector2(size.x / world_size.x, size.y / world_size.y)
 
-func setup_map_data(grid_size: Vector2i, terrain_map: Dictionary, islands_data: Dictionary, real_world_size: Vector2, initial_colors: Dictionary) -> void:
+func setup_map_data(grid_size: Vector2i, terrains_dict: Dictionary, islands_data: Dictionary, real_world_size: Vector2) -> void:
 	_map_size = grid_size
 	_island_tiles = islands_data
 	world_size = real_world_size * 2
 	
 	_calculate_stretch_scale()
-	_generate_texture(terrain_map, initial_colors)
+	_generate_texture(terrains_dict)
 	
 	var loading_screen = get_tree().get_first_node_in_group("loading_screen")
 	if loading_screen != null:
 		loading_screen.close_loading_screen()
 
-func _generate_texture(terrain_map: Dictionary, initial_colors: Dictionary) -> void:
+func _generate_texture(terrains_dict: Dictionary) -> void:
 	_minimap_image = Image.create(_map_size.x, _map_size.y, false, Image.FORMAT_RGBA8)
-	var water_color = Color(0, 0, 0, 0)
-	var default_land_color = Color("c2b280")
+	
+	_minimap_image.fill(default_water_color)
 
-	var tile_to_island: Dictionary = {}
-	for island_id in _island_tiles:
-		for tile in _island_tiles[island_id]:
-			tile_to_island[tile] = island_id
-
-	for x in _map_size.x:
-		for y in _map_size.y:
-			var pos = Vector2i(x, y)
-			if terrain_map.has(pos) and terrain_map[pos] == 0:
-				if tile_to_island.has(pos):
-					var id = tile_to_island[pos]
-					_minimap_image.set_pixel(x, y, initial_colors.get(id, default_land_color))
-				else:
-					_minimap_image.set_pixel(x, y, default_land_color)
-			else:
-				_minimap_image.set_pixel(x, y, water_color)
+	for terrain_id in terrains_dict:
+		var current_color = default_water_color
+		
+		if terrain_id == 0:
+			current_color = default_grass_color
+		elif terrain_id == 1:
+			current_color = default_sand_color
+			
+		if current_color != default_water_color:
+			for pos in terrains_dict[terrain_id]:
+				if pos.x >= 0 and pos.x < _map_size.x and pos.y >= 0 and pos.y < _map_size.y:
+					_minimap_image.set_pixel(pos.x, pos.y, current_color)
 
 	_map_texture = ImageTexture.create_from_image(_minimap_image)
-	queue_redraw()
-
-func change_island_color(island_id: int, new_color: Color) -> void:
-	if not _island_tiles.has(island_id) or _minimap_image == null: 
-		return
-		
-	for pixel in _island_tiles[island_id]:
-		_minimap_image.set_pixel(pixel.x, pixel.y, new_color)
-		
-	_map_texture.update(_minimap_image)
 	queue_redraw()
 
 func register_marker(marker: MinimapMarker):
