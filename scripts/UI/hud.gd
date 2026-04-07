@@ -8,7 +8,10 @@ func _on_gold_changed(amount: int) -> void:
 	gold_label.text = str(amount)
 
 func _on_getDamage(i):
-	life_label.text = str(int(i))
+	if i is int or i is float:
+		life_label.text = str(int(i))
+	else:
+		push_error("HUD _on_getDamage a reçu une donnée non-numérique : ", i)
 
 func update_island() -> void :
 	var i = 0

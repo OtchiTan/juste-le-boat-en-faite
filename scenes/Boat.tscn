@@ -4,8 +4,10 @@
 [ext_resource type="PackedScene" uid="uid://b6u1ubbrve3xx" path="res://scenes/projectile.tscn" id="2_8jrvy"]
 [ext_resource type="PackedScene" uid="uid://643adwfdt1lf" path="res://scenes/camera_2d.tscn" id="3_q7w65"]
 [ext_resource type="Script" uid="uid://dukmfiwpskmss" path="res://scripts/character/raycast_sensor_2d_extended.gd" id="4_4pna2"]
-[ext_resource type="Script" path="res://scripts/UI/MinimapMarker.gd" id="5_wdn3g"]
+[ext_resource type="Script" uid="uid://cximee0366rki" path="res://scripts/UI/MinimapMarker.gd" id="5_wdn3g"]
 [ext_resource type="Texture2D" uid="uid://p7idp61bqldb" path="res://assets/PrettyBoat/prettyBoatIdleSpriteSheetRed.png" id="6_3afor"]
+[ext_resource type="Texture2D" uid="uid://rusdiisavq1b" path="res://assets/cannonball/muzzle-ezgif.com-gif-to-sprite-converter.png" id="8_gbyt4"]
+[ext_resource type="Script" uid="uid://d3wfvsgc3aig6" path="res://scripts/muzzle_flash.gd" id="9_551pn"]
 [ext_resource type="Texture2D" uid="uid://cedf6crj2vdhl" path="res://assets/PrettyBoat/prettyBoatIdleCyanSpriteSheet.png" id="14_iyrcj"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nai5d"]
@@ -152,7 +154,64 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="BoatRigidBody" type="RigidBody2D" unique_id=1813145880 node_paths=PackedStringArray("label")]
+[sub_resource type="AtlasTexture" id="AtlasTexture_u6ywy"]
+atlas = ExtResource("8_gbyt4")
+region = Rect2(0, 0, 583, 582)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mxywu"]
+atlas = ExtResource("8_gbyt4")
+region = Rect2(583, 0, 583, 582)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_poyle"]
+atlas = ExtResource("8_gbyt4")
+region = Rect2(1166, 0, 583, 582)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sg1ty"]
+atlas = ExtResource("8_gbyt4")
+region = Rect2(1749, 0, 583, 582)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_amrr5"]
+atlas = ExtResource("8_gbyt4")
+region = Rect2(2332, 0, 583, 582)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_brt8x"]
+atlas = ExtResource("8_gbyt4")
+region = Rect2(2915, 0, 583, 582)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ijv02"]
+atlas = ExtResource("8_gbyt4")
+region = Rect2(3498, 0, 583, 582)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_aucbc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u6ywy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mxywu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_poyle")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sg1ty")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_amrr5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_brt8x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ijv02")
+}],
+"loop": false,
+"name": &"fire",
+"speed": 20.0
+}]
+
+[node name="BoatRigidBody" type="RigidBody2D" unique_id=1813145880 node_paths=PackedStringArray("label", "muzzle_flash_left", "muzzle_flash_right")]
 collision_layer = 129
 collision_mask = 129
 physics_material_override = SubResource("PhysicsMaterial_nai5d")
@@ -161,6 +220,8 @@ script = ExtResource("1_5gp31")
 label = NodePath("Label")
 projectile_scene = ExtResource("2_8jrvy")
 camera_scene = ExtResource("3_q7w65")
+muzzle_flash_left = NodePath("MuzzleFlashLeft")
+muzzle_flash_right = NodePath("MuzzleFlashRight")
 
 [node name="BoatSprite2D" type="Sprite2D" parent="." unique_id=81384593]
 visible = false
@@ -216,3 +277,27 @@ scale = Vector2(0.65, 0.65)
 sprite_frames = SubResource("SpriteFrames_oswpr")
 autoplay = "default"
 frame_progress = 0.87082994
+
+[node name="MuzzleFlashLeft" type="AnimatedSprite2D" parent="." unique_id=847757214]
+z_index = 2
+position = Vector2(-9.000001, -56.999996)
+rotation = -1.331175
+scale = Vector2(0.15, 0.15)
+sprite_frames = SubResource("SpriteFrames_aucbc")
+animation = &"fire"
+centered = false
+offset = Vector2(-50, -370)
+script = ExtResource("9_551pn")
+
+[node name="MuzzleFlashRight" type="AnimatedSprite2D" parent="." unique_id=205533093]
+z_index = 2
+position = Vector2(-1.1920929e-06, 134.00002)
+rotation = -1.331175
+scale = Vector2(0.15, 0.15)
+sprite_frames = SubResource("SpriteFrames_aucbc")
+animation = &"fire"
+centered = false
+offset = Vector2(-50, -370)
+flip_h = true
+flip_v = true
+script = ExtResource("9_551pn")

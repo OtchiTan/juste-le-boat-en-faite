@@ -54,6 +54,9 @@ var wind_acceptance_angle = 30 * PI / 180
 #par combien le vent multiplie l'accélération
 var wind_strenght = 2
 
+@export var muzzle_flash_left: AnimatedSprite2D
+@export var muzzle_flash_right: AnimatedSprite2D
+
 func _ready():
 	GameManager.register_boat(self)
 	original_life = life
@@ -181,35 +184,40 @@ func _integrate_forces(state):
 
 
 func attack() -> void :
-	
-
-	
 	var nb_Bullet = 1
 	var dispertion_Angle = 0.0
-	
 	var angle_btw = 0
+	
 	if nb_Bullet > 1:
 		angle_btw = dispertion_Angle/(nb_Bullet-1) as float
 	
 	if ( want_to_shoot_l and time_since_last_fire_left >= fire_cool_down ) :
 		time_since_last_fire_left = 0
+		# Joue l'animation côté gauche
+		if muzzle_flash_left: muzzle_flash_left.fire()
+		
 		var direction = global_transform.y.rotated(-dispertion_Angle/2)
-		for fire_angle:int in nb_Bullet:
+		for fire_angle in range(nb_Bullet):
 			var projectile1 = projectile_scene.instantiate()
 			projectile1.position = position + direction * 50
-			projectile1.direction = (direction + linear_velocity *0.5 / projectile1.vitesse)
+			projectile1.direction = (direction + linear_velocity * 0.5 / projectile1.vitesse)
 			projectile1.degats = atk
 			projectile1.tireur = self
 			get_parent().add_child(projectile1)
 			direction = direction.rotated(angle_btw)
+			
 	if (want_to_shoot_r and time_since_last_fire_right >= fire_cool_down) :
 		time_since_last_fire_right = 0
+		# Joue l'animation côté droit
+		if muzzle_flash_right: muzzle_flash_right.fire()
+		
 		var direction = global_transform.y.rotated(-dispertion_Angle/2)
-		for fire_angle:int in nb_Bullet:
-			direction = direction.rotated(PI)
+		for fire_angle in range(nb_Bullet):
+			var bullet_dir = direction.rotated(PI)
 			var projectile1 = projectile_scene.instantiate()
-			projectile1.position = position + direction * 50
-			projectile1.direction = (direction  + linear_velocity * 0.5 / projectile1.vitesse)
+			# Utilise bullet_dir pour la position et la direction du côté droit
+			projectile1.position = position + bullet_dir * 50
+			projectile1.direction = (bullet_dir + linear_velocity * 0.5 / projectile1.vitesse)
 			projectile1.degats = atk
 			projectile1.tireur = self
 			get_parent().add_child(projectile1)
