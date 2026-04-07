@@ -65,12 +65,17 @@ func calculate_raycasts() -> Array:
 	var range_squared =  ray_length * ray_length
 	var Id_Already_Collid = []
 	var real0_for_raycast_dist = 0
-	if collision_shape_2d and "radius" in collision_shape_2d.shape :
-		real0_for_raycast_dist = collision_shape_2d.shape.radius 
-		real0_for_raycast_dist *= real0_for_raycast_dist * 1.1
+	if collision_shape_2d and "radius" in collision_shape_2d.shape:
+		# On stocke le rayon au carré pour la comparaison
+		real0_for_raycast_dist = pow(collision_shape_2d.shape.radius, 2)
+
 	var first_angle = BoatOwner.global_transform.x.angle_to(rays[0].target_position)
-	var inv_of_range :float= 1.0 / sqrt(ray_length)
-	for i in range(0, n_rays, ray_groupping) :
+
+	# On normalise par la longueur maximale (linéaire)
+	var inv_of_range: float = 1.0 / ray_length
+
+	# DANS LA BOUCLE
+	for i in range(0, n_rays, ray_groupping):
 		var min_dist = range_squared
 		var min_d_index = i
 		for j in range(i, i + ray_groupping):
@@ -81,15 +86,20 @@ func calculate_raycasts() -> Array:
 			if iray.is_colliding():
 				var collider_t = iray.get_collider()
 				if not Id_Already_Collid.has(collider_t.get_instance_id()):
-					if collider_t as Boat : 
+					if collider_t as Boat:
 						Id_Already_Collid.append(collider_t.get_instance_id())
 					
-					var distance = (iray.get_collision_point() - iray.global_position).length_squared()
-					if distance < min_dist:
-						min_dist = distance
+					var distance_sqr = (iray.get_collision_point() - iray.global_position).length_squared()
+					if distance_sqr < min_dist:
+						min_dist = distance_sqr
 						min_d_index = j
+
+		var corrected_sqr_dist = max(min_dist - real0_for_raycast_dist, 0.0)
 		
-		var normalized_min_dist = sqrt(sqrt(max(min_dist - real0_for_raycast_dist, 0))) * inv_of_range
+		var linear_dist = sqrt(corrected_sqr_dist)
+		
+		var normalized_min_dist = linear_dist * inv_of_range
+		
 		result.append(normalized_min_dist)
 		
 		if not add_friend_foe_info:

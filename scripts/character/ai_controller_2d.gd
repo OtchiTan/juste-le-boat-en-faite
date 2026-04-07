@@ -44,6 +44,7 @@ func get_obs() -> Dictionary:
 	for i in range(0, (raycast_sensor_2d.n_rays /raycast_sensor_2d.ray_groupping) * 9 , 9) :
 		if c_frame_obs[i+1] == 0.0  and c_frame_obs[i] < min_w_dist:
 			min_w_dist = c_frame_obs[i]
+	boat.label.text = str(min_w_dist)
 
 	if min_w_dist < 0.3 :
 		var inv_min = (1- min_w_dist)
@@ -107,8 +108,8 @@ func set_action(action) -> void:
 
 	move.x = newx
 	move.y = newy
-	boat.throttle = move.x
-	boat.steering = move.y
+	boat.throttle = move.x * 1.2
+	boat.steering = move.y * 2
 	
 	boat.want_to_shoot_r = action["shoot_right"]
 	boat.want_to_shoot_l = action["shoot_left"]

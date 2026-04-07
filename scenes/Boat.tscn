@@ -238,10 +238,10 @@ rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_nai5d")
 
 [node name="Label" type="Label" parent="." unique_id=533265940]
-offset_left = -88.0
-offset_top = -57.0
-offset_right = 80.0
-offset_bottom = 46.0
+offset_left = 86.0
+offset_top = -55.0
+offset_right = 254.0
+offset_bottom = 48.0
 text = "A"
 label_settings = SubResource("LabelSettings_4pna2")
 horizontal_alignment = 1
