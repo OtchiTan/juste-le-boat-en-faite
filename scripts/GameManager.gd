@@ -48,6 +48,7 @@ func register_boat(boat:Boat):
 
 func register_island(island):
 	islands.append(island)
+	island.new_owner.connect(_on_new_owner)
 	
 func on_boat_destroyed(boat, tireur):
 	if (boat.player_id == 0):
@@ -58,9 +59,6 @@ func on_boat_destroyed(boat, tireur):
 	for island in islands:
 		if island.island_owner == dead_player:
 			island.change_owner(-1, false)
-	if tireur.player_id == 0:
-		emit_signal("player_has_more_islands")
-	check_victory(tireur.player_id)
 
 func check_victory(tireur_id):
 	if islands.size() < 2:
@@ -80,6 +78,9 @@ func check_victory(tireur_id):
 	
 func _on_getDamage(i):
 	emit_signal("update_life_hud", i)
+	
+func _on_new_owner():
+	emit_signal("player_has_more_islands")
 	
 func defeat():
 	print("lose")

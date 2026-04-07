@@ -34,7 +34,7 @@ var sprite_up: Sprite2D
 const CAPTURE_TIME: float = 3.0
 var capture_progress: float = 0.0
 var boats_in_zone: Array = []
-
+signal new_owner(int)
 # === Références externes ===
 var tilemap: TileMapLayer = null
 var tile_terrain_map: Dictionary = {}  # Vector2i → 0 (terre) ou 1 (eau)
@@ -245,6 +245,7 @@ func change_owner(new_owner: int, is_needed_to_await_ready: bool) -> void:
 	print(new_owner)
 	if new_owner == 0:
 		team_color = Color.DARK_GREEN
+		emit_signal("new_owner")
 	elif new_owner == -1:
 		team_color = Color.SLATE_GRAY
 	else:
