@@ -8,13 +8,16 @@
 [ext_resource type="Texture2D" uid="uid://dqsg7j6lny8mj" path="res://assets/textures/Buildings/Cyan/CyanTower.png" id="5_cngje"]
 [ext_resource type="Texture2D" uid="uid://bgaan0nwi2ijw" path="res://assets/textures/Buildings/Red/RedDocks.png" id="6_ftju0"]
 [ext_resource type="Texture2D" uid="uid://csch860rtgphe" path="res://assets/textures/Buildings/Red/RedTower.png" id="7_mifw5"]
+[ext_resource type="Script" uid="uid://cximee0366rki" path="res://scripts/UI/MinimapMarker.gd" id="9_jxvd6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1uhhg"]
 radius = 150.0
 
-[node name="Island" type="Node2D" unique_id=1055533821]
+[node name="Island" type="Node2D" unique_id=1055533821 node_paths=PackedStringArray("minimap_marker", "marker_dock")]
 script = ExtResource("1_stbqp")
 boat_scene = ExtResource("2_mifw5")
+minimap_marker = NodePath("MinimapMarker")
+marker_dock = NodePath("Dock/marker_dock")
 
 [node name="castle_player" type="Sprite2D" parent="." unique_id=782191194]
 visible = false
@@ -203,3 +206,15 @@ texture = ExtResource("7_mifw5")
 region_enabled = true
 region_rect = Rect2(0, 48, 16, 17)
 region_filter_clip_enabled = true
+
+[node name="marker_dock" type="Node" parent="Dock" unique_id=265519648]
+script = ExtResource("9_jxvd6")
+is_rect = true
+marker_size = Vector2(200, 100)
+metadata/_custom_type_script = "uid://cximee0366rki"
+
+[node name="MinimapMarker" type="Node" parent="." unique_id=2073306485]
+script = ExtResource("9_jxvd6")
+is_rect = true
+marker_size = Vector2(200, 200)
+metadata/_custom_type_script = "uid://cximee0366rki"

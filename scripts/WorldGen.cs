@@ -100,7 +100,7 @@ public partial class WorldGen : TileMapLayer
 			var realWorldSize = MapSize * (Vector2)tileSize;
 
 
-			uis[0].Call("setup_map_data", MapSize, _tileTerrainMap, _islandTiles, realWorldSize, _initialIslandColors);
+			uis[0].Call("setup_map_data", MapSize, _terrains, _islandTiles, realWorldSize);
 		}
 	}
 

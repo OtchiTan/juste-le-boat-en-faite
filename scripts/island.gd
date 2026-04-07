@@ -22,6 +22,8 @@ var alreay_spawn_boat = false
 @onready var upgrade_label: Label = $Dock/UpgradeLabel
 @onready var heal_label: Label = $Dock/HealLabel
 
+@export var minimap_marker: MinimapMarker
+@export var marker_dock: MinimapMarker
 
 # On met à jour les références pour pointer vers les sprites à l'intérieur d'un des dossiers
 # (On les ré-assignera dynamiquement dans _orient_dock)
@@ -244,11 +246,11 @@ func change_owner(new_owner: int, is_needed_to_await_ready: bool) -> void:
 	var team_color: Color
 	print(new_owner)
 	if new_owner == 0:
-		team_color = Color.DARK_GREEN
+		team_color = Color.CYAN
 	elif new_owner == -1:
-		team_color = Color.SLATE_GRAY
+		team_color = Color.GRAY
 	else:
-		team_color = Color.DARK_RED
+		team_color = Color.RED
 	if not is_needed_to_await_ready:
 		_update_minimap_color(team_color)
 	
@@ -256,14 +258,15 @@ func change_owner(new_owner: int, is_needed_to_await_ready: bool) -> void:
 	GameManager.check_victory(new_owner)
 
 func _update_minimap_color(color: Color) -> void:
-	var uis = get_tree().get_nodes_in_group("minimap_ui")
-	if not uis.is_empty():
-		uis[0].change_island_color(island_id, color)
+	minimap_marker.marker_color = color
+	marker_dock.marker_color = color
 
 func update_visual() -> void:
 	if island_owner == 0:
 		castle_player.visible = true
 		castle_ai.visible = false
+		minimap_marker.marker_color = Color.CYAN
+		marker_dock.marker_color = Color.CYAN
 	else:
 		castle_player.visible = false
 		castle_ai.visible = true
