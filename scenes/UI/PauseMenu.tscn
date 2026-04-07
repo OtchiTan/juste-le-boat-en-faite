@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://cmb7f0f757l6d"]
+
+[ext_resource type="Script" uid="uid://b5jqq0p21p7q7" path="res://scripts/UI/pause_menu.gd" id="1_fsae6"]
+
+[node name="PauseMenu" type="CanvasLayer" unique_id=1958549330]
+process_mode = 3
+script = ExtResource("1_fsae6")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=575946652]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -261.5
+offset_top = -222.5
+offset_right = 261.5
+offset_bottom = 222.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=886330940]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 30
+
+[node name="ButtonResume" type="Button" parent="PanelContainer/VBoxContainer" unique_id=435770561]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Resume"
+
+[node name="ButtonMainMenu" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1414377832]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Main Menu"
+
+[node name="Buttonquit" type="Button" parent="PanelContainer/VBoxContainer" unique_id=724090315]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Quit"
+
+[connection signal="pressed" from="PanelContainer/VBoxContainer/ButtonResume" to="." method="_on_button_resume_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/ButtonMainMenu" to="." method="_on_button_main_menu_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/Buttonquit" to="." method="_on_buttonquit_pressed"]

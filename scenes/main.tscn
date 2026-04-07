@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://ok2c2172j67q" path="res://addons/godot_rl_agents/sync.gd" id="8_tipki"]
 [ext_resource type="PackedScene" uid="uid://dxcwxmtl8ss3y" path="res://scenes/world_map.tscn" id="9_85g3d"]
 [ext_resource type="PackedScene" uid="uid://c4g67s2yuwyx8" path="res://scenes/UI/loading_screen.tscn" id="9_choun"]
+[ext_resource type="PackedScene" uid="uid://cmb7f0f757l6d" path="res://scenes/UI/PauseMenu.tscn" id="9_ya4ey"]
 [ext_resource type="Script" uid="uid://br1fv6edo4c16" path="res://scripts/UI/loading_screen.gd" id="10_ya4ey"]
 [ext_resource type="PackedScene" uid="uid://cmp5of1dtwbgn" path="res://scenes/UI/Wind.tscn" id="11_eb6dy"]
 
@@ -52,6 +53,8 @@ script = ExtResource("10_ya4ey")
 [node name="hud" parent="UI" unique_id=1754513234 instance=ExtResource("7_o6xl0")]
 
 [node name="Wind" parent="UI" unique_id=964546308 instance=ExtResource("11_eb6dy")]
+
+[node name="PauseMenu" parent="UI" unique_id=909487286 instance=ExtResource("9_ya4ey")]
 
 [node name="Sync" type="Node" parent="." unique_id=1330921170]
 script = ExtResource("8_tipki")

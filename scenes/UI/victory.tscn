@@ -3,22 +3,37 @@
 [ext_resource type="Script" uid="uid://d34pqy287gqwc" path="res://scripts/UI/victory.gd" id="1_ieymx"]
 
 [node name="CanvasLayer" type="CanvasLayer" unique_id=1513328342]
+process_mode = 3
 script = ExtResource("1_ieymx")
 
-[node name="Label" type="Label" parent="." unique_id=1171374771]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1457083286]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -114.0
-offset_top = -79.0
-offset_right = 111.0
-offset_bottom = 79.5
+offset_left = -55.5
+offset_top = -41.5
+offset_right = 55.5
+offset_bottom = 41.5
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=1829310687]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1171374771]
+layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 60
 text = "test"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="ButtonMainMenu" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1113087869]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Main menu"
+
+[connection signal="pressed" from="PanelContainer/VBoxContainer/ButtonMainMenu" to="." method="_on_button_main_menu_pressed"]

@@ -15,11 +15,14 @@ var player_gold: int = 0:
 		player_gold = value
 		gold_changed.emit(player_gold)
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
 
-
+func reset() -> void:
+	player_gold = 0
+	boats.clear()
+	islands.clear()
+	
 var elapsed_time_since_wind_changed = 0
 var change_wind_time = 1
 var wind_direction = randf_range(-PI,PI)
