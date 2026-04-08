@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://cmb7f0f757l6d"]
 
 [ext_resource type="Script" uid="uid://b5jqq0p21p7q7" path="res://scripts/UI/pause_menu.gd" id="1_fsae6"]
+[ext_resource type="StyleBox" uid="uid://cg1hwxtftvkig" path="res://assets/Styles/buttonStyle.tres" id="2_4r2wj"]
+[ext_resource type="StyleBox" uid="uid://1c7eaqab6tyx" path="res://assets/Styles/buttonStyleH.tres" id="3_avwb0"]
 
 [node name="PauseMenu" type="CanvasLayer" unique_id=1958549330]
 process_mode = 3
@@ -27,17 +29,26 @@ theme_override_constants/separation = 30
 
 [node name="ButtonResume" type="Button" parent="PanelContainer/VBoxContainer" unique_id=435770561]
 layout_mode = 2
+theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = ExtResource("2_4r2wj")
+theme_override_styles/hover = ExtResource("3_avwb0")
 text = "Resume"
 
 [node name="ButtonMainMenu" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1414377832]
 layout_mode = 2
+theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = ExtResource("2_4r2wj")
+theme_override_styles/hover = ExtResource("3_avwb0")
 text = "Main Menu"
 
 [node name="Buttonquit" type="Button" parent="PanelContainer/VBoxContainer" unique_id=724090315]
 layout_mode = 2
+theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = ExtResource("2_4r2wj")
+theme_override_styles/hover = ExtResource("3_avwb0")
 text = "Quit"
 
 [connection signal="pressed" from="PanelContainer/VBoxContainer/ButtonResume" to="." method="_on_button_resume_pressed"]

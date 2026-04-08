@@ -1,6 +1,15 @@
 [gd_scene format=3 uid="uid://cafidtwtrqo84"]
 
 [ext_resource type="Script" uid="uid://mgfncc7q0y1" path="res://scripts/UI/main_menu.gd" id="1_11hie"]
+[ext_resource type="Texture2D" uid="uid://fri4unlbrqqr" path="res://assets/Capture d'écran 2026-04-07 210331.png" id="2_4vh8y"]
+[ext_resource type="StyleBox" uid="uid://cg1hwxtftvkig" path="res://assets/Styles/buttonStyle.tres" id="2_58fj5"]
+[ext_resource type="StyleBox" uid="uid://1c7eaqab6tyx" path="res://assets/Styles/buttonStyleH.tres" id="3_3h7gc"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_b1p1q"]
+texture = ExtResource("2_4vh8y")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s7yn2"]
+bg_color = Color(0, 0, 0, 0.2509804)
 
 [node name="MainMenu" type="Control" unique_id=339742918]
 layout_mode = 3
@@ -11,32 +20,61 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_11hie")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=758272461]
+[node name="Panel" type="PanelContainer" parent="." unique_id=498347814]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_b1p1q")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=421428642]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -321.0
-offset_top = -271.0
-offset_right = 321.0
-offset_bottom = 220.0
+offset_left = -491.5
+offset_top = -347.0
+offset_right = 491.5
+offset_bottom = 347.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s7yn2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=758272461]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_constants/separation = 50
 
-[node name="ButtonPlay" type="Button" parent="VBoxContainer" unique_id=1146510496]
-custom_minimum_size = Vector2(0, 200)
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1726148625]
 layout_mode = 2
-theme_override_font_sizes/font_size = 40
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 100
+text = "Juste le Boat"
+horizontal_alignment = 1
+
+[node name="ButtonPlay" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1146510496]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = ExtResource("2_58fj5")
+theme_override_styles/hover = ExtResource("3_3h7gc")
 text = "Start new game"
 
-[node name="ButtonQuit" type="Button" parent="VBoxContainer" unique_id=684579106]
-custom_minimum_size = Vector2(0, 200)
+[node name="ButtonQuit" type="Button" parent="PanelContainer/VBoxContainer" unique_id=684579106]
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
-theme_override_font_sizes/font_size = 40
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = ExtResource("2_58fj5")
+theme_override_styles/hover = ExtResource("3_3h7gc")
 text = "Quit"
 
-[connection signal="pressed" from="VBoxContainer/ButtonPlay" to="." method="_on_button_play_pressed"]
-[connection signal="pressed" from="VBoxContainer/ButtonQuit" to="." method="_on_button_quit_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/ButtonPlay" to="." method="_on_button_play_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/ButtonQuit" to="." method="_on_button_quit_pressed"]

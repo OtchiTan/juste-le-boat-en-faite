@@ -5,7 +5,14 @@ extends CanvasLayer
 func _ready():
 	visible = false
 	GameManager.game_won.connect(_on_game_won)
+	GameManager.game_over.connect(_on_game_over)
 
+func _on_game_over():
+	visible = true
+	get_tree().paused = true
+	label.text = "DÉFAITE !"
+	
+	
 func _on_game_won():
 	visible = true
 	get_tree().paused = true

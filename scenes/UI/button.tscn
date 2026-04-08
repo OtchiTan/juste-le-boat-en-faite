@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://x85cufav45on"]
+
+[ext_resource type="StyleBox" uid="uid://cg1hwxtftvkig" path="res://assets/Styles/buttonStyle.tres" id="1_gp3m7"]
+[ext_resource type="StyleBox" uid="uid://1c7eaqab6tyx" path="res://assets/Styles/buttonStyleH.tres" id="2_vm61w"]
+
+[node name="ButtonPlay" type="Button" unique_id=1705099855]
+custom_minimum_size = Vector2(0, 100)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = ExtResource("1_gp3m7")
+theme_override_styles/hover = ExtResource("2_vm61w")
+text = "Start new game"

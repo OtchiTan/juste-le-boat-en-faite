@@ -1,26 +1,30 @@
 [gd_scene format=3 uid="uid://cp5wyt6eikplx"]
 
 [ext_resource type="Script" uid="uid://d34pqy287gqwc" path="res://scripts/UI/victory.gd" id="1_ieymx"]
+[ext_resource type="StyleBox" uid="uid://cg1hwxtftvkig" path="res://assets/Styles/buttonStyle.tres" id="2_6x1tk"]
+[ext_resource type="StyleBox" uid="uid://1c7eaqab6tyx" path="res://assets/Styles/buttonStyleH.tres" id="3_1qw6s"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1qw6s"]
+bg_color = Color(0, 0, 0, 0.1764706)
+expand_margin_left = 5.0
+expand_margin_right = 5.0
 
 [node name="CanvasLayer" type="CanvasLayer" unique_id=1513328342]
 process_mode = 3
 script = ExtResource("1_ieymx")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1457083286]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -55.5
-offset_top = -41.5
-offset_right = 55.5
-offset_bottom = 41.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1qw6s")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=1829310687]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_constants/separation = 20
 
 [node name="Label" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1171374771]
@@ -34,6 +38,8 @@ vertical_alignment = 1
 [node name="ButtonMainMenu" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1113087869]
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
-text = "Main menu"
+theme_override_styles/normal = ExtResource("2_6x1tk")
+theme_override_styles/hover = ExtResource("3_1qw6s")
+text = "Menu"
 
 [connection signal="pressed" from="PanelContainer/VBoxContainer/ButtonMainMenu" to="." method="_on_button_main_menu_pressed"]

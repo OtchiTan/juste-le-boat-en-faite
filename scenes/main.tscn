@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://b4tdte0od7vt3" path="res://scripts/main.gd" id="1_o5qli"]
 [ext_resource type="PackedScene" uid="uid://cp5wyt6eikplx" path="res://scenes/UI/victory.tscn" id="5_tbgi4"]
-[ext_resource type="PackedScene" uid="uid://db7vu88a6jeey" path="res://scenes/UI/game_over.tscn" id="6_tefeu"]
 [ext_resource type="PackedScene" uid="uid://c5vag0pinjsig" path="res://scenes/UI/HUD.tscn" id="7_o6xl0"]
 [ext_resource type="Script" uid="uid://ok2c2172j67q" path="res://addons/godot_rl_agents/sync.gd" id="8_tipki"]
 [ext_resource type="PackedScene" uid="uid://dxcwxmtl8ss3y" path="res://scenes/world_map.tscn" id="9_85g3d"]
@@ -47,8 +46,6 @@ visible = false
 script = ExtResource("10_ya4ey")
 
 [node name="victory" parent="UI" unique_id=1513328342 instance=ExtResource("5_tbgi4")]
-
-[node name="gameOver" parent="UI" unique_id=916379606 instance=ExtResource("6_tefeu")]
 
 [node name="hud" parent="UI" unique_id=1754513234 instance=ExtResource("7_o6xl0")]
 

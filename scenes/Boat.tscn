@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://cximee0366rki" path="res://scripts/UI/MinimapMarker.gd" id="5_wdn3g"]
 [ext_resource type="Texture2D" uid="uid://p7idp61bqldb" path="res://assets/PrettyBoat/prettyBoatIdleSpriteSheetRed.png" id="6_3afor"]
 [ext_resource type="Texture2D" uid="uid://rusdiisavq1b" path="res://assets/cannonball/muzzle-ezgif.com-gif-to-sprite-converter.png" id="8_gbyt4"]
-[ext_resource type="Script" uid="uid://d3wfvsgc3aig6" path="res://scripts/muzzle_flash.gd" id="9_551pn"]
+[ext_resource type="Script" path="res://scripts/muzzle_flash.gd" id="9_551pn"]
 [ext_resource type="Texture2D" uid="uid://cedf6crj2vdhl" path="res://assets/PrettyBoat/prettyBoatIdleCyanSpriteSheet.png" id="14_iyrcj"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nai5d"]
@@ -238,6 +238,7 @@ rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_nai5d")
 
 [node name="Label" type="Label" parent="." unique_id=533265940]
+visible = false
 offset_left = 86.0
 offset_top = -55.0
 offset_right = 254.0
