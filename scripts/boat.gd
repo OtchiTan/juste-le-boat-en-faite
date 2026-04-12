@@ -13,9 +13,9 @@ var front_redistribute_power = 0.3 # suppr le 0.3 et met 2 si t'es un zhomme qui
 #used by the AI controller for rewards (and important stuff I guess)
 signal on_health_changed(new_health: float)
 signal on_dealt_damages(dmg_amount:float, dmg_boat:Boat)
-@export var life = 20
+@export var life = 4
 var original_life:int
-var atk :int = 5
+var atk :int = 1
 var player_id : int = -1
 var player_island: Island
 
