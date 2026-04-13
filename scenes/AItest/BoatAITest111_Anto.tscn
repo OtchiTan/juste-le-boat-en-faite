@@ -1,8 +1,8 @@
-[gd_scene format=3 uid="uid://bd8lfogk1peil"]
+[gd_scene format=3 uid="uid://dt47cycuqornf"]
 
-[ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="1_lf4h0"]
-[ext_resource type="Texture2D" uid="uid://yt3ypfvkeh66" path="res://assets/fleche.png" id="2_lf4h0"]
-[ext_resource type="Texture2D" uid="uid://d1yix7r4c2n8n" path="res://assets/textures/Miscellaneous/Well.png" id="3_ubajb"]
+[ext_resource type="PackedScene" uid="uid://bd3bhg5ddf81h" path="res://scenes/Boat.tscn" id="1_ooytp"]
+[ext_resource type="Texture2D" uid="uid://yt3ypfvkeh66" path="res://assets/fleche.png" id="2_py44s"]
+[ext_resource type="Texture2D" uid="uid://d1yix7r4c2n8n" path="res://assets/textures/Miscellaneous/Well.png" id="3_pt1bk"]
 
 [sub_resource type="GDScript" id="GDScript_dmd83"]
 resource_name = "AIRayCastTraining"
@@ -16,13 +16,13 @@ script/source = "extends Node2D
 
 var wind_str :float= 1
 var wind_dir :float = 0
-var time_between_target = 0.1
-var target_active_time = 120
+var time_between_target = 45
+var target_active_time = 30
 var assign_target_timer : Timer
 var delete_target_timer : Timer
 
 
-var wind_strbound:Array = [1,2]
+var wind_strbound:Array = [1,4]
 func _ready() -> void:
 	
 	FactionManager.firendly_fire_on = false
@@ -35,11 +35,10 @@ func _ready() -> void:
 
 	boat_2.set_as_player_and_id(2)
 	boat_3.set_as_player_and_id(2)
-	
-	#boat_2.set_target(boat)
-	#boat_3.set_target(boat_1)
-	#boat.set_target(boat_2)
-	#boat_1.set_target(boat_3)
+	boat_2.set_target(boat)
+	boat_3.set_target(boat_1)
+	boat.set_target(boat_2)
+	boat_1.set_target(boat_3)
 	
 	boat.controller.reset_with_time = true
 	boat_1.controller.reset_with_time = true
@@ -70,11 +69,7 @@ func _ready() -> void:
 	delete_target_timer.timeout.connect(reset_targets)
 	add_child(delete_target_timer)
 	
-	#reset_targets()
-	
 	dummyboat.set_as_player_and_id(3)
-	GameManager.game_is_ready = true
-	GameManager.game_ready.emit()
 
 
 func set_boat_spawn2(_boat, input : CollisionShape2D) :
@@ -124,6 +119,12 @@ func _process(delta: float) -> void:
 
 func reset_targets() :
 	assign_target_timer.start()
+	target_1_sprite.visible = false
+	target_2_sprite.visible = false
+	boat.controller.b_goto_target = 0
+	boat_1.controller.b_goto_target = 0
+	boat_2.controller.b_goto_target = 0
+	boat_3.controller.b_goto_target = 0
 
 func set_all_boat_target() :
 	delete_target_timer.start()
@@ -137,8 +138,8 @@ func set_all_boat_target() :
 	
 	target_1_sprite.visible = true
 	target_2_sprite.visible = true
-	target_1_sprite.global_position = target1
-	target_2_sprite.global_position = target2
+	target_1_sprite.position = target1
+	target_2_sprite.position = target2
 	
 func set_boat_target(_boat : Boat, target : Vector2) :
 	_boat.controller.target_point = target
@@ -192,7 +193,7 @@ func get_random_point_in_shape(collisionshape:CollisionShape2D) :
 	var rand_y = randf_range(-half_height, half_height)
 	
 	# On ajoute ce décalage à la position du centre de la zone
-	return collisionshape.global_position + Vector2(rand_x, rand_y)
+	return position + collisionshape.position + Vector2(rand_x, rand_y)
 	
 "
 
@@ -223,9 +224,6 @@ func _ready():
 	state_timer.autostart = true
 	state_timer.timeout.connect(_on_state_timer_timeout)
 	add_child(state_timer)
-	
-	var cpos = boat.global_position
-	boat.spawn_rectancgle = Vector4(cpos.x-400, cpos.x + 400, cpos.y - 400, cpos.y +400)
 
 func _on_state_timer_timeout():
 	# À chaque fois que le timer de 10s sonne, on inverse l'état
@@ -264,15 +262,9 @@ func update(delta):
 [node name="BoatAiTraining" type="Node2D" unique_id=216534563]
 script = SubResource("GDScript_dmd83")
 
-[node name="Boat" parent="." unique_id=1813145880 instance=ExtResource("1_lf4h0")]
+[node name="Boat" parent="." unique_id=1813145880 instance=ExtResource("1_ooytp")]
 position = Vector2(-204.99998, -199.00002)
 rotation = -1.5728018
-camera_scene = null
-dont_die_on_life_equal_0 = true
-
-[node name="Boat1" parent="." unique_id=558970727 instance=ExtResource("1_lf4h0")]
-position = Vector2(-160, 316.99997)
-rotation = -0.92489445
 camera_scene = null
 dont_die_on_life_equal_0 = true
 
@@ -340,45 +332,12 @@ position = Vector2(777.99994, 7)
 scale = Vector2(0.96000123, 0.96000105)
 shape = SubResource("RectangleShape2D_0wxyi")
 
-[node name="Boat2" parent="." unique_id=1247349405 instance=ExtResource("1_lf4h0")]
-position = Vector2(215.00003, -181)
-rotation = -1.5721577
-camera_scene = null
-dont_die_on_life_equal_0 = true
-
-[node name="Boat3" parent="." unique_id=840857634 instance=ExtResource("1_lf4h0")]
-position = Vector2(157.00003, 426.00003)
-rotation = -1.2194724
-camera_scene = null
-dont_die_on_life_equal_0 = true
-
-[node name="Label2" type="Label" parent="." unique_id=2137089932]
-offset_left = -2597.0
-offset_top = 867.0
-offset_right = -1855.0
-offset_bottom = 1413.0
-text = "test"
-label_settings = SubResource("LabelSettings_0wxyi")
-
-[node name="Label4" type="Label" parent="." unique_id=186609607]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = 1849.0
-offset_top = 884.0
-offset_right = 2591.0
-offset_bottom = 1430.0
-grow_horizontal = 0
-text = "test"
-label_settings = SubResource("LabelSettings_lf4h0")
-horizontal_alignment = 2
-
 [node name="WindNode" type="Node2D" parent="." unique_id=1651118086]
 position = Vector2(5, -1310)
 
 [node name="Sprite2D" type="Sprite2D" parent="WindNode" unique_id=1564709479]
 scale = Vector2(0.3, 0.3)
-texture = ExtResource("2_lf4h0")
+texture = ExtResource("2_py44s")
 
 [node name="targeting" type="StaticBody2D" parent="." unique_id=1048346531]
 collision_layer = 0
@@ -398,7 +357,7 @@ shape = SubResource("RectangleShape2D_0wxyi")
 [node name="target1" type="Sprite2D" parent="targeting" unique_id=2065723665]
 position = Vector2(-1253, -4.999998)
 scale = Vector2(5, 5)
-texture = ExtResource("3_ubajb")
+texture = ExtResource("3_pt1bk")
 hframes = 3
 vframes = 2
 
@@ -419,12 +378,12 @@ vertical_alignment = 1
 [node name="target2" type="Sprite2D" parent="targeting" unique_id=264272102]
 position = Vector2(888.99994, 9.999999)
 scale = Vector2(5, 5)
-texture = ExtResource("3_ubajb")
+texture = ExtResource("3_pt1bk")
 hframes = 3
 vframes = 2
 
-[node name="Dummyboat" parent="." unique_id=1152827146 instance=ExtResource("1_lf4h0")]
-position = Vector2(20.00003, -17)
+[node name="Dummyboat" parent="." unique_id=1152827146 instance=ExtResource("1_ooytp")]
+position = Vector2(40, 777)
 rotation = -0.92489445
 camera_scene = null
 dont_die_on_life_equal_0 = true

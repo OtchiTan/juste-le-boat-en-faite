@@ -3,6 +3,11 @@
 [ext_resource type="Texture2D" uid="uid://dtd8vvmw1isw2" path="res://assets/textures/Ground/Shore.png" id="1_m2vqf"]
 [ext_resource type="Texture2D" uid="uid://u720cj22ydoi" path="res://assets/textures/Ground/Grass.png" id="2_vdcxm"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vdcxm"]
+friction = 0.1
+rough = true
+bounce = 0.2
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4dvvg"]
 texture = ExtResource("1_m2vqf")
 0:0/0 = 0
@@ -34,6 +39,7 @@ texture = ExtResource("2_vdcxm")
 
 [resource]
 physics_layer_0/collision_layer = 1
+physics_layer_0/physics_material = SubResource("PhysicsMaterial_vdcxm")
 terrain_set_0/mode = 0
 terrain_set_0/terrain_0/name = "Grass"
 terrain_set_0/terrain_0/color = Color(0.25, 0.5, 0.3125, 1)

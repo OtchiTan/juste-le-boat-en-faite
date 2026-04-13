@@ -49,17 +49,34 @@ var _action_space_training: Array[Dictionary] = []
 var _action_space_inference: Array[Dictionary] = []
 var _obs_space_training: Array[Dictionary] = []
 
+
+signal sync_ready(sync_node)
+var sync_is_ready:bool = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	add_to_group("sync_node")
 	
+	await get_tree().root.ready
+	
+	# --- LA PAUSE EST ICI ---
+	print("Sync en attente du signal...")
+	if not GameManager.game_is_ready : 
+		await GameManager.game_ready
+	
+	await get_tree().create_timer(1.0).timeout
+	get_tree().set_pause(true)
+	
+
+	_initialize()
+	
+	#on fait ça après l'initialize... c'est plus simple. 
 	get_tree().node_added.connect(_on_node_added)
 	get_tree().node_removed.connect(_on_node_removed)
 	
-	await get_tree().root.ready
-	get_tree().set_pause(true)
-	_initialize()
-	await get_tree().create_timer(1.0).timeout
 	get_tree().set_pause(false)
+
+	sync_is_ready = true
+	sync_ready.emit(self)
 	
 
 
@@ -226,6 +243,8 @@ func _inference_process():
 
 		for agent_id in range(0, agents_inference.size()):
 			var agent = agents_inference[agent_id] 
+			if not agent : 
+				continue
 			var model: ONNXModel = agent.onnx_model
 			
 			var action = model.run_inference(
@@ -334,8 +353,8 @@ func _set_agent_mode(agent: Node):
 
 
 func _get_agents():
-	all_agents = get_tree().get_nodes_in_group("AGENT")
-	for agent in all_agents:
+	var all_ag_temp =get_tree().get_nodes_in_group("AGENT")
+	for agent in all_ag_temp:
 		_set_agent_mode(agent)
 
 		if agent.control_mode == agent.ControlModes.TRAINING:
@@ -536,7 +555,10 @@ func _reset_agents(agents = all_agents):
 func _get_obs_from_agents(agents: Array = all_agents):
 	var obs = []
 	for agent in agents:
-		obs.append(agent.get_obs())
+		if agent :
+			obs.append(agent.get_obs())
+		else :
+			obs.append(null)
 	return obs
 
 

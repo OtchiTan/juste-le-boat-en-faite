@@ -4,15 +4,15 @@
 [ext_resource type="PackedScene" uid="uid://b6u1ubbrve3xx" path="res://scenes/projectile.tscn" id="2_8jrvy"]
 [ext_resource type="PackedScene" uid="uid://643adwfdt1lf" path="res://scenes/camera_2d.tscn" id="3_q7w65"]
 [ext_resource type="Script" uid="uid://dukmfiwpskmss" path="res://scripts/character/raycast_sensor_2d_extended.gd" id="4_4pna2"]
-[ext_resource type="Script" uid="uid://cximee0366rki" path="res://scripts/UI/MinimapMarker.gd" id="5_wdn3g"]
+[ext_resource type="Script" path="res://scripts/UI/MinimapMarker.gd" id="5_wdn3g"]
 [ext_resource type="Texture2D" uid="uid://p7idp61bqldb" path="res://assets/PrettyBoat/prettyBoatIdleSpriteSheetRed.png" id="6_3afor"]
 [ext_resource type="Texture2D" uid="uid://rusdiisavq1b" path="res://assets/cannonball/muzzle-ezgif.com-gif-to-sprite-converter.png" id="8_gbyt4"]
-[ext_resource type="Script" path="res://scripts/muzzle_flash.gd" id="9_551pn"]
+[ext_resource type="Script" uid="uid://d3wfvsgc3aig6" path="res://scripts/muzzle_flash.gd" id="9_551pn"]
 [ext_resource type="Texture2D" uid="uid://cedf6crj2vdhl" path="res://assets/PrettyBoat/prettyBoatIdleCyanSpriteSheet.png" id="14_iyrcj"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nai5d"]
-friction = 0.2
-bounce = 0.8
+friction = 0.5
+bounce = 0.4
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_d2m2p"]
 load_path = "res://.godot/imported/Boat.png-35589654e32fd06d4321846cfa571870.ctex"
@@ -212,8 +212,8 @@ animations = [{
 }]
 
 [node name="BoatRigidBody" type="RigidBody2D" unique_id=1813145880 node_paths=PackedStringArray("label", "muzzle_flash_left", "muzzle_flash_right")]
-collision_layer = 129
-collision_mask = 129
+collision_layer = 133
+collision_mask = 133
 physics_material_override = SubResource("PhysicsMaterial_nai5d")
 gravity_scale = 0.0
 script = ExtResource("1_5gp31")
@@ -238,20 +238,21 @@ rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_nai5d")
 
 [node name="Label" type="Label" parent="." unique_id=533265940]
-visible = false
 offset_left = 86.0
 offset_top = -55.0
 offset_right = 254.0
 offset_bottom = 48.0
-text = "A"
+text = "Boat Label THAT SHOULD BE VISIBLE
+"
 label_settings = SubResource("LabelSettings_4pna2")
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="RaycastSensor2D_extended" type="Node2D" parent="." unique_id=1203286671]
 script = ExtResource("4_4pna2")
 add_friend_foe_info = true
 ray_groupping = 8
-collision_mask = 127
+collision_mask = 123
 collide_with_areas = true
 n_rays = 64.0
 ray_length = 3000

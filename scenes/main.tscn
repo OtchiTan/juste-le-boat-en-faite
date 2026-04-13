@@ -56,5 +56,11 @@ script = ExtResource("10_ya4ey")
 [node name="Sync" type="Node" parent="." unique_id=1330921170]
 script = ExtResource("8_tipki")
 control_mode = 2
-onnx_model_path = "python/models/model_retrained2.onnx"
+onnx_model_path = "python/FINAL_AI_0.onnx"
 metadata/_custom_type_script = "uid://ok2c2172j67q"
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=36178635]
+visible = false
+position = Vector2(6468, 3046)
+enabled = false
+zoom = Vector2(0.13, 0.13)

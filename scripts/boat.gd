@@ -1,7 +1,6 @@
 extends RigidBody2D
 
 class_name Boat
-
 @export var label: Label
 
 var friction = 0.995
@@ -57,8 +56,14 @@ var wind_strenght = 2
 @export var muzzle_flash_left: AnimatedSprite2D
 @export var muzzle_flash_right: AnimatedSprite2D
 
+
+
+@export var respawn_on_spawn_point:=true
+
+var spawn_point : Vector2
 func _ready():
-	GameManager.register_boat(self)
+	spawn_point = global_position
+	
 	original_life = life
 	var shape_resource = collision.shape
 	minimap_marker.marker_size = Vector2(shape_resource.height, shape_resource.radius * 2)
@@ -67,18 +72,24 @@ func _ready():
 		minimap_marker.marker_color = Color.GREEN
 	else :
 		minimap_marker.marker_color = Color.CRIMSON
+	if player_island : 
+		var offset := Vector2(player_island.shore_tile_direction * 64)
+		global_position = player_island.dock.global_position + offset
+		global_rotation = 0.0
+		rotate(deg_to_rad(player_island.dock_orientation))
 
-	var offset := Vector2(player_island.shore_tile_direction * 64)
-	global_position = player_island.dock.global_position + offset
-	global_rotation = 0.0
-	rotate(deg_to_rad(player_island.dock_orientation))
+	GameManager.register_boat(self)
+	
+	
+	
 
 func set_as_player_and_id(id_player: int, island: Island = null) -> void:
 	player_id = id_player
 	label.text = str(player_id)
-	player_island = island
+	if island != null : 
+		player_island = island
 	await _ready()
-	if island.island_owner == 0:
+	if island != null and island.island_owner == 0:
 		boat_cyan.visible = true
 		boat_red.visible = false
 	else:
@@ -88,16 +99,22 @@ func set_as_player_and_id(id_player: int, island: Island = null) -> void:
 	if controller :
 		return
 	if id_player == 0:
-		controller=PlayerController.new()
+		controller=AIControllerWithRaycast.new()
+		controller.raycast_sensor_2d = $RaycastSensor2D_extended
 		controller.boat = self
+		controller.control_mode = AIController2D.ControlModes.HUMAN
+		add_child(controller)
 		if camera_scene:
 			var camera_instance = camera_scene.instantiate()
 			# Sécurité : On vérifie que c'est bien une Camera2D
-			if camera_instance is Camera2D:
+			
+			var true_cam := camera_instance as Camera2D
+			if true_cam:
 				# On s'assure qu'elle est active
-				camera_instance.enabled = true 
+				true_cam.enabled = true
 				# On l'attache au bateau
-				add_child(camera_instance)
+				add_child(true_cam)
+				#la cam se met current tte seule.
 				print("Caméra configurée attachée au bateau du joueur : ", player_id)
 			else:
 				print("Erreur: camera_scene n'est pas une Camera2D !")
@@ -175,10 +192,18 @@ func _physics_process(delta: float) -> void:
 
 @export var spawn_rectancgle:Vector4 = Vector4(-500,500,-500,500)
 
+var first_iter = true
 func _integrate_forces(state):
+	
+	if first_iter : 
+		spawn_point = global_position
+		first_iter = false
 	if(tpRandomNextFrame):
-		var target_pos = Vector2(randf_range(spawn_rectancgle.x, spawn_rectancgle.y), randi_range(spawn_rectancgle.z, spawn_rectancgle.w))
-		state.transform.origin = get_parent().to_global(target_pos)
+		if respawn_on_spawn_point :
+			state.transform.origin = spawn_point
+		else : 
+			var target_pos = Vector2(randf_range(spawn_rectancgle.x, spawn_rectancgle.y), randi_range(spawn_rectancgle.z, spawn_rectancgle.w))
+			state.transform.origin = get_parent().to_global(target_pos)
 		tpRandomNextFrame = false
 
 

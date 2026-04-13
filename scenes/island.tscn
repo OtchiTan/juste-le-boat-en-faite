@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dqsg7j6lny8mj" path="res://assets/textures/Buildings/Cyan/CyanTower.png" id="5_cngje"]
 [ext_resource type="Texture2D" uid="uid://bgaan0nwi2ijw" path="res://assets/textures/Buildings/Red/RedDocks.png" id="6_ftju0"]
 [ext_resource type="Texture2D" uid="uid://csch860rtgphe" path="res://assets/textures/Buildings/Red/RedTower.png" id="7_mifw5"]
-[ext_resource type="Script" uid="uid://cximee0366rki" path="res://scripts/UI/MinimapMarker.gd" id="9_jxvd6"]
+[ext_resource type="Script" path="res://scripts/UI/MinimapMarker.gd" id="9_jxvd6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1uhhg"]
 radius = 150.0
@@ -37,6 +37,8 @@ region_rect = Rect2(0.9449959, 33.03382, 30.135582, 30.813114)
 [node name="Dock" type="Node2D" parent="." unique_id=835547789]
 
 [node name="Area2D" type="Area2D" parent="Dock" unique_id=996083645]
+collision_layer = 4
+collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Dock/Area2D" unique_id=1719365019]
 shape = SubResource("CircleShape2D_1uhhg")
@@ -211,10 +213,8 @@ region_filter_clip_enabled = true
 script = ExtResource("9_jxvd6")
 is_rect = true
 marker_size = Vector2(200, 100)
-metadata/_custom_type_script = "uid://cximee0366rki"
 
 [node name="MinimapMarker" type="Node" parent="." unique_id=2073306485]
 script = ExtResource("9_jxvd6")
 is_rect = true
 marker_size = Vector2(200, 200)
-metadata/_custom_type_script = "uid://cximee0366rki"

@@ -1,8 +1,18 @@
 [gd_scene format=3 uid="uid://643adwfdt1lf"]
 
+[sub_resource type="GDScript" id="GDScript_slwai"]
+resource_name = "mainCameraScript"
+script/source = "extends Camera2D
+
+
+func _ready() -> void:
+	make_current()
+"
+
 [node name="Camera2D" type="Camera2D" unique_id=2045000063]
 zoom = Vector2(0.5, 0.5)
 limit_left = 0
 limit_top = 0
 limit_right = 11200
 limit_bottom = 6400
+script = SubResource("GDScript_slwai")

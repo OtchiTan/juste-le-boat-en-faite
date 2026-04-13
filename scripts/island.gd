@@ -63,14 +63,20 @@ const GOLD_TICK_TIME: float = 5.0 # Génère de l'or toutes les 5 secondes
 const HEAL_COST: int = 5       # Coût en or
 const HEAL_AMOUNT: int = 1     # PV rendus par pression de touche
 
+var sync
 func _ready() -> void:
+	sync = get_tree().get_first_node_in_group("sync_node")
+	
+	if sync and sync.control_mode == sync.ControlModes.TRAINING :
+		island_id += 1 ## on skip l'ID 0 pour ne pas faire pop le joueur HUMAIN
+	
 	GameManager.register_island(self)
 	
 	# INITIALISATION CRITIQUE : On définit d'abord quel dossier utiliser
 	# Cela va remplir les variables sprite_right, sprite_left, etc.
 	_update_dock_appearance() 
 	
-	update_visual()
+	update_visual()	
 	dock_area.body_entered.connect(_on_dock_body_entered)
 	dock_area.body_exited.connect(_on_dock_body_exited)
 	
@@ -144,11 +150,15 @@ func _orient_dock(shore_tile: Vector2i) -> void:
 	
 	if !alreay_spawn_boat:
 		_spawn_boat()
+		
+		sync = get_tree().get_first_node_in_group("sync_node")
+		if sync and sync.control_mode == sync.ControlModes.TRAINING :
+			_spawn_boat()
 	
 func _spawn_boat() -> void :
 	alreay_spawn_boat = true
 	var boat = boat_scene.instantiate()
-	if boat is Node2D:
+	if boat is Boat:
 		boat.set_as_player_and_id(island_id, self)
 		get_parent().call_deferred("add_child", boat)
 
@@ -236,19 +246,19 @@ func _on_dock_body_exited(body: Node2D) -> void:
 # =============================================
 # === Changement de propriétaire ===
 # =============================================
-func change_owner(new_owner: int, is_needed_to_await_ready: bool) -> void:
-	island_owner = new_owner
+func change_owner(new_owner_id: int, is_needed_to_await_ready: bool) -> void:
+	island_owner = new_owner_id
 	capture_progress = 0.0
 	
 	if is_needed_to_await_ready:
 		await ready
 	update_visual()
 	var team_color: Color
-	print(new_owner)
-	if new_owner == 0:
+	print(new_owner_id)
+	if new_owner_id == 0:
 		team_color = Color.CYAN
 		emit_signal("new_owner")
-	elif new_owner == -1:
+	elif new_owner_id == -1:
 		team_color = Color.GRAY
 	else:
 		team_color = Color.RED
@@ -256,7 +266,7 @@ func change_owner(new_owner: int, is_needed_to_await_ready: bool) -> void:
 		_update_minimap_color(team_color)
 	
 	_update_dock_appearance()
-	GameManager.check_victory(new_owner)
+	GameManager.check_victory(new_owner_id)
 
 func _update_minimap_color(color: Color) -> void:
 	minimap_marker.marker_color = color
@@ -284,7 +294,9 @@ func _get_water_direction(shore_tile: Vector2i) -> Vector2:
 	return Vector2.ZERO
 	
 func _process(delta: float) -> void:
-	_handle_capture(delta)
+	
+	if not sync or sync.control_mode != sync.ControlModes.TRAINING :
+		_handle_capture(delta)
 	_handle_upgrade_input()
 	_handle_heal_input()
 	_generate_passive_gold(delta)
@@ -369,7 +381,7 @@ func _generate_passive_gold(delta: float) -> void:
 			gold_timer = 0.0
 			var amount = GOLD_GEN_FORTRESS if is_fortress else GOLD_GEN_NORMAL
 			GameManager.player_gold += amount
-			print("Or généré : +", amount, " (Total: ", GameManager.player_gold, ")")
+			#print("Or généré : +", amount, " (Total: ", GameManager.player_gold, ")")
 			
 func _handle_heal_input() -> void:
 	# Vérifie si le joueur appuie sur 'H'
