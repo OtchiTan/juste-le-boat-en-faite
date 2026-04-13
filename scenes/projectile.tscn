@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bcxhhw861j7kq" path="res://scripts/projectile.gd" id="1_d1ss1"]
 [ext_resource type="PackedScene" uid="uid://cpravls24kss8" path="res://scenes/explosion.tscn" id="2_softn"]
+[ext_resource type="PackedScene" uid="uid://dobbycj4w4sr6" path="res://scenes/water_splash.tscn" id="3_6q2a6"]
 [ext_resource type="Texture2D" uid="uid://b7jq5m0ln6q2r" path="res://assets/cannonball/bomb2.png" id="3_softn"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_b1xqg"]
@@ -13,6 +14,7 @@ collision_layer = 128
 collision_mask = 128
 script = ExtResource("1_d1ss1")
 explosion_scene = ExtResource("2_softn")
+splashScene = ExtResource("3_6q2a6")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1058775721]
 shape = SubResource("CircleShape2D_b1xqg")

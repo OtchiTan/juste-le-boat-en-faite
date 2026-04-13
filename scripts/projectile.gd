@@ -1,15 +1,23 @@
 extends Area2D
 
 @export var explosion_scene: PackedScene
+@export var splashScene: PackedScene 
 
 var vitesse = 500
 var direction = Vector2.ZERO
 var degats : int = 20
 var tireur
-var duree_vie :float = 1
+var duree_vie :float = 0.75
 
 func _ready() -> void:
 	await get_tree().create_timer(duree_vie).timeout
+	splash_and_destroy()
+	
+
+func splash_and_destroy() ->void:
+	var splash = splashScene.instantiate()
+	splash.global_position = global_position
+	get_tree().current_scene.add_child(splash)
 	queue_free()
 
 func _physics_process(delta: float) -> void:
