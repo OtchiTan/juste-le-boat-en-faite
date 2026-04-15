@@ -32,6 +32,7 @@ signal getDamage(int)
 #@onready var boat_sprite_2d: Sprite2D = $BoatSprite2D
 @onready var boat_cyan: AnimatedSprite2D = $CyanBoat
 @onready var boat_red: AnimatedSprite2D = $RedBoat
+@onready var pew_audio: AudioStreamPlayer2D = $AudioStreamPlayer2D
 
 # INPUTS (pilotés par controller)
 var throttle := 0.0   # -1 → 1
@@ -219,6 +220,7 @@ func attack() -> void :
 	if ( want_to_shoot_l and time_since_last_fire_left >= fire_cool_down ) :
 		time_since_last_fire_left = 0
 		# Joue l'animation côté gauche
+		pew_audio.play
 		if muzzle_flash_left: muzzle_flash_left.fire()
 		
 		var direction = global_transform.y.rotated(-dispertion_Angle/2)
@@ -234,6 +236,7 @@ func attack() -> void :
 	if (want_to_shoot_r and time_since_last_fire_right >= fire_cool_down) :
 		time_since_last_fire_right = 0
 		# Joue l'animation côté droit
+		pew_audio.play()
 		if muzzle_flash_right: muzzle_flash_right.fire()
 		
 		var direction = global_transform.y.rotated(-dispertion_Angle/2)

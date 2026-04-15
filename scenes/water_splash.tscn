@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://7rped61go86" path="res://assets/WaterSplashPlusPetit.png" id="1_5p2cg"]
 [ext_resource type="Texture2D" uid="uid://daklc58qsyo13" path="res://assets/WaterSplash.png" id="1_l75kt"]
 [ext_resource type="Script" uid="uid://c7dlhtxe8d00f" path="res://scripts/water_splash.gd" id="2_ckhv4"]
+[ext_resource type="AudioStream" uid="uid://2fyoh7gmiqux" path="res://assets/Audio/Water, Splash, Water, Drop SND138196.mp3" id="4_nn642"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nn642"]
 atlas = ExtResource("1_5p2cg")
@@ -61,3 +62,8 @@ frame = 5
 frame_progress = 1.0
 speed_scale = 2.5
 script = ExtResource("2_ckhv4")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=322748431]
+stream = ExtResource("4_nn642")
+volume_db = -25.0
+bus = &"SFX"

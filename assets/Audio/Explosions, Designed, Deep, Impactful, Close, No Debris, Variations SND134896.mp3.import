@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c807tod3pstnl"
+path="res://.godot/imported/Explosions, Designed, Deep, Impactful, Close, No Debris, Variations SND134896.mp3-5f5eb7d25c7a1f890fa400ee1df66617.mp3str"
+
+[deps]
+
+source_file="res://assets/Audio/Explosions, Designed, Deep, Impactful, Close, No Debris, Variations SND134896.mp3"
+dest_files=["res://.godot/imported/Explosions, Designed, Deep, Impactful, Close, No Debris, Variations SND134896.mp3-5f5eb7d25c7a1f890fa400ee1df66617.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

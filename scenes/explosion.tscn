@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://cfip0gaq4p804" path="res://assets/cannonball/explosion.png" id="1_17npe"]
 [ext_resource type="Script" uid="uid://b7o2ff3rx0nio" path="res://scripts/explosion.gd" id="2_nfeox"]
+[ext_resource type="AudioStream" uid="uid://c807tod3pstnl" path="res://assets/Audio/Explosions, Designed, Deep, Impactful, Close, No Debris, Variations SND134896.mp3" id="3_aw4cw"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nfeox"]
 atlas = ExtResource("1_17npe")
@@ -325,3 +326,8 @@ sprite_frames = SubResource("SpriteFrames_yhkye")
 frame = 15
 frame_progress = 0.5353187
 script = ExtResource("2_nfeox")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=589458015]
+stream = ExtResource("3_aw4cw")
+volume_db = -15.0
+bus = &"SFX"
