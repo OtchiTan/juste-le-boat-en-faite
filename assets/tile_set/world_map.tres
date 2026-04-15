@@ -4,9 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://u720cj22ydoi" path="res://assets/textures/Ground/Grass.png" id="2_vdcxm"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vdcxm"]
-friction = 0.1
+friction = 0.15
 rough = true
-bounce = 0.2
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4dvvg"]
 texture = ExtResource("1_m2vqf")

@@ -79,18 +79,24 @@ func _ready():
 		global_rotation = 0.0
 		rotate(deg_to_rad(player_island.dock_orientation))
 
+
 	GameManager.register_boat(self)
 	
 	
 	
-
-func set_as_player_and_id(id_player: int, island: Island = null) -> void:
+var _is_player
+func set_as_player_and_id(id_player: int, island: Island = null, is_player := false) -> void:
+	_is_player = is_player
 	player_id = id_player
 	label.text = str(player_id)
 	if island != null : 
 		player_island = island
 	await _ready()
-	if island != null and island.island_owner == 0:
+	
+	if _is_player : 
+		boat_cyan.visible = true
+		boat_red.visible = false
+	elif island != null and island.island_owner == 0:
 		boat_cyan.visible = true
 		boat_red.visible = false
 	else:
@@ -99,7 +105,7 @@ func set_as_player_and_id(id_player: int, island: Island = null) -> void:
 	#On ne créé pas de controlleur si un est déjà assigné.
 	if controller :
 		return
-	if id_player == 0:
+	if _is_player:
 		controller=AIControllerWithRaycast.new()
 		controller.raycast_sensor_2d = $RaycastSensor2D_extended
 		controller.boat = self
@@ -254,7 +260,7 @@ func attack() -> void :
 func get_damage(damage: float, tireur) -> void :
 	if not tireur or FactionManager.get_should_deal_damage(tireur, self) : 
 		life -= damage
-	if player_id == 0:
+	if _is_player:
 		emit_signal("getDamage", life)
 	on_health_changed.emit(life)
 	
@@ -262,8 +268,7 @@ func get_damage(damage: float, tireur) -> void :
 	if (bot_atk) :
 		bot_atk.on_dealt_damages.emit(damage, self)
 
-	if life <= 0:
-		if not dont_die_on_life_equal_0 : 
+	if life <= 0 and not dont_die_on_life_equal_0 : 
 			GameManager.on_boat_destroyed(self, tireur)
 			queue_free()
 

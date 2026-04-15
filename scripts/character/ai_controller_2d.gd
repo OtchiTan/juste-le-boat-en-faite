@@ -99,15 +99,18 @@ func get_action_space() -> Dictionary:
 	}
 	dict.sort()
 	return dict
-	
+
+
+var throtle_mult = 1.2
+var steering_mult = 2
 func set_action(action) -> void:
 	var newx = action["rotate_left_right"] - 1
 	var newy = action["accelerate_decelerate"] - 1
 
 	move.x = newx
 	move.y = newy
-	boat.throttle = move.x * 1.2
-	boat.steering = move.y * 2
+	boat.throttle = move.x * throtle_mult
+	boat.steering = move.y * steering_mult
 	
 	boat.want_to_shoot_r = action["shoot_right"]
 	boat.want_to_shoot_l = action["shoot_left"]
@@ -143,8 +146,8 @@ func _physics_process(delta):
 			move.x = Input.get_action_strength("up") - Input.get_action_strength("down")
 			boat.want_to_shoot_l = Input.get_action_strength("attack")
 			boat.want_to_shoot_r = boat.want_to_shoot_l
-			boat.throttle = move.x
-			boat.steering = move.y
+			boat.throttle = move.x * throtle_mult
+			boat.steering = move.y * steering_mult
 		
 	#reward -= target_dist *0.00001
 	#cumulated_rewar -= target_dist *0.00001

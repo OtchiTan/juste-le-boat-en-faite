@@ -6,7 +6,7 @@ enum Relation { NEUTRAL, ALLY, ENEMY }
 var diplomacy_matrix = {}
 
 func _ready():
-	register_faction(0) #faction neutre random ??? (pour le lol)
+	register_faction(0) #faction du joueur
 
 # Ajoute une nouvelle faction au système
 func register_faction(player_id: int):

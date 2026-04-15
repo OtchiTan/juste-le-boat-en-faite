@@ -72,14 +72,14 @@ func register_island(island):
 	island.new_owner.connect(_on_new_owner)
 	
 func on_boat_destroyed(boat, tireur):
-	if (boat.player_id == 0):
+	if (boat._is_player):
 		defeat()
 	boats.erase(boat)
 	var dead_player = boat.player_id
 	if (tireur) :
 		var new_owner = tireur.player_id
 	for island in islands:
-		if island.island_owner == dead_player:
+		if island.island_owner == dead_player and island.island_owner != 0 :
 			island.change_owner(-1, false)
 
 func check_victory(tireur_id):

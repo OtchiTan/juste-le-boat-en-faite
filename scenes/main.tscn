@@ -10,6 +10,10 @@
 [ext_resource type="Script" uid="uid://br1fv6edo4c16" path="res://scripts/UI/loading_screen.gd" id="10_ya4ey"]
 [ext_resource type="PackedScene" uid="uid://cmp5of1dtwbgn" path="res://scenes/UI/Wind.tscn" id="11_eb6dy"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_85g3d"]
+friction = 0.0
+bounce = 0.25
+
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_jyhfs"]
 
 [node name="Main" type="Node2D" unique_id=1828361990]
@@ -20,6 +24,7 @@ script = ExtResource("1_o5qli")
 [node name="Bordures" type="StaticBody2D" parent="." unique_id=309844219]
 collision_layer = 129
 collision_mask = 129
+physics_material_override = SubResource("PhysicsMaterial_85g3d")
 
 [node name="CollisionShape_up" type="CollisionShape2D" parent="Bordures" unique_id=223622771]
 rotation = 3.1415927
@@ -56,7 +61,7 @@ script = ExtResource("10_ya4ey")
 [node name="Sync" type="Node" parent="." unique_id=1330921170]
 script = ExtResource("8_tipki")
 control_mode = 2
-onnx_model_path = "python/FINAL_AI_0.onnx"
+onnx_model_path = "python/FINAL_AI_2.onnx"
 metadata/_custom_type_script = "uid://ok2c2172j67q"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=36178635]

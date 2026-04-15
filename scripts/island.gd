@@ -55,7 +55,7 @@ var current_capture_time: float = CAPTURE_TIME_NORMAL
 const GOLD_GEN_NORMAL: int = 1    # Or par cycle
 const GOLD_GEN_FORTRESS: int = 2 # Plus d'or pour une forteresse
 const UPGRADE_COST: int = 20      # Coût de l'amélioration
-
+const BUY_BOAT_COST:int =  30
 var gold_timer: float = 0.0
 const GOLD_TICK_TIME: float = 5.0 # Génère de l'or toutes les 5 secondes
 
@@ -156,10 +156,13 @@ func _orient_dock(shore_tile: Vector2i) -> void:
 			_spawn_boat()
 	
 func _spawn_boat() -> void :
+	
+	var is_player = (not alreay_spawn_boat) and (island_owner == 0)
 	alreay_spawn_boat = true
 	var boat = boat_scene.instantiate()
 	if boat is Boat:
-		boat.set_as_player_and_id(island_id, self)
+		
+		boat.set_as_player_and_id(island_owner, self,is_player)
 		get_parent().call_deferred("add_child", boat)
 
 func _hide_all_dock_sprites() -> void:
@@ -299,15 +302,24 @@ func _process(delta: float) -> void:
 		_handle_capture(delta)
 	_handle_upgrade_input()
 	_handle_heal_input()
+	_handle_buy_boat_input()
 	_generate_passive_gold(delta)
-
+func _handle_buy_boat_input() :
+	if Input.is_action_just_pressed("buy_boat") :
+		if GameManager.player_gold >= BUY_BOAT_COST:
+			for boat in boats_in_zone:
+				if is_instance_valid(boat) and boat._is_player:
+					_spawn_boat()
+					return
+			
+			
 func _handle_upgrade_input() -> void:
 	if Input.is_action_just_pressed("upgrade"):
 		if not is_fortress and island_owner == 0:
 			# On vérifie si le joueur a assez d'argent
 			if GameManager.player_gold >= UPGRADE_COST:
 				for boat in boats_in_zone:
-					if is_instance_valid(boat) and boat.player_id == 0:
+					if is_instance_valid(boat) and boat._is_player:
 						GameManager.player_gold -= UPGRADE_COST
 						upgrade_to_fortress()
 						return
@@ -364,6 +376,7 @@ func _update_dock_appearance() -> void:
 		if heal_label:
 			heal_label.visible = !is_fortress
 			heal_label.text = "[H] Heal (" + str(HEAL_COST) + " gold)"
+			heal_label.text += "\n[B] Buy a new boat ("+ str(BUY_BOAT_COST) +" gold)"
 	else:
 		if capture_bar: capture_bar.visible = true
 		if upgrade_label: upgrade_label.visible = false
@@ -372,7 +385,8 @@ func _update_dock_appearance() -> void:
 	# 4. On replace le dock (ce qui appellera _orient_dock)
 	if tilemap != null:
 		_place_dock_on_shore()
-
+		
+var island_gold = 0
 func _generate_passive_gold(delta: float) -> void:
 	# Seules les îles du joueur (ID 0) génèrent de l'or pour lui
 	if island_owner == 0:
@@ -382,7 +396,15 @@ func _generate_passive_gold(delta: float) -> void:
 			var amount = GOLD_GEN_FORTRESS if is_fortress else GOLD_GEN_NORMAL
 			GameManager.player_gold += amount
 			#print("Or généré : +", amount, " (Total: ", GameManager.player_gold, ")")
-			
+	else :
+		gold_timer += delta
+		if gold_timer >= GOLD_TICK_TIME:
+			gold_timer = 0.0
+			var amount = GOLD_GEN_FORTRESS if is_fortress else GOLD_GEN_NORMAL
+			island_gold+=amount
+		if island_gold > BUY_BOAT_COST :
+			_spawn_boat()
+			island_gold = 0
 func _handle_heal_input() -> void:
 	# Vérifie si le joueur appuie sur 'H'
 	if Input.is_action_just_pressed("heal"): # Assure-toi de créer l'action "heal" pour la touche H
@@ -390,7 +412,7 @@ func _handle_heal_input() -> void:
 		if island_owner == 0:
 			if GameManager.player_gold >= HEAL_COST:
 				for boat in boats_in_zone:
-					if is_instance_valid(boat) and boat.player_id == 0:
+					if is_instance_valid(boat) and boat._is_player :
 						# On vérifie si le bateau a besoin de soin
 						if boat.life < boat.original_life:
 							GameManager.player_gold -= HEAL_COST

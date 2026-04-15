@@ -55,9 +55,9 @@ var sync_is_ready:bool = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	add_to_group("sync_node")
-	
-	await get_tree().root.ready
-	
+	var root :Node = get_tree().root
+	if (not root.is_node_ready()) :
+		await root.ready
 	# --- LA PAUSE EST ICI ---
 	print("Sync en attente du signal...")
 	if not GameManager.game_is_ready : 
