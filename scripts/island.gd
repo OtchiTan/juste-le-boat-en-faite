@@ -310,6 +310,7 @@ func _handle_buy_boat_input() :
 			for boat in boats_in_zone:
 				if is_instance_valid(boat) and boat._is_player:
 					_spawn_boat()
+					GameManager.player_gold -= BUY_BOAT_COST
 					return
 			
 			

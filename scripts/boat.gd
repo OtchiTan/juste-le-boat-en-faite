@@ -227,7 +227,7 @@ func attack() -> void :
 		time_since_last_fire_left = 0
 		# Joue l'animation côté gauche
 		pew_audio.play
-		if muzzle_flash_left: muzzle_flash_left.fire()
+		if muzzle_flash_right: muzzle_flash_right.fire()
 		
 		var direction = global_transform.y.rotated(-dispertion_Angle/2)
 		for fire_angle in range(nb_Bullet):
@@ -243,7 +243,7 @@ func attack() -> void :
 		time_since_last_fire_right = 0
 		# Joue l'animation côté droit
 		pew_audio.play()
-		if muzzle_flash_right: muzzle_flash_right.fire()
+		if muzzle_flash_left: muzzle_flash_left.fire()
 		
 		var direction = global_transform.y.rotated(-dispertion_Angle/2)
 		for fire_angle in range(nb_Bullet):

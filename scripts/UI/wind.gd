@@ -2,7 +2,7 @@ extends CanvasLayer
 
 @export var wind_particle: GPUParticles2D
 
-var speed_multiplier : float = 50
+var speed_multiplier : float = 250
 var max_wind_strength : float = 3
 
 # Called when the node enters the scene tree for the first time.

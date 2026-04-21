@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://b6u1ubbrve3xx" path="res://scenes/projectile.tscn" id="2_8jrvy"]
 [ext_resource type="PackedScene" uid="uid://643adwfdt1lf" path="res://scenes/camera_2d.tscn" id="3_q7w65"]
 [ext_resource type="Script" uid="uid://dukmfiwpskmss" path="res://scripts/character/raycast_sensor_2d_extended.gd" id="4_4pna2"]
-[ext_resource type="Script" path="res://scripts/UI/MinimapMarker.gd" id="5_wdn3g"]
+[ext_resource type="Script" uid="uid://cximee0366rki" path="res://scripts/UI/MinimapMarker.gd" id="5_wdn3g"]
 [ext_resource type="Texture2D" uid="uid://p7idp61bqldb" path="res://assets/PrettyBoat/prettyBoatIdleSpriteSheetRed.png" id="6_3afor"]
 [ext_resource type="Texture2D" uid="uid://rusdiisavq1b" path="res://assets/cannonball/muzzle-ezgif.com-gif-to-sprite-converter.png" id="8_gbyt4"]
 [ext_resource type="Script" uid="uid://d3wfvsgc3aig6" path="res://scripts/muzzle_flash.gd" id="9_551pn"]
