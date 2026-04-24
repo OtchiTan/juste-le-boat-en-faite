@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 GameManager="*uid://dpdosp8w3xlhr"
 FactionManager="*uid://d3eut31ba4qe1"
+BackgroundMusic="*uid://ceacl8l0fiflw"
 
 [display]
 

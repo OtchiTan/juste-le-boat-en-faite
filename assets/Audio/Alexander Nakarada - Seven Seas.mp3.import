@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cae0oruv7w2mu"
+path="res://.godot/imported/Alexander Nakarada - Seven Seas.mp3-8cc8faba3110459ef5fb8c969f59f1c8.mp3str"
+
+[deps]
+
+source_file="res://assets/Audio/Alexander Nakarada - Seven Seas.mp3"
+dest_files=["res://.godot/imported/Alexander Nakarada - Seven Seas.mp3-8cc8faba3110459ef5fb8c969f59f1c8.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

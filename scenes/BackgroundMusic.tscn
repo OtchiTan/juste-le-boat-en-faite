@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://ceacl8l0fiflw"]
+
+[ext_resource type="AudioStream" uid="uid://cae0oruv7w2mu" path="res://assets/Audio/Alexander Nakarada - Seven Seas.mp3" id="1_olq4t"]
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer" unique_id=1184527348]
+stream = ExtResource("1_olq4t")
+volume_db = -20.0
+autoplay = true
+parameters/looping = true
